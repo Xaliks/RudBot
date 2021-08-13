@@ -17,40 +17,26 @@ module.exports = (bot) => {
 
 	///////////////////////////////////////////////////////////////////////////////////////
 
-	const processFiles = readdirSync("./processes/").filter((file) => file.endsWith(".js"));
+	readdirSync("./commands").forEach((dirs) => {
+		const commands = readdirSync(`./commands${sep}${dirs}${sep}`).filter((f) => f.endsWith(".js"));
 
-	processFiles.forEach((file) => {
-		const processFile = require(`../processes/${file}`);
+		for (const file of commands) {
+			const cmd = require(`../commands/${dirs}/${file}`);
 
-		process.on(processFile.name, processFile.execute.bind(null, bot));
-
-		delete require.cache[require.resolve(`../processes/${file}`)];
-
-		///////////////////////////////////////////////////////////////////////////////////////
-
-		readdirSync("./commands").forEach((dirs) => {
-			const commands = readdirSync(`./commands${sep}${dirs}${sep}`).filter((f) =>
-				f.endsWith(".js"),
-			);
-
-			for (const file of commands) {
-				const cmd = require(`../commands/${dirs}/${file}`);
-
-				if (cmd.aliases) {
-					for (const alias of cmd.aliases) {
-						bot.aliases.set(alias, cmd.name);
-					}
-				}
-
-				bot.commands.set(cmd.name, cmd);
-
-				const cooldowns = bot.cooldowns;
-
-				if (!cooldowns.has(cmd.name)) {
-					cooldowns.set(cmd.name, new Collection());
+			if (cmd.aliases) {
+				for (const alias of cmd.aliases) {
+					bot.aliases.set(alias, cmd.name);
 				}
 			}
-		});
+
+			bot.commands.set(cmd.name, cmd);
+
+			const cooldowns = bot.cooldowns;
+
+			if (!cooldowns.has(cmd.name)) {
+				cooldowns.set(cmd.name, new Collection());
+			}
+		}
 	});
 
 	///////////////////////////////////////////////////////////////////////////////////////

@@ -16,4 +16,6 @@ const bot = new Client({
 
 require("./require")(bot);
 
+process.on("unhandledRejection", (error) => bot.utils.sendError(bot, error));
+
 bot.login(token);
