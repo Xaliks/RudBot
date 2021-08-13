@@ -1,0 +1,16 @@
+{
+	"name": "rudbot",
+	"version": "1.0.0",
+	"description": "Просто РудБот",
+	"main": "bot.js",
+	"author": "Xaliks",
+	"scripts": {
+		"format": "prettier --write \"**/*.{js,json}\""
+	},
+	"dependencies": {
+		"@iamtraction/google-translate": "^1.1.2",
+		"discord.js": "github:discordjs/discord.js",
+		"mongoose": "^5.11.14",
+		"node-fetch": "^2.6.1"
+	}
+}

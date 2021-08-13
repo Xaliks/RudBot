@@ -1,0 +1,25 @@
+{
+	"badges": {
+		"DISCORD_EMPLOYEE": "",
+		"PARTNERED_SERVER_OWNER": "<a:DiscordPartner:754358488825593928>",
+		"BUGHUNTER_LEVEL_1": "<:BugHunter:754358238392352788>",
+		"BUGHUNTER_LEVEL_2": "<:BugHunter2:754358255848915004>",
+		"HYPESQUAD_EVENTS": "<:HypeSquad:754359179241848852>",
+		"HOUSE_BRAVERY": "<:Bravery:754359452945219705>",
+		"HOUSE_BRILLIANCE": "<:Brilliance:754359452747956275>",
+		"HOUSE_BALANCE": "<:Balance:754359452974579782>",
+		"EARLY_SUPPORTER": "<:EarlySupporter:772155154505138196>",
+		"TEAM_USER": "",
+		"SYSTEM": "",
+		"VERIFIED_BOT": "",
+		"EARLY_VERIFIED_BOT_DEVELOPER": "<:verified_developer:754365620572782602>"
+	},
+
+	"ActivityType": {
+		"PLAYING": "Играет в",
+		"STREAMING": "Стримит",
+		"LISTENING": "Слушает",
+		"WATCHING": "Смотрит",
+		"COMPETING": "Соревнуется в"
+	}
+}
