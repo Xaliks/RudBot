@@ -42,7 +42,6 @@ module.exports = {
 
 		const embed = new MessageEmbed()
 			.setAuthor(`${user.id} | ${user.tag}`)
-			.setTitle(`Информация о пользователе`)
 			.setDescription(
 				`Аватар: **[Ссылка](${user.displayAvatarURL({ dynamic: true, size: 2048 })})**${
 					user.banner
