@@ -4,7 +4,7 @@ module.exports = (message, user, author) => {
 		return undefined;
 	}
 
-	user = user.toString().toLowerCase()
+	user = user.toString().toLowerCase();
 	if (!message.mentions.members.first() && user.startsWith("@")) user = user.slice(1);
 
 	const ret =

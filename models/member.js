@@ -31,8 +31,8 @@ module.exports = model(
 			type: Object,
 			default: {
 				hasReminders: false,
-				reminders: []
-			}
+				reminders: [],
+			},
 		},
 	}),
 );

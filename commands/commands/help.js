@@ -32,7 +32,8 @@ module.exports = {
 		const data = [];
 		if (command.aliases) data.push(`\n**Псевдоним(-ы):** ${command.aliases.join(", ")}`);
 		data.push(
-			`\n**Использование:** ${prefix}${command.name} ${command.usage?.map((us) => `\`${us}\``).join(" ") || ""
+			`\n**Использование:** ${prefix}${command.name} ${
+				command.usage?.map((us) => `\`${us}\``).join(" ") || ""
 			}`,
 		);
 
@@ -41,7 +42,8 @@ module.exports = {
 				new MessageEmbed()
 					.setTitle(`Помощь`)
 					.setDescription(
-						`**Имя:** ${command.name}\n**Описание:** ${command.description
+						`**Имя:** ${command.name}\n**Описание:** ${
+							command.description
 						}\n${data}\n**Кулдаун:** ${bot.utils.time(command.cooldown * 1000 || 3000)}`,
 					)
 					.setTimestamp(),
@@ -54,13 +56,14 @@ module.exports = {
 **[] - Не обязательное действие**
 
 ${bot.commands
-						.filter((c) => c.category === category)
-						.map(
-							(c) =>
-								`${prefix}**${c.name}** ${c.usage?.map((us) => `\`${us}\``).join(" ") || ""} - ${c.description
-								}`,
-						)
-						.join(`\n`)}`);
+	.filter((c) => c.category === category)
+	.map(
+		(c) =>
+			`${prefix}**${c.name}** ${c.usage?.map((us) => `\`${us}\``).join(" ") || ""} - ${
+				c.description
+			}`,
+	)
+	.join(`\n`)}`);
 		}
 	},
 };

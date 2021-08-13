@@ -22,12 +22,19 @@ module.exports = {
 			}
 			*/
 			try {
-				if (args[0] && /\d{18}/.test(args[0])) user = new User(bot, await bot.api.users(args[0]).get().catch(() => null));
+				if (args[0] && /\d{18}/.test(args[0]))
+					user = new User(
+						bot,
+						await bot.api
+							.users(args[0])
+							.get()
+							.catch(() => null),
+					);
 				else {
 					user = new User(bot, await bot.api.users(message.author.id).get());
 					member = message.member;
 				}
-			} catch(e) {
+			} catch (e) {
 				user = new User(bot, await bot.api.users(message.author.id).get());
 				member = message.member;
 			}
@@ -37,18 +44,19 @@ module.exports = {
 			.setAuthor(`${user.id} | ${user.tag}`)
 			.setTitle(`Информация о пользователе`)
 			.setDescription(
-				`Аватар: **[Ссылка](${user.displayAvatarURL({dynamic: true, size: 2048})})**${
-	user.banner
-			? ` | Баннер: **[Ссылка](${user.bannerURL({ dynamic: true, size: 2048 })})**`
-		: ""
-				}${!user.bot && user.flags && user.flags.bitfield != 0
-					? "\nЗначки: " +
-					user.flags
-						.toArray()
-						.map((flag) => badges[flag])
-						.join(" ")
-					: ""
-}`,
+				`Аватар: **[Ссылка](${user.displayAvatarURL({ dynamic: true, size: 2048 })})**${
+					user.banner
+						? ` | Баннер: **[Ссылка](${user.bannerURL({ dynamic: true, size: 2048 })})**`
+						: ""
+				}${
+					!user.bot && user.flags && user.flags.bitfield != 0
+						? "\nЗначки: " +
+						  user.flags
+								.toArray()
+								.map((flag) => badges[flag])
+								.join(" ")
+						: ""
+				}`,
 			)
 			.setThumbnail(
 				user.displayAvatarURL({
@@ -68,7 +76,11 @@ module.exports = {
 		if (member) {
 			if (user.id === message.author.id) member = message.member;
 			embed.setColor(member.displayHexColor);
-			embed.description += `\nПрисоединился: \`${Array.from(message.guild.members.cache.map(member => member.joinedTimestamp).sort((a, b) => a - b)).indexOf(message.member.joinedTimestamp) + 1 }\`/\`${message.guild.members.cache.size}\``
+			embed.description += `\nПрисоединился: \`${
+				Array.from(
+					message.guild.members.cache.map((member) => member.joinedTimestamp).sort((a, b) => a - b),
+				).indexOf(message.member.joinedTimestamp) + 1
+			}\`/\`${message.guild.members.cache.size}\``;
 
 			//Статус
 			//-----------------------------------------------------------------------------
@@ -101,7 +113,7 @@ module.exports = {
 					}
 				});
 				//-----------------------------------------------------------------------------
-			} else clientStatus.push(`${emoji.offline} Оффлайн`)
+			} else clientStatus.push(`${emoji.offline} Оффлайн`);
 			//----------------------------------------------------------------------------
 
 			//Создан / Зашел

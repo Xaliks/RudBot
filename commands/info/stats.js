@@ -27,7 +27,9 @@ module.exports = {
 						)}\`текст. / \`${channelSize("GUILD_VOICE")}\`голос.)
 
 ${emoji.CPU}**Кол-во ядер процессора:** \`${os.cpus().length}\`
-${emoji.RAM}**Использование ОЗУ:** \`${(process.memoryUsage().rss / Math.pow(1024, 2)).toFixed(0)}\`MB / \`${(os.totalmem() / Math.pow(1024, 3)).toFixed(1)}\`GB
+${emoji.RAM}**Использование ОЗУ:** \`${(process.memoryUsage().rss / Math.pow(1024, 2)).toFixed(
+							0,
+						)}\`MB / \`${(os.totalmem() / Math.pow(1024, 3)).toFixed(1)}\`GB
 ${emoji.NodeJS}**Версия Node.js:** \`${process.version}\`
 ${emoji.DiscordJS}**Версия Discord.js:** \`${version}\`
 ${emoji.Linux}**Операционная система:** \`${os.type()} / ${os.arch()}\``,
