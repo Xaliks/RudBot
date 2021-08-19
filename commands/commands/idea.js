@@ -12,10 +12,7 @@ module.exports = {
 		const image = message.attachments.map((a) => a)[0]?.attachment || "";
 
 		if (!guild.idea_channel)
-			return bot.utils.error(
-				`Канал для идей не установлен! \`${guild.prefix}set-idea <#канал>\``,
-				message,
-			);
+			return bot.utils.error(`Канал для идей не установлен! \`${guild.prefix}set-idea <#канал>\``, message);
 
 		if (message.member.roles.cache.has("851520479578816533"))
 			return bot.utils.error(`Клоун, тебе нельзя писать идеи!`, message);
@@ -37,7 +34,6 @@ module.exports = {
 							}),
 						)
 						.setDescription(args.join(" "))
-						.setTimestamp()
 						.setFooter(`${guild.prefix}${this.name}`)
 						.setImage(image),
 				],

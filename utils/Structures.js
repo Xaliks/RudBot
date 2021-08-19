@@ -1,3 +1,5 @@
+"use strict";
+
 const Discord = require("discord.js");
 
 module.exports = () => {
@@ -5,7 +7,16 @@ module.exports = () => {
 		constructor(data = {}, skipValidation = false) {
 			super(data, skipValidation);
 
-			this.color = "color" in data ? Discord.Util.resolveColor(data.color) : "303136";
+			/**
+			 * The color of this embed
+			 * @type {?number}
+			 */
+			this.color = Discord.Util.resolveColor("color" in data ? data.color : "303136");
+			/**
+			 * The timestamp of this embed
+			 * @type {?number}
+			 */
+			this.timestamp = new Date("timestamp" in data ? data.timestamp : Date.now()).getTime();
 		}
 	};
 	// https://github.com/discordjs/discord.js/pull/6117

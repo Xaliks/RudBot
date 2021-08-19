@@ -62,8 +62,7 @@ module.exports = {
 						offset: 0,
 						user_ids: query[0],
 					});
-					if (!userInfo.response)
-						return bot.utils.error(`Пользователь с ID \`${query[0]}\` не найден!`, message);
+					if (!userInfo.response) return bot.utils.error(`Пользователь с ID \`${query[0]}\` не найден!`, message);
 				} else if (form === "search") {
 					userInfo = await fetch("users.search", {
 						fields: [
@@ -113,12 +112,8 @@ module.exports = {
 						p: query.join(" "),
 					});
 					if (userInfo.response.count === 0)
-						return bot.utils.error(
-							`Пользователь по запросу \`${query.join(" ")}\` не найден!`,
-							message,
-						);
-				} else
-					return bot.utils.error(`Неизвестный тип! Доступные типы: \`${this.usage[0]}\``, message);
+						return bot.utils.error(`Пользователь по запросу \`${query.join(" ")}\` не найден!`, message);
+				} else return bot.utils.error(`Неизвестный тип! Доступные типы: \`${this.usage[0]}\``, message);
 
 				(form === "get" ? userInfo.response : userInfo.response.items).forEach((info) => {
 					console.log(info);
@@ -146,11 +141,7 @@ module.exports = {
 Статус: ${info.online === 1 ? emoji.online : emoji.offline}**${
 										bot.utils.escapeMarkdown(info.status) || "Отсутствует"
 									}**
-Последний заход: **${
-										info.last_seen
-											? bot.utils.formatDate(info.last_seen.time * 1000, "%full")
-											: "Неизвестно"
-									}**
+Последний заход: **${info.last_seen ? bot.utils.formatDate(info.last_seen.time * 1000, "%full") : "Неизвестно"}**
 
 Пол: **${vk.sex[info.sex]}**
 Год рождения: **${info.bdate || "Неизвестно"}**
@@ -211,8 +202,7 @@ module.exports = {
 					offset: 0,
 					group_ids: query[0],
 				});
-				if (!groupInfo.response)
-					return bot.utils.error(`Группа с ID \`${query[0]}\` не найдена!`, message);
+				if (!groupInfo.response) return bot.utils.error(`Группа с ID \`${query[0]}\` не найдена!`, message);
 				groupInfo.response.forEach((info) => {
 					embeds.push(
 						new MessageEmbed()
@@ -227,9 +217,7 @@ module.exports = {
 Статус: **${info.status || "Отсутствует"}**
 ${
 	info.links && info.links[0]
-		? "Ссылки:\n" +
-		  info.links.map((link) => `[\`${link.name}\`](${link.url}) | ${link.desc}`).join("\n") +
-		  "\n"
+		? "Ссылки:\n" + info.links.map((link) => `[\`${link.name}\`](${link.url}) | ${link.desc}`).join("\n") + "\n"
 		: ""
 }
 Описание: \`${info.description || "Отсутствует"}\`
@@ -238,9 +226,7 @@ ${
 							.addField(
 								"Контакты",
 								info.contacts
-									? info.contacts
-											.map((cnt) => `ID: \`${cnt.user_id || cnt.email}\` ${cnt.desc || ""}`)
-											.join("\n")
+									? info.contacts.map((cnt) => `ID: \`${cnt.user_id || cnt.email}\` ${cnt.desc || ""}`).join("\n")
 									: "Отсутствуют",
 							),
 					);

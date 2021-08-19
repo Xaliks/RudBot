@@ -35,19 +35,13 @@ module.exports = {
 				);
 
 			if (emoji_users[message.author.id]) {
-				if (emoji_users[message.author.id].rare != null ? Math.round(Math.random()) === 1 : true)
+				if (emoji_users[message.author.id].r != false ? Math.round(Math.random()) === 1 : true)
 					message.react(emoji_users[message.author.id].emoji);
 			}
 		}
 		//------------------------------------------------------------------------------------------------
 
-		if (
-			!commandName ||
-			!command ||
-			!message.content.startsWith(prefix) ||
-			message.content === prefix
-		)
-			return;
+		if (!commandName || !command || !message.content.startsWith(prefix) || message.content === prefix) return;
 		if (bot.commands.has(command.name)) {
 			if (user.blacklisted) return message.react("❌");
 
@@ -55,9 +49,7 @@ module.exports = {
 			const cooldownAmount = (command.cooldown || 3) * 1000;
 			if (command.usage && command.usage.filter((u) => !u.startsWith("[")).length > args.length)
 				return bot.utils.error(
-					`Правильное использование команды: \`${prefix}${command.name} ${command.usage.join(
-						" ",
-					)}\``,
+					`Правильное использование команды: \`${prefix}${command.name} ${command.usage.join(" ")}\``,
 					message,
 				);
 			if (command.category === "botowner" && !config.owners.includes(message.author.id))

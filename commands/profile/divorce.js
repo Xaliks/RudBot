@@ -8,8 +8,7 @@ module.exports = {
 		const member = await bot.utils.findMember(message, args.join(" "));
 
 		if (!member) return bot.utils.error("Пользователь не найден!", message);
-		if (member.id === message.author.id)
-			return bot.utils.error("Как вы разведётесь с собой?", message);
+		if (member.id === message.author.id) return bot.utils.error("Как вы разведётесь с собой?", message);
 
 		const DBuser = await bot.database.member.get({ id: member.id, guild_id: message.guild.id });
 		const DBauthor = await bot.database.member.get({
@@ -21,10 +20,7 @@ module.exports = {
 			return bot.utils.error("Вы не пара!", message);
 
 		bot.database.member.update({ id: member.id, guild_id: message.guild.id }, { marry: null });
-		bot.database.member.update(
-			{ id: message.author.id, guild_id: message.guild.id },
-			{ marry: null },
-		);
+		bot.database.member.update({ id: message.author.id, guild_id: message.guild.id }, { marry: null });
 
 		bot.utils.success(`Вы развелись с ${member}.`, message);
 	},

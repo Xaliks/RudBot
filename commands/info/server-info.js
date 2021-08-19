@@ -9,17 +9,6 @@ module.exports = {
 	cooldown: 10,
 	category: "info",
 	async execute(message, args, bot) {
-		//Даты
-		//-----------------------------------------------------------------------------
-		let date1 = new Date(message.createdTimestamp);
-		let date2 = new Date(message.guild.createdTimestamp);
-		let date3 = new Date(message.member.joinedTimestamp);
-		const createdAtMS = Math.round(Math.abs(date1.getTime() - date2.getTime()));
-		const joinedAtMS = Math.round(Math.abs(date1.getTime() - date3.getTime()));
-		const joinedAt = bot.utils.formatDate(date3, "%full");
-		const createdAt = bot.utils.formatDate(date2, "%full");
-		//-----------------------------------------------------------------------------
-
 		const embed = new MessageEmbed()
 			.setAuthor(message.guild.name)
 			.setTitle(`Информация о сервере`)
@@ -43,9 +32,7 @@ ${
 				`:bust_in_silhouette: Пользователей: **${bot.utils.formatNumber(
 					message.guild.members.cache.filter((m) => !m.user.bot).size,
 				)}**
-${emoji.bot} Ботов: **${bot.utils.formatNumber(
-					message.guild.members.cache.filter((m) => m.user.bot).size,
-				)}**
+${emoji.bot} Ботов: **${bot.utils.formatNumber(message.guild.members.cache.filter((m) => m.user.bot).size)}**
 ${emoji.online} Онлайн: **${get("status", "online")}**
 ${emoji.offline} Оффлайн: **${get("status", "offline")}**
 ${emoji.idle} Не актив: **${get("status", "idle")}**
@@ -68,7 +55,6 @@ ${emoji.voice} Кол-во гол. каналов: **${get("channel", ["GUILD_VO
 			.addField(`⁣⁣⁣⁣`, `⁣`, false)
 			//-----------------------------------------------------------------------------
 
-			.setTimestamp()
 			.setFooter("Дизайн JeggyBot")
 			.setThumbnail(
 				message.guild.iconURL({
@@ -91,8 +77,8 @@ ${emoji.boosted} Кол-во бустов: **${message.guild.premiumSubscription
 
 		//Даты
 		//-----------------------------------------------------------------------------
-		embed.addField(`Дата создания`, `${createdAt}\n(**${get("day", createdAtMS)} назад**)`, true);
-		embed.addField(`Вы присоединились`, `${joinedAt}\n(**${get("day", joinedAtMS)} назад**)`, true);
+		embed.addField(`Дата создания`, bot.utils.discordTime(message.guild.createdTimestamp), true);
+		embed.addField(`Вы присоединились`, bot.utils.discordTime(message.member.joinedTimestamp), true);
 		//-----------------------------------------------------------------------------
 
 		message.channel.send({ embeds: [embed] });
@@ -101,17 +87,11 @@ ${emoji.boosted} Кол-во бустов: **${message.guild.premiumSubscription
 			if (type === "channel") {
 				if (typeof data === "string") data = [data];
 				return bot.utils.formatNumber(
-					data
-						.map((d) => message.guild.channels.cache.filter((c) => c.type === d).size)
-						.reduce((a, b) => a + b),
+					data.map((d) => message.guild.channels.cache.filter((c) => c.type === d).size).reduce((a, b) => a + b),
 				);
 			}
-			if (type === "day")
-				return bot.utils.plural(Math.round(data / (1000 * 60 * 60 * 24)), ["день", "дня", "дней"]);
 			if (type === "status")
-				return bot.utils.formatNumber(
-					message.guild.presences.cache.filter((m) => m.status == data).size,
-				);
+				return bot.utils.formatNumber(message.guild.presences.cache.filter((m) => m.status == data).size);
 		}
 	},
 };

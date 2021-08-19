@@ -10,12 +10,7 @@ module.exports = {
 		const data = await fetch("https://miss.perssbest.repl.co/api/v2/cry").then((res) => res.json());
 
 		message.channel.send({
-			embeds: [
-				new MessageEmbed()
-					.setDescription(`${message.author} Плачет`)
-					.setImage(data.image)
-					.setTimestamp(),
-			],
+			embeds: [new MessageEmbed().setDescription(`${message.author} Плачет`).setImage(data.image)],
 		});
 	},
 };

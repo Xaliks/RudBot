@@ -1,99 +1,84 @@
-let news = "733052356564091051";
-let golos = "733052465246896279";
-let idea = "748859760270639126";
-let YT = "782549456360177715";
-let events = "868244256396029974";
-
-let white = "759706348014927882";
-let gray = "759702688186892308";
-let pink = "759702741962063883";
-let lime = "787636100625596426";
-let black = "801891098167214160";
-let green = "805444779382276126";
-let yellow = "845924211540492329";
-
 module.exports = {
 	name: "messageReactionRemove",
 	execute(bot, react, user) {
-		let { guild, channel } = react.message;
+		if (!react || !user || !react.message) return;
+		const { guild, channel } = react.message;
 		if (!guild) return;
 		if (guild.id != "681142809654591501") return;
+
+		const member = guild.members.cache.get(user.id);
 		if (channel.id === "726380912085958727") {
-			let member = guild.members.cache.get(user.id);
-			let e = react.emoji.toString();
-			switch (e) {
-				case "🔴": //Новости
-					if (!member.roles.cache.has(news)) return;
-					member.roles.remove(news);
+			switch (react.emoji.toString()) {
+				case "🔴":
+					if (!member.roles.cache.has("733052356564091051")) return;
+					member.roles.remove("733052356564091051");
 					break;
-				case "🟠": //Голосования
-					if (!member.roles.cache.has(golos)) return;
-					member.roles.remove(golos);
+				case "🟠":
+					if (!member.roles.cache.has("733052465246896279")) return;
+					member.roles.remove("733052465246896279");
 					break;
-				case "🟢": //Идеи
-					if (!member.roles.cache.has(idea)) return;
-					member.roles.remove(idea);
+				case "🟢":
+					if (!member.roles.cache.has("748859760270639126")) return;
+					member.roles.remove("748859760270639126");
 					break;
-				case "📢": //ЮТ
-					if (!member.roles.cache.has(YT)) return;
-					member.roles.remove(YT);
+				case "📢":
+					if (!member.roles.cache.has("782549456360177715")) return;
+					member.roles.remove("782549456360177715");
 					break;
 				case "⚪":
-					if (!member.roles.cache.has(white)) return;
-					member.roles.remove(white);
+					if (!member.roles.cache.has("759706348014927882")) return;
+					member.roles.remove("759706348014927882");
 					break;
 				case "⚫":
-					if (!member.roles.cache.has(gray)) return;
-					member.roles.remove(gray);
+					if (!member.roles.cache.has("759702688186892308")) return;
+					member.roles.remove("759702688186892308");
 					break;
 				case "🍅":
-					if (!member.roles.cache.has(pink)) return;
-					member.roles.remove(pink);
+					if (!member.roles.cache.has("759702741962063883")) return;
+					member.roles.remove("759702741962063883");
 					break;
-				case "🥒": //Лаймовый
-					if (!member.roles.cache.has(lime)) return;
-					member.roles.remove(lime);
+				case "🥒":
+					if (!member.roles.cache.has("787636100625596426")) return;
+					member.roles.remove("787636100625596426");
 					break;
-				case "👾": //Лаймовый
-					if (!member.roles.cache.has(black)) return;
-					member.roles.remove(black);
+				case "👾":
+					if (!member.roles.cache.has("801891098167214160")) return;
+					member.roles.remove("801891098167214160");
 					break;
-				case "🐸": //Лаймовый
-					if (!member.roles.cache.has(green)) return;
-					member.roles.remove(green);
+				case "🐸":
+					if (!member.roles.cache.has("805444779382276126")) return;
+					member.roles.remove("805444779382276126");
 					break;
 				case "🟡":
-					if (!member.roles.cache.has(yellow)) return;
-					member.roles.remove(yellow);
+					if (!member.roles.cache.has("845924211540492329")) return;
+					member.roles.remove("845924211540492329");
 					break;
-				case "🆚": // Ивенты
-					if (!member.roles.cache.has(events)) return;
-					member.roles.remove(events);
+				case "🆚":
+					if (!member.roles.cache.has("868244256396029974")) return;
+					member.roles.remove("868244256396029974");
 					break;
 				default:
 					null;
 			}
 		} else if (channel.id === "833656341833711656") {
-			let member = guild.members.cache.get(user.id);
-			let e = react.emoji.toString();
-			switch (e) {
-				case "🐸": //salat
+			switch (react.emoji.toString()) {
+				case "🐸":
 					if (!member.roles.cache.has("793594413317226566")) return;
 					member.roles.remove("793594413317226566");
 					break;
-				case "🍅": //pink
+				case "🍅":
 					if (!member.roles.cache.has("803602083650469888")) return;
 					member.roles.remove("803602083650469888");
 					break;
-				case "🔴": //red
+				case "🔴":
 					if (!member.roles.cache.has("805442959709438024")) return;
 					member.roles.remove("805442959709438024");
 					break;
-				case "👾": //dark
+				case "👾":
 					if (!member.roles.cache.has("808351547687305246")) return;
 					member.roles.remove("808351547687305246");
 					break;
-				case "🔵": //aqua
+				case "🔵":
 					if (!member.roles.cache.has("808338239583944704")) return;
 					member.roles.remove("808338239583944704");
 					break;

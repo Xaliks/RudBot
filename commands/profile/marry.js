@@ -22,9 +22,7 @@ module.exports = {
 		if (DBuser.gender === null)
 			return bot.utils.error(
 				`У ${member} пол **не определён!**
-Попросите его/её поставить его командой ${guild.prefix}set-gender ${
-					bot.commands.get("set-gender").usage
-				}`,
+Попросите его/её поставить его командой ${guild.prefix}set-gender ${bot.commands.get("set-gender").usage}`,
 				message,
 			);
 
@@ -35,8 +33,7 @@ module.exports = {
 				message,
 			);
 
-		if (DBuser.gender === DBauthor.gender)
-			return bot.utils.error("У вас совпадает пол! :eyes:", message);
+		if (DBuser.gender === DBauthor.gender) return bot.utils.error("У вас совпадает пол! :eyes:", message);
 
 		message.channel.send(
 			`${member}, Вы хотите выйти замуж за ${message.author}? **Да/Нет** (У вас есть 15 секунд)`,
@@ -52,14 +49,8 @@ module.exports = {
 				const msg = msgs.first();
 
 				if (["y", "yes", "д", "да"].includes(msg.content.toLowerCase())) {
-					bot.database.member.update(
-						{ id: member.id, guild_id: message.guild.id },
-						{ marry: message.author.id },
-					);
-					bot.database.member.update(
-						{ id: message.author.id, guild_id: message.guild.id },
-						{ marry: member.id },
-					);
+					bot.database.member.update({ id: member.id, guild_id: message.guild.id }, { marry: message.author.id });
+					bot.database.member.update({ id: message.author.id, guild_id: message.guild.id }, { marry: member.id });
 
 					bot.utils.success(`Вы поженились с ${user}. Поздравляю!`, msg);
 				} else {

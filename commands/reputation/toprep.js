@@ -19,9 +19,10 @@ module.exports = {
 				const member = await bot.utils.findMember(message, user.id);
 
 				if (user.reputation != 0 && member)
-					description += `\`${++number}\`. **${bot.utils.escapeMarkdown(
-						member.user.tag,
-					)}** ${bot.utils.plural(user.reputation, ["очко", "очка", "очков"])}\n`;
+					description += `\`${++number}\`. **${bot.utils.escapeMarkdown(member.user.tag)}** ${bot.utils.plural(
+						user.reputation,
+						["очко", "очка", "очков"],
+					)}\n`;
 			});
 
 		setTimeout(() => {

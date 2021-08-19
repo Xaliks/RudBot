@@ -19,8 +19,7 @@ module.exports = {
 WS Пинг: ${emojis(bot.ws.ping)}ms
 
 [Пожертвовать](https://www.donationalerts.com/r/xaliksss) на [хостинг](https://hostvds.com/donate/pay-with?id=14ef2d9d-d8ff-4b13-bd88-9411976b6e1d&donate_to=061b7539#card-stripe)`,
-					)
-					.setTimestamp(),
+					),
 			],
 		});
 	},

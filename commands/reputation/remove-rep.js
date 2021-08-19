@@ -6,10 +6,7 @@ module.exports = {
 	cooldown: 20,
 	usage: ["<@Пользователь>", "<Число>"],
 	async execute(message, args, bot) {
-		if (
-			!message.member.permissions.has(["MANAGE_MESSAGES"]) ||
-			!message.member.permissions.has(["ADMINISTRATOR"])
-		)
+		if (!message.member.permissions.has(["MANAGE_MESSAGES"]) || !message.member.permissions.has(["ADMINISTRATOR"]))
 			return bot.utils.error("У вас нет прав! (**Управлять сообщениями**)", message);
 
 		const member = bot.utils.findMember(message, args[0]);
@@ -23,9 +20,11 @@ module.exports = {
 		const DBuser = await bot.database.member.get({ id: member.id, guild_id: message.guild.id });
 		if (DBuser.reputation < amount)
 			return bot.utils.error(
-				`У пользователя нет столько репутации! У него: \`${
-					DBuser.reputation
-				}\` **${bot.utils.plural(DBuser.reputation, ["очко", "очка", "очков"], false)} репутации**`,
+				`У пользователя нет столько репутации! У него: \`${DBuser.reputation}\` **${bot.utils.plural(
+					DBuser.reputation,
+					["очко", "очка", "очков"],
+					false,
+				)} репутации**`,
 				message,
 			);
 

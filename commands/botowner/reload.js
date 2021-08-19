@@ -30,8 +30,7 @@ module.exports = {
 			}
 			const name = args[0].toLowerCase();
 			const command =
-				bot.commands.get(name) ||
-				bot.commands.find((cmd) => cmd.aliases && cmd.aliases.includes(name));
+				bot.commands.get(name) || bot.commands.find((cmd) => cmd.aliases && cmd.aliases.includes(name));
 
 			if (!command) {
 				found = false;
@@ -78,9 +77,7 @@ module.exports = {
 				embeds: [
 					new MessageEmbed().setTitle("Успешно!").setDescription(`Имя: **${command.name}**
 Категория: **${command.category}**
-Псевдонимы: ${
-						command.aliases ? command.aliases.map((a) => `\`${a}\``).join(", ") : "**Отсутствуют**"
-					}
+Псевдонимы: ${command.aliases ? command.aliases.map((a) => `\`${a}\``).join(", ") : "**Отсутствуют**"}
 Команда создателя? **${command.admin ? "Да" : "Нет"}**
 Нужны аргументы? **${command.usage?.filter((u) => !u.startsWith("[")) ? "Да" : "Нет"}**`),
 				],

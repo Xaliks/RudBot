@@ -15,12 +15,7 @@ module.exports = {
 		if (message.author.id === user.id) return message.channel.send(`Вы не можете погладить себя!`);
 
 		message.channel.send({
-			embeds: [
-				new MessageEmbed()
-					.setDescription(`${message.author} гладит ${user}`)
-					.setImage(data.url)
-					.setTimestamp(),
-			],
+			embeds: [new MessageEmbed().setDescription(`${message.author} гладит ${user}`).setImage(data.url)],
 		});
 	},
 };

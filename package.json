@@ -11,6 +11,6 @@
 		"@iamtraction/google-translate": "^1.1.2",
 		"discord.js": "github:discordjs/discord.js",
 		"mongoose": "^5.11.14",
-		"node-fetch": "^2.6.1"
+		"xml-js": "^1.6.11"
 	}
 }

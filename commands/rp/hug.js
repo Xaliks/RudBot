@@ -15,12 +15,7 @@ module.exports = {
 		if (message.author.id === user.id) return message.channel.send(`Вы не можете обнять себя!`);
 
 		message.channel.send({
-			embeds: [
-				new MessageEmbed()
-					.setDescription(`${message.author} обнимает ${user}`)
-					.setImage(data.url)
-					.setTimestamp(),
-			],
+			embeds: [new MessageEmbed().setDescription(`${message.author} обнимает ${user}`).setImage(data.url)],
 		});
 	},
 };

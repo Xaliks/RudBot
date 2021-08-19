@@ -9,16 +9,18 @@ module.exports = {
 	usage: ["<Ваш текст>"],
 	category: "commands",
 	async execute(message, args, bot) {
-		const data = await fetch(`https://hastebin.com/documents`, {
-			method: "POST",
-			body: args.join(" "),
-			headers: { "Content-Type": "text/plain" },
-		}).then((resp) => resp.json());
+		try {
+			const data = await fetch(`https://hastebin.com/documents`, {
+				method: "POST",
+				body: args.join(" "),
+				headers: { "Content-Type": "text/plain" },
+			}).then((resp) => resp.json());
 
-		if (data.ok) return bot.utils.error("Произошла ошибка со стороны Hastebin'а!", message);
-
-		message.channel.send({
-			embeds: [new MessageEmbed().setDescription(`Ваша ссылка: https://hastebin.com/${data.key}`)],
-		});
+			message.channel.send({
+				embeds: [new MessageEmbed().setDescription(`Ваша ссылка: https://hastebin.com/${data.key}`)],
+			});
+		} catch (e) {
+			bot.utils.error("Hastebin не может создать документ! Попробуйте позже", message);
+		}
 	},
 };

@@ -10,9 +10,7 @@ module.exports = {
 	aliases: ["майнкрафт", "мсервер"],
 	async execute(message, args, bot) {
 		const IP = args[0];
-		const data = await fetch(`https://api.mcsrvstat.us/2/${encodeURIComponent(IP)}`).then((res) =>
-			res.json(),
-		);
+		const data = await fetch(`https://api.mcsrvstat.us/2/${encodeURIComponent(IP)}`).then((res) => res.json());
 		if (data.ip === "") return bot.utils.error("IP не найден!", message);
 
 		message.channel.send({
@@ -27,9 +25,9 @@ module.exports = {
 **Порт:** **${data.port}**
 ${
 	data.online
-		? `**Игроков:** \`${bot.utils.formatNumber(
-				data.players.online,
-		  )}\` **/** \`${bot.utils.formatNumber(data.players.max)}\`
+		? `**Игроков:** \`${bot.utils.formatNumber(data.players.online)}\` **/** \`${bot.utils.formatNumber(
+				data.players.max,
+		  )}\`
 **Версия:** **${data.version}**
 
 ${
@@ -41,8 +39,7 @@ ${
 		: ""
 }`,
 					)
-					.setThumbnail(data.online ? `https://api.mcsrvstat.us/icon/${IP}` : "")
-					.setTimestamp(),
+					.setThumbnail(data.online ? `https://api.mcsrvstat.us/icon/${IP}` : ""),
 			],
 		});
 	},

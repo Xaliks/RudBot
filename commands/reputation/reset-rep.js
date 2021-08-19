@@ -38,10 +38,7 @@ module.exports = {
 						.filter((u) => u.rep !== 0);
 
 					data.forEach(async (item, idx) => {
-						bot.database.user.update(
-							{ id: item._doc.user_id, guild_id: message.guild.id },
-							{ reputation: 0 },
-						);
+						bot.database.user.update({ id: item._doc.user_id, guild_id: message.guild.id }, { reputation: 0 });
 					});
 					bot.utils.success("Репутация была полностью сброшена!", msg);
 				} else message.channel.send("Действие отклонено!");

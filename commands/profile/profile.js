@@ -42,10 +42,7 @@ module.exports = {
 				? message.guild.members.cache.get(Umarry)
 				: `Пользователя нет на сервере.`
 			: `Нет никого...`;
-		const Uage =
-			DBmember.age != null
-				? bot.utils.plural(DBmember.age, ["год", "года", "лет"])
-				: "Не определён";
+		const Uage = DBmember.age != null ? bot.utils.plural(DBmember.age, ["год", "года", "лет"]) : "Не определён";
 
 		if (marry === "Пользователя нет на сервере.") {
 			bot.database.member.get({ id: member.id, guild_id: message.guild.id }, { marry: null });

@@ -15,7 +15,5 @@ module.exports = (act) => {
 	if (emoji.startsWith("<:spotify:") && act.state && act.details)
 		other = `(\`${act.state}\` - \`${act.details}\`)`;
 
-	return `${emoji} ${require("../data/user-info.json").ActivityType[act.type]} **${
-		act.name
-	}** ${other}\n`;
+	return `${emoji} ${require("../data/user-info.json").ActivityType[act.type]} **${act.name}** ${other}\n`;
 };

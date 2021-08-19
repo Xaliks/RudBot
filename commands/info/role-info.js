@@ -10,13 +10,9 @@ module.exports = {
 	execute(message, args, bot) {
 		const role =
 			message.mentions.roles.first() ||
-			message.guild.roles.cache.find(
-				(role) => role.name.toLowerCase() === args.join(" ").toLowerCase(),
-			) ||
+			message.guild.roles.cache.find((role) => role.name.toLowerCase() === args.join(" ").toLowerCase()) ||
 			message.guild.roles.cache.find((role) => role.id === args[0]) ||
-			message.guild.roles.cache.find((role) =>
-				role.name.toLowerCase().startsWith(args.join(" ").toLowerCase()),
-			);
+			message.guild.roles.cache.find((role) => role.name.toLowerCase().startsWith(args.join(" ").toLowerCase()));
 
 		if (!role) return bot.utils.error("Не могу найти роль!", message);
 
@@ -40,8 +36,8 @@ module.exports = {
 					.addField("**Позиция:**", `${bot.utils.formatNumber(position)}`, true)
 					.addField("**Отображаемая роль?**", hoist, true)
 					.addField("**Упоминается?**", mentionable, true)
-					.addField("**Создана**", `${bot.utils.formatDate(role.createdAt)}`, true)
-					.setTimestamp()
+					.addField("**Создана**", bot.utils.discordTime(data.createdTimestamp), true)
+
 					.setFooter(message.author.username),
 			],
 		});

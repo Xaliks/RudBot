@@ -37,9 +37,7 @@ module.exports = (date, format = "%fullDate / %fullTime (%dayOfWeek)") => {
 
 		.replace(
 			/%dayOfWeek+/g,
-			["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"][
-				Time2.getDay()
-			],
+			["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"][Time2.getDay()],
 		)
 
 		.replace(/%day+/g, d[0])

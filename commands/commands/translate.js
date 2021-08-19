@@ -21,17 +21,14 @@ module.exports = {
 						new MessageEmbed()
 							.setDescription(result.text)
 							.setFooter(message.author.username)
-							.setTimestamp()
+
 							.setTitle("Google Переводчик"),
 					],
 				});
 			})
 			.catch((e) => {
 				if (String(e).startsWith("Error: The language "))
-					return bot.utils.error(
-						"Неизвестный код языка! Коды языков: https://jeggybot.ml/languages",
-						message,
-					);
+					return bot.utils.error("Неизвестный код языка! Коды языков: https://jeggybot.xyz/languages", message);
 				else bot.utils.error("Произошла ошибка!", message);
 			});
 	},

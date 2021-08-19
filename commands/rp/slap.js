@@ -11,16 +11,10 @@ module.exports = {
 		const user = bot.utils.findMember(message, args.join(" "));
 
 		if (!user) return bot.utils.error("Пользователь не найден!", message);
-		if (message.author.id === user.id)
-			return message.channel.send(`Вы не можете дать себе пощечину!`);
+		if (message.author.id === user.id) return message.channel.send(`Вы не можете дать себе пощечину!`);
 
 		message.channel.send({
-			embeds: [
-				new MessageEmbed()
-					.setDescription(`${message.author} даёт пощечину ${user}`)
-					.setImage(data.url)
-					.setTimestamp(),
-			],
+			embeds: [new MessageEmbed().setDescription(`${message.author} даёт пощечину ${user}`).setImage(data.url)],
 		});
 	},
 };

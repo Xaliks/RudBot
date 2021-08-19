@@ -12,16 +12,10 @@ module.exports = {
 		const user = bot.utils.findMember(message, args.join(" "));
 
 		if (!user) return bot.utils.error("Пользователь не найден!", message);
-		if (message.author.id === user.id)
-			return message.channel.send(`Вы не можете покормить себя! (Странно, да?)`);
+		if (message.author.id === user.id) return message.channel.send(`Вы не можете покормить себя! (Странно, да?)`);
 
 		message.channel.send({
-			embeds: [
-				new MessageEmbed()
-					.setDescription(`${message.author} кормит ${user}`)
-					.setImage(data.url)
-					.setTimestamp(),
-			],
+			embeds: [new MessageEmbed().setDescription(`${message.author} кормит ${user}`).setImage(data.url)],
 		});
 	},
 };

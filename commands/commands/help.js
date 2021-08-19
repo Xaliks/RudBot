@@ -23,8 +23,7 @@ module.exports = {
 		}
 
 		const name = args[0].toLowerCase();
-		const command =
-			bot.commands.get(name) || bot.commands.find((c) => c.aliases && c.aliases.includes(name));
+		const command = bot.commands.get(name) || bot.commands.find((c) => c.aliases && c.aliases.includes(name));
 		if (!command) return bot.utils.error("Я не нашел эту команду!", message);
 		if (command.admin && !owners.includes(message.author.id))
 			return message.channel.send("Эта команда только для создателя бота!");
@@ -32,9 +31,7 @@ module.exports = {
 		const data = [];
 		if (command.aliases) data.push(`\n**Псевдоним(-ы):** ${command.aliases.join(", ")}`);
 		data.push(
-			`\n**Использование:** ${prefix}${command.name} ${
-				command.usage?.map((us) => `\`${us}\``).join(" ") || ""
-			}`,
+			`\n**Использование:** ${prefix}${command.name} ${command.usage?.map((us) => `\`${us}\``).join(" ") || ""}`,
 		);
 
 		message.channel.send({
@@ -45,8 +42,7 @@ module.exports = {
 						`**Имя:** ${command.name}\n**Описание:** ${
 							command.description
 						}\n${data}\n**Кулдаун:** ${bot.utils.time(command.cooldown * 1000 || 3000)}`,
-					)
-					.setTimestamp(),
+					),
 			],
 		});
 
@@ -57,12 +53,7 @@ module.exports = {
 
 ${bot.commands
 	.filter((c) => c.category === category)
-	.map(
-		(c) =>
-			`${prefix}**${c.name}** ${c.usage?.map((us) => `\`${us}\``).join(" ") || ""} - ${
-				c.description
-			}`,
-	)
+	.map((c) => `${prefix}**${c.name}** ${c.usage?.map((us) => `\`${us}\``).join(" ") || ""} - ${c.description}`)
 	.join(`\n`)}`);
 		}
 	},

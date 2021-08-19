@@ -10,9 +10,7 @@ module.exports = {
 	async execute(message, args, bot) {
 		const [type, ...query] = args;
 		const data = await fetch(
-			`http://api.xaliks.xyz/info/spotify?type=${type}&query=${encodeURIComponent(
-				query.join(" "),
-			)}`,
+			`http://api.xaliks.xyz/info/spotify?type=${type}&query=${encodeURIComponent(query.join(" "))}`,
 		).then((resp) => resp.json());
 
 		switch (type.toLowerCase()) {
@@ -35,7 +33,7 @@ URI: \`${data.uri}\`
 							.addField(
 								"Альбом",
 								`Название: **${data.album.name}**
-Дата релиза: **${data.album.release_date}**
+Дата релиза: ${bot.utils.discordTime(data.album.release_date)}
 Артисты: ${data.album.artists.map((artist) => `[\`${artist.name}\`](${artist.url})`).join(", ")}`,
 								true,
 							)
@@ -73,7 +71,7 @@ URI: \`${data.uri}\``,
 							.setTitle(`Инфо об альбоме ${data.name}`)
 							.setURL(data.url)
 							.setDescription(
-								`Дата релиза: **${data.release_date}**
+								`Дата релиза: ${bot.utils.discordTime(data.release_date)}
 Всего треков: \`${data.total_tracks}\`
 ${
 	data.total_tracks === 0

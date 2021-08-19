@@ -11,7 +11,7 @@ module.exports = {
 	async execute(message, args, bot) {
 		const guild = await bot.database.guild.get({ id: message.guild.id });
 
-		if (!args[0]) {
+		if (!args[0])
 			return message.channel.send({
 				embeds: [
 					new MessageEmbed().setDescription(
@@ -21,24 +21,22 @@ module.exports = {
 					),
 				],
 			});
-		}
 
 		if (
 			!owners.includes(message.author.id) &&
 			!message.channel.permissionsFor(message.member).has(Permissions.FLAGS.MANAGE_GUILD) &&
 			!message.channel.permissionsFor(message.member).has(Permissions.FLAGS.ADMINISTRATOR)
 		)
-			return bot.utils.error(
-				"У вас нет прав! (**Управлять сервером** или **Администратор**)",
-				message,
-			);
+			return bot.utils.error("У вас нет прав! (**Управлять сервером** или **Администратор**)", message);
 
 		const channel =
 			message.mentions.channels.first() ||
 			message.guild.channels.cache.find((ch) => ch.name === args[0]) ||
 			message.guild.channels.cache.find((ch) => ch.id === args[0]);
-
 		if (!channel) return bot.utils.error("Канал не найден!", message);
+		if (channel.type != "GUILD_TEXT" && channel.type != "GUILD_NEWS")
+			return bot.utils.error("Это не текстовой канал!", message);
+
 		bot.database.guild.update(
 			{ id: message.guild.id },
 			{

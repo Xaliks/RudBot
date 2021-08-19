@@ -32,8 +32,7 @@ module.exports = (number, options) => {
 		if (text.length === 0) return time("ms", ms);
 		if (text.length === 1) return txt.replace("{text}", text[0]);
 		if (text.length >= 2) {
-			if (text.length > 2 && number > 0)
-				return txt.replace("{text}", `${text[0]}, ${text[1]} и ${text[2]}`);
+			if (text.length > 2 && number > 0) return txt.replace("{text}", `${text[0]}, ${text[1]} и ${text[2]}`);
 			return txt.replace("{text}", `${text[0]} и ${text[1]}`);
 		}
 	}

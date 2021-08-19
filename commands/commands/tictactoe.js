@@ -90,6 +90,7 @@ module.exports = {
 					);
 
 					collect.on("collect", (btn) => {
+						if (msg.deleted) return;
 						if (last === btn.user.id)
 							return btn.reply({
 								content: "Ты не можешь ходить второй раз!",
@@ -121,6 +122,7 @@ ${winnner === "draw" ? "Ничья!" : `Победил(-а) ${winnner}`}`;
 						edit(btn);
 					});
 					collect.on("end", () => {
+						if (msg.deleted) return;
 						if (checkWinner(t, message.author, user)) return;
 						content = `Крестики-нолики.
                         

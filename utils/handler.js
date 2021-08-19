@@ -3,49 +3,49 @@ const { sep } = require("path");
 const { Collection } = require("discord.js");
 
 module.exports = (bot) => {
-	///////////////////////////////////////////////////////////////////////////////////////
+	// Ивенты
+	//-----------------------------------------------------------------------------
+	readdirSync("./events/")
+		.filter((file) => file.endsWith(".js"))
+		.forEach((file) => {
+			const event = require(`../events/${file}`);
 
-	const eventFiles = readdirSync("./events/").filter((file) => file.endsWith(".js"));
+			bot.on(event.name, event.execute.bind(null, bot));
 
-	eventFiles.forEach((file) => {
-		const event = require(`../events/${file}`);
+			delete require.cache[require.resolve(`../events/${file}`)];
+		});
+	//-----------------------------------------------------------------------------
 
-		bot.on(event.name, event.execute.bind(null, bot));
+	// Команды
+	//-----------------------------------------------------------------------------
+	readdirSync("./commands").forEach((dir) => {
+		readdirSync(`./commands${sep}${dir}${sep}`)
+			.filter((f) => f.endsWith(".js"))
+			.forEach((file) => {
+				const command = require(`../commands/${dir}/${file}`);
 
-		delete require.cache[require.resolve(`../events/${file}`)];
-	});
-
-	///////////////////////////////////////////////////////////////////////////////////////
-
-	readdirSync("./commands").forEach((dirs) => {
-		const commands = readdirSync(`./commands${sep}${dirs}${sep}`).filter((f) => f.endsWith(".js"));
-
-		for (const file of commands) {
-			const cmd = require(`../commands/${dirs}/${file}`);
-
-			if (cmd.aliases) {
-				for (const alias of cmd.aliases) {
-					bot.aliases.set(alias, cmd.name);
+				if (command.aliases) {
+					for (const alias of command.aliases) {
+						bot.aliases.set(alias, command.name);
+					}
 				}
-			}
+				if (!bot.cooldowns.has(command.name)) {
+					bot.cooldowns.set(command.name, new Collection());
+				}
 
-			bot.commands.set(cmd.name, cmd);
-
-			const cooldowns = bot.cooldowns;
-
-			if (!cooldowns.has(cmd.name)) {
-				cooldowns.set(cmd.name, new Collection());
-			}
-		}
+				bot.commands.set(command.name, command);
+			});
 	});
+	//-----------------------------------------------------------------------------
 
-	///////////////////////////////////////////////////////////////////////////////////////
+	// Функции
+	//-----------------------------------------------------------------------------
+	readdirSync("./functions/")
+		.filter((file) => file.endsWith(".js"))
+		.forEach((file) => {
+			bot.utils[file.replace(".js", "")] = require(`../functions/${file}`);
 
-	const functionsFiles = readdirSync("./functions/").filter((file) => file.endsWith(".js"));
-
-	functionsFiles.forEach((file) => {
-		bot.utils[file.replace(".js", "")] = require(`../functions/${file}`);
-
-		delete require.cache[require.resolve(`../functions/${file}`)];
-	});
+			delete require.cache[require.resolve(`../functions/${file}`)];
+		});
+	//-----------------------------------------------------------------------------
 };

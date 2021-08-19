@@ -1,5 +1,5 @@
-const fetch = require("node-fetch");
 const { MessageEmbed } = require("discord.js");
+const fetch = require("node-fetch");
 
 module.exports = {
 	name: "github",
@@ -10,8 +10,8 @@ module.exports = {
 	aliases: ["gh"],
 	async execute(message, args, bot) {
 		const username = args.join(" ");
-		const user = await fetch(`https://api.github.com/users/${encodeURIComponent(username)}`).then(
-			(res) => res.json(),
+		const user = await fetch(`https://api.github.com/users/${encodeURIComponent(username)}`).then((res) =>
+			res.json(),
 		);
 
 		if (user.message === "Not Found") bot.utils.error("Пользователь не найден!", message);
@@ -32,7 +32,7 @@ module.exports = {
 					.setTitle(`Профиль`)
 					.setDescription(
 						`**ID:** \`${user.id}\`
-[**Аватар**](${user.avatar_url})
+**[Аватар](${user.avatar_url})**
 **Тип:** \`${user.type}\`
 **Компания:** \`${company}\`
 **Локация:** \`${location}\`
@@ -45,8 +45,8 @@ module.exports = {
 					.addField("Подписчиков:", `**${bot.utils.formatNumber(user.followers)}**`, true)
 					.addField("Подписок: ", `**${bot.utils.formatNumber(user.following)}**`, true)
 					.addField("\u200b", "\u200b", false)
-					.addField("Дата создания", `${bot.utils.formatDate(user.created_at)}`, true)
-					.addField("Аккаунт обновлен ", `${bot.utils.formatDate(user.updated_at)}`, true)
+					.addField("Дата создания", bot.utils.discordTime(data.created_at), true)
+					.addField("Аккаунт обновлен ", bot.utils.discordTime(data.updated_at), true)
 					.setThumbnail(user.avatar_url),
 			],
 		});

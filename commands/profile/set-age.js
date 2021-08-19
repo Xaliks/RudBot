@@ -13,8 +13,7 @@ module.exports = {
 		});
 
 		if (!age) return bot.utils.error("Вы должны поставить **правильный** возраст!", message);
-		if (age > 50 || age < 5)
-			return bot.utils.error("Возраст может быть только от `5` до `50`", message);
+		if (age > 50 || age < 5) return bot.utils.error("Возраст может быть только от `5` до `50`", message);
 		if (user.age === age) return bot.utils.error("У вас уже стоит такой возраст!", message);
 
 		bot.database.member.update(

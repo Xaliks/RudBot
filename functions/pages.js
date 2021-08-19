@@ -42,12 +42,14 @@ module.exports = async (message, pages, timeout = 180000) => {
 				break;
 		}
 
-		btn.update({
-			embeds: [pages[page].setFooter(`Страница ${page + 1} / ${pages.length}`)],
-			components: [{ type: 1, components: buttons }],
-		});
+		btn
+			.update({
+				embeds: [pages[page].setFooter(`Страница ${page + 1} / ${pages.length}`)],
+				components: [{ type: 1, components: buttons }],
+			})
+			.catch(() => null);
 	});
 	colletor.on("end", () => {
-		msg.edit({ embeds: msg.embeds, components: [] });
+		msg.edit({ embeds: msg.embeds, components: [] }).catch(() => null);
 	});
 };

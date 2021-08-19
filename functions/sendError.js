@@ -4,18 +4,20 @@ const { MessageEmbed } = require("discord.js");
 module.exports = (bot, error) => {
 	if (!error) return;
 
-	const channel = bot.channels.cache.get(errorLogsChannelId);
-
-	channel.send({
+	bot.channels.cache.get(errorLogsChannelId).send({
 		content: "<@448799481777881089>",
 		embeds: [
 			new MessageEmbed()
 				.setTitle("Новая ошибка!")
 				.addField("**Короткая ошибка:**", `\`${error}\``, true)
-				.addField("**Имя:**", `\`${error.name || "Отстутствует"}\``, true)
-				.addField("**Код ошибки:**", `\`${error.code || "Отстутствует"}\``, true)
-				.addField("**Путь:**", `\`${error.path || "Отстутствует"}\``, true)
-				.addField("**http Статус:**", `\`${error.httpStatus || "Отстутствует"}\``, true)
+				.addField("**Имя:**", `\`${error.name || "Отсутствует"}\``, true)
+				.addField("**Код ошибки:**", `\`${error.code || "Отсутствует"}\``, true)
+				.addField("**http Статус:**", `\`${error.httpStatus || "Отсутствует"}\``, true)
+				.addField("**Путь:**", `\`${error.path || "Отсутствует"}\``, false)
+				.addField(
+					"**Json**",
+					error.requestData ? `\`\`\`${JSON.stringify(error.requestData).substr(0, 4000)}\`\`\`` : "Отсутствует",
+				)
 				.setDescription(`**Ошибка:**\n\`\`\`${error.stack || error}\`\`\``),
 		],
 	});

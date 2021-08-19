@@ -44,9 +44,7 @@ module.exports = {
 			.setAuthor(`${user.id} | ${user.tag}`)
 			.setDescription(
 				`Аватар: **[Ссылка](${user.displayAvatarURL({ dynamic: true, size: 2048 })})**${
-					user.banner
-						? ` | Баннер: **[Ссылка](${user.bannerURL({ dynamic: true, size: 2048 })})**`
-						: ""
+					user.banner ? ` | Баннер: **[Ссылка](${user.bannerURL({ dynamic: true, size: 2048 })})**` : ""
 				}${
 					!user.bot && user.flags && user.flags.bitfield != 0
 						? "\nЗначки: " +
@@ -63,15 +61,8 @@ module.exports = {
 					size: 2048,
 				}),
 			)
-			.setFooter("Дизайн JeggyBot")
-			.setTimestamp();
+			.setFooter("Дизайн JeggyBot");
 
-		const messageCreatedDate = new Date(message.createdTimestamp);
-		const userCreatedDate = new Date(user.createdTimestamp);
-		const userCreatedAtMS = Math.round(
-			Math.abs(messageCreatedDate.getTime() - userCreatedDate.getTime()),
-		);
-		const userCreatedAt = bot.utils.formatDate(userCreatedDate, "%full");
 		if (member) {
 			if (user.id === message.author.id) member = message.member;
 			embed.setColor(member.displayHexColor);
@@ -115,15 +106,6 @@ module.exports = {
 			} else clientStatus.push(`${emoji.offline} Оффлайн`);
 			//----------------------------------------------------------------------------
 
-			//Создан / Зашел
-			//-----------------------------------------------------------------------------
-			const memberJoinedDate = new Date(member.joinedTimestamp);
-			const memberJoinedAtMS = Math.round(
-				Math.abs(messageCreatedDate.getTime() - memberJoinedDate.getTime()),
-			);
-			const memberJoinedAt = bot.utils.formatDate(memberJoinedDate, "%full");
-			//-----------------------------------------------------------------------------
-
 			//Роли
 			//-----------------------------------------------------------------------------
 			const roles = member.roles.cache
@@ -142,22 +124,10 @@ module.exports = {
 			if (roles) embed.addField(`**Роли (${RolesCount}):**`, roles, false);
 			else embed.addField("\u200b", "\u200b", false);
 
-			embed.addField(
-				"Зашел на сервер:",
-				`${memberJoinedAt} (**${getDay(memberJoinedAtMS)}** назад)`,
-				true,
-			);
+			embed.addField("Зашел на сервер:", bot.utils.discordTime(member.joinedTimestamp), true);
 		}
-		embed.addField(
-			"Аккаунт создан:",
-			`${userCreatedAt} (**${getDay(userCreatedAtMS)}** назад)`,
-			true,
-		);
+		embed.addField("Аккаунт создан:", bot.utils.discordTime(user.createdTimestamp), true);
 
 		message.channel.send({ embeds: [embed] });
-
-		function getDay(ms) {
-			return bot.utils.plural(Math.round(ms / (1000 * 60 * 60 * 24)), ["день", "дня", "дней"]);
-		}
 	},
 };

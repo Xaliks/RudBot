@@ -9,12 +9,7 @@ module.exports = {
 		const data = await fetch("https://nekos.life/api/v2/img/smug").then((res) => res.json());
 
 		message.channel.send({
-			embeds: [
-				new MessageEmbed()
-					.setDescription(`${message.author} Выглядит самодовольно.`)
-					.setImage(data.url)
-					.setTimestamp(),
-			],
+			embeds: [new MessageEmbed().setDescription(`${message.author} Выглядит самодовольно.`).setImage(data.url)],
 		});
 	},
 };
