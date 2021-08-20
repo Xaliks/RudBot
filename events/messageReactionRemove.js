@@ -2,12 +2,9 @@ module.exports = {
 	name: "messageReactionRemove",
 	execute(bot, react, user) {
 		if (!react || !user || !react.message) return;
-		const { guild, channel } = react.message;
-		if (!guild) return;
-		if (guild.id != "681142809654591501") return;
 
-		const member = guild.members.cache.get(user.id);
-		if (channel.id === "726380912085958727") {
+		if (react.message.id === "733057234363219999") {
+			const member = react.message.guild.members.cache.get(user.id);
 			switch (react.emoji.toString()) {
 				case "🔴":
 					if (!member.roles.cache.has("733052356564091051")) return;
@@ -60,7 +57,8 @@ module.exports = {
 				default:
 					null;
 			}
-		} else if (channel.id === "833656341833711656") {
+		} else if (react.message.id === "836277376274530346") {
+			const member = react.message.guild.members.cache.get(user.id);
 			switch (react.emoji.toString()) {
 				case "🐸":
 					if (!member.roles.cache.has("793594413317226566")) return;

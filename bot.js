@@ -3,8 +3,8 @@ const { Client } = require("discord.js");
 const { token } = require("./config.json");
 
 const bot = new Client({
-	intents: 1795,
-	allowedMentions: { parse: ["users", "roles"] },
+	partials: ["USER", "CHANNEL", "GUILD_MEMBER", "MESSAGE", "REACTION"],
+	intents: 32767,
 	ws: {
 		properties: {
 			$browser: "Discord Android",
