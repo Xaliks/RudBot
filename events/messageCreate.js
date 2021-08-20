@@ -30,7 +30,12 @@ module.exports = {
 			if (message.content === "112" || message.content.startsWith("112 "))
 				return message.channel.send(
 					`<@&775683300811341824>! Вас вызвал: ${message.author}${
-						args[0] ? `\nПричина вызова: **${args.join(" ")}**` : ""
+						args[0]
+							? `\nПричина вызова: **${args
+									.join(" ")
+									.replace("@everyone", "`<пинг всех>`")
+									.replace(/<@&\d{18}>/gi, "`<пинг роли>`")}**`
+							: ""
 					}`,
 				);
 

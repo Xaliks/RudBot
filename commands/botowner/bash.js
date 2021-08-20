@@ -13,7 +13,7 @@ module.exports = {
 			message.channel.send({
 				embeds: [
 					new MessageEmbed().setDescription(
-						out ? (out.length > 2048 ? `${out.substr(0, 2045)}...` : out) : "Нет ответа",
+						out ? (out.length > 2048 ? `${out.substr(0, 2045)}...` : out) : "¯\\_(ツ)_/¯",
 					),
 				],
 			});
