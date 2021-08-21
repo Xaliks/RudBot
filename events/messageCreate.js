@@ -1,11 +1,13 @@
 let config = require("../config.json");
 const { writeFileSync } = require("fs");
-const emoji_users = require("../data/TBR.json");
+const { emojis } = require("../data/TBR.json");
 
 module.exports = {
 	name: "messageCreate",
 	async execute(bot, message) {
-		if (!message.guild || message.author.bot) return;
+		if (!message.guild) return;
+		if (["739809196677267478", "782548346862043176"].includes(message.channel.id)) message.crosspost();
+		if (message.author.bot) return;
 		if (
 			!message.channel.permissionsFor(message.guild.me).has("SEND_MESSAGES") &&
 			!message.channel.permissionsFor(message.guild.me).has("ADMINISTRATOR")
@@ -39,8 +41,8 @@ module.exports = {
 					}`,
 				);
 
-			if (emoji_users[message.author.id]) {
-				if (emoji_users[message.author.id].r != false ? Math.round(Math.random()) === 1 : true)
+			if (emojis[message.author.id]) {
+				if (emojis[message.author.id].r != false ? Math.round(Math.random()) === 1 : true)
 					message.react(emoji_users[message.author.id].emoji);
 			}
 		}
