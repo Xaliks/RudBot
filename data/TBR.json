@@ -3,50 +3,5 @@
 		"448799481777881089": { "r": false, "emoji": "🍪" },
 		"727187181612957716": { "r": false, "emoji": "🥝" },
 		"500638624837140484": { "r": false, "emoji": "855466154368958485" }
-	},
-	"YT": {
-		"UCl-5XqVjPqyRaAJOMtIqglg": {
-			"text": "{@everyone}\n\nУ **Руды** вышло новое видео! Бегом смотреть!1!! ||Не забудьте поставить лайк||\n{link} | {discord_server}",
-			"channel": "739809196677267478",
-			"discord_server": "https://discord.gg/ruda",
-			"videos": ["yt:video:lKSUbhHdB3g", "yt:video:T_vIuEjjnd4", "yt:video:NjMlkCve-sM", "yt:video:pWsd6gI7ywQ"]
-		},
-		"UClDK8y_0QJJBfhBY0TrGOkw": {
-			"text": "{<@&782549456360177715>}\n\nУ **Фанзи** вышло новое видео!\n{link}",
-			"channel": "782548346862043176",
-			"discord_server": "",
-			"videos": [
-				"yt:video:a7zqEfkL4mQ",
-				"yt:video:tpnM6cp_1WI",
-				"yt:video:PwKky3sksTc",
-				"yt:video:_Sl7Av23grY",
-				"yt:video:hNLXr7PSGtw",
-				"yt:video:oKAPZxlVMHE"
-			]
-		},
-		"UC2k1fpFQ9tRn3fMrcTXZ_ew": {
-			"text": "{<@&782549456360177715>}\n\nНа канале **ПРОКСИК** вышло новое видео!\n{link} | {discord_server}",
-			"channel": "782548346862043176",
-			"discord_server": "https://discord.gg/SjTFBdB",
-			"videos": ["yt:video:R_mITfmsJpQ", "yt:video:WRap-MRDqTE", "yt:video:siyLaD75_QY"]
-		},
-		"UCdxiYtkZ9MyaRw2Dd5imNtQ": {
-			"text": "{<@&782549456360177715>}\n\nНа канале **Freezbee** вышло новое видео!\n{link} | {discord_server}",
-			"channel": "782548346862043176",
-			"discord_server": "https://discord.gg/UTDktDh",
-			"videos": ["yt:video:EJrTTpe2f7E"]
-		},
-		"UCC01YxEbq75Ie3rFn6DiTmA": {
-			"text": "{<@&782549456360177715>}\n\nУ **Флюзи** вышло новое видео!\n{link} | {discord_server}",
-			"channel": "782548346862043176",
-			"discord_server": "https://discord.gg/yh4cpkknAk",
-			"videos": [
-				"yt:video:-CsBjUN5Og8",
-				"yt:video:nK1g5-CS3RY",
-				"yt:video:vIcwcXL1Pk4",
-				"yt:video:KYg0Mgcdhms",
-				"yt:video:7LJbUBaH1Jc"
-			]
-		}
 	}
 }
