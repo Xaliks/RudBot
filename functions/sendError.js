@@ -16,7 +16,7 @@ module.exports = (bot, error) => {
 				.addField("**Путь:**", `\`${error.path || "Отсутствует"}\``, false)
 				.addField(
 					"**Json**",
-					`\`\`\`${error.requestData ? JSON.stringify(error.requestData).substr(0, 1024) : "Отсутствует"}\`\`\``,
+					`\`\`\`${error.requestData ? JSON.stringify(error.requestData).substr(0, 1000) : "Отсутствует"}\`\`\``,
 				)
 				.setDescription(`**Ошибка:**\n\`\`\`${error.stack || error}\`\`\``),
 		],
