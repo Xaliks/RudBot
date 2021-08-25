@@ -12,18 +12,26 @@ module.exports = {
 	async execute(message, args, bot) {
 		let user;
 		let member = bot.utils.findMember(message, args.join(" "));
-		if (args[0] && /\d{17,18}/.test(args[0])) user = await bot.api.users(args[0]).get().catch(() => null);
+		if (args[0] && /\d{17,18}/.test(args[0]))
+			user = await bot.api
+				.users(args[0])
+				.get()
+				.catch(() => null);
 		if (member) user = await bot.api.users(member.user.id).get();
 		if (!user) {
 			user = await bot.api.users(message.author.id).get();
 			member = message.member;
 		}
-		
-		user = new User(bot, user)
+
+		user = new User(bot, user);
 
 		let description = `Аватар: **[Ссылка](${user.displayAvatarURL({ dynamic: true, size: 2048 })})**`;
-		if (user.banner) description += ` | Баннер: **[Ссылка](${user.bannerURL({ dynamic: true, size: 2048 })})**`
-		if (!user.bot && user.flags && user.flags.bitfield != 0) description += `\nЗначки: ${user.flags.toArray().map((flag) => badges[flag]).join(" ")}`
+		if (user.banner) description += ` | Баннер: **[Ссылка](${user.bannerURL({ dynamic: true, size: 2048 })})**`;
+		if (!user.bot && user.flags && user.flags.bitfield != 0)
+			description += `\nЗначки: ${user.flags
+				.toArray()
+				.map((flag) => badges[flag])
+				.join(" ")}`;
 
 		const embed = new MessageEmbed()
 			.setAuthor(`${user.id} | ${user.tag}`)
@@ -38,7 +46,11 @@ module.exports = {
 		if (member) {
 			if (user.id === message.author.id) member = message.member;
 			embed.setColor(member.displayHexColor);
-			description += `\nПрисоединился: \`${Array.from(message.guild.members.cache.map((member) => member.joinedTimestamp).sort((a, b) => a - b),).indexOf(message.member.joinedTimestamp) + 1}\`/\`${message.guild.members.cache.size}\``;
+			description += `\nПрисоединился: \`${
+				Array.from(
+					message.guild.members.cache.map((member) => member.joinedTimestamp).sort((a, b) => a - b),
+				).indexOf(message.member.joinedTimestamp) + 1
+			}\`/\`${message.guild.members.cache.size}\``;
 
 			//Статус
 			//-----------------------------------------------------------------------------
