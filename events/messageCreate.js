@@ -1,6 +1,6 @@
 let config = require("../config.json");
 const { writeFileSync } = require("fs");
-const { emojis } = require("../data/TBR.json");
+const TBR = require("../data/TBR.json");
 
 module.exports = {
 	name: "messageCreate",
@@ -41,9 +41,14 @@ module.exports = {
 					}`,
 				);
 
-			if (emojis[message.author.id]) {
-				if (emojis[message.author.id].r != false ? Math.round(Math.random()) === 1 : true)
-					message.react(emojis[message.author.id].emoji).catch(() => null);
+			if (TBR.emojis[message.author.id] && TBR.emojis[message.author.id].end != null) {
+				if (Date.now() < TBR.emojis[message.author.id].end) {
+					if (TBR.emojis[message.author.id].r != false ? Math.round(Math.random()) === 1 : true)
+						message.react(TBR.emojis[message.author.id].emoji).catch(() => null);
+				} else {
+					delete TBR.emojis[message.author.id];
+					writeFileSync("./data/TBR.json", JSON.stringify(TBR, null, 2));
+				}
 			}
 		}
 		//------------------------------------------------------------------------------------------------
