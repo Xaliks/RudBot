@@ -24,16 +24,47 @@ module.exports = {
 			const channel = await message.guild.channels.create(`тикет-${user.username}-${user.discriminator}`, {
 				parent: "879788172102467604",
 				reason: "тикеты",
+				permissionOverwrites: [
+					{
+						id: message.guild.id,
+						allow: [
+							"SEND_MESSAGES",
+							"EMBED_LINKS",
+							"ATTACH_FILES",
+							"ADD_REACTIONS",
+							"USE_EXTERNAL_EMOJIS",
+							"USE_EXTERNAL_STICKERS",
+							"READ_MESSAGE_HISTORY",
+							"SEND_TTS_MESSAGES",
+						],
+						deny: [
+							"VIEW_CHANNEL",
+							"MANAGE_CHANNELS",
+							"MANAGE_WEBHOOKS",
+							"MANAGE_MESSAGES",
+							"CREATE_INSTANT_INVITE",
+							"MENTION_EVERYONE",
+							"USE_PUBLIC_THREADS",
+							"USE_PRIVATE_THREADS",
+							"MANAGE_THREADS",
+							"USE_APPLICATION_COMMANDS",
+						],
+					},
+					{
+						id: "292603927315087360",
+						allow: ["VIEW_CHANNEL", "MANAGE_CHANNELS", "MANAGE_MESSAGES"],
+					},
+					{
+						id: "678250906407403531",
+						allow: ["VIEW_CHANNEL", "MANAGE_CHANNELS", "MANAGE_MESSAGES"],
+					},
+					{
+						id: user.id,
+						allow: ["VIEW_CHANNEL"],
+					},
+				],
 			});
-			await channel.permissionOverwrites.edit(
-				user.id,
-				{
-					VIEW_CHANNEL: true,
-				},
-				"тикеты",
-			);
 
-			interaction.reply({ content: `Вы открыли тикет! <#${channel.id}>`, ephemeral: true });
 			channel.send({
 				content: `Тикет <@${user.id}>.\n\n<@292603927315087360>, <@637309157997019136> и <@678250906407403531> скоро подойдут.`,
 				components: [
@@ -45,6 +76,7 @@ module.exports = {
 					},
 				],
 			});
+			interaction.reply({ content: `Вы открыли тикет! <#${channel.id}>`, ephemeral: true });
 		}
 		if (interaction.customId === "тикет-закрыть") {
 			if (!message.channel.name.startsWith("тикет-")) return;
