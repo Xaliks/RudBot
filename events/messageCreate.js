@@ -43,7 +43,7 @@ module.exports = {
 
 			if (emojis[message.author.id]) {
 				if (emojis[message.author.id].r != false ? Math.round(Math.random()) === 1 : true)
-					message.react(emojis[message.author.id].emoji);
+					message.react(emojis[message.author.id].emoji).catch(() => null);
 			}
 		}
 		//------------------------------------------------------------------------------------------------
