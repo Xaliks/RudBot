@@ -9,16 +9,15 @@ module.exports = (bot, error) => {
 		embeds: [
 			new MessageEmbed()
 				.setTitle("Новая ошибка!")
-				.addField("**Короткая ошибка:**", `\`${error}\``, true)
-				.addField("**Имя:**", `\`${error.name || "Отсутствует"}\``, true)
-				.addField("**Код ошибки:**", `\`${error.code || "Отсутствует"}\``, true)
-				.addField("**http Статус:**", `\`${error.httpStatus || "Отсутствует"}\``, true)
-				.addField("**Путь:**", `\`${error.path || "Отсутствует"}\``, false)
+				.addField("**Код ошибки:**", `\`${error.code || "Неизвестно"}\``, true)
+				.addField("**HTTP код:**", `\`${error.httpStatus || "Неизвестно"}\``, true)
+				.addField("**Метод:**", `\`${error.method || "Неизвестно"}\``, true)
+				.addField("**Путь:**", `\`${error.path || "Неизвестно"}\``, false)
 				.addField(
 					"**Json**",
 					`\`\`\`${error.requestData ? JSON.stringify(error.requestData).substr(0, 1000) : "Отсутствует"}\`\`\``,
 				)
-				.setDescription(`**Ошибка:**\n\`\`\`${error.stack || error}\`\`\``),
+				.setDescription(`**${error}**${error.stack ? `\n\`\`\`${error.stack}\`\`\`` : ""}`),
 		],
 	});
 };
