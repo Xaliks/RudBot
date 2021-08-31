@@ -62,7 +62,8 @@ module.exports = {
 						offset: 0,
 						user_ids: query[0],
 					});
-					if (!userInfo.response) return bot.utils.error(`Пользователь с ID \`${query[0]}\` не найден!`, this, message, bot);
+					if (!userInfo.response)
+						return bot.utils.error(`Пользователь с ID \`${query[0]}\` не найден!`, this, message, bot);
 				} else if (form === "search") {
 					userInfo = await fetch("users.search", {
 						fields: [
@@ -138,9 +139,7 @@ module.exports = {
 								.setDescription(
 									`
 Подписчиков: \`${info.followers_count || "Неизвестно"}\`
-Статус: ${info.online === 1 ? emoji.online : emoji.offline}**${
-										bot.utils.escapeMarkdown(info.status) || "Отсутствует"
-									}**
+Статус: ${info.online === 1 ? emoji.online : emoji.offline}**${bot.utils.escapeMarkdown(info.status) || "Отсутствует"}**
 Последний заход: **${info.last_seen ? bot.utils.formatDate(info.last_seen.time * 1000, "%full") : "Неизвестно"}**
 
 Пол: **${vk.sex[info.sex]}**

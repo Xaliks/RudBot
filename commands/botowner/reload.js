@@ -22,15 +22,12 @@ module.exports = {
 
 				return message.channel.send({
 					embeds: [
-						new MessageEmbed()
-							.setTitle("Reload")
-							.setDescription(`**Перезагружено \`${bot.commands.size}\` команд.**`),
+						new MessageEmbed().setTitle("Reload").setDescription(`**Перезагружено \`${bot.commands.size}\` команд.**`),
 					],
 				});
 			}
 			const name = args[0].toLowerCase();
-			const command =
-				bot.commands.get(name) || bot.commands.find((cmd) => cmd.aliases && cmd.aliases.includes(name));
+			const command = bot.commands.get(name) || bot.commands.find((cmd) => cmd.aliases && cmd.aliases.includes(name));
 
 			if (!command) {
 				found = false;

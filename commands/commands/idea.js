@@ -20,9 +20,9 @@ module.exports = {
 		message.guild.channels.cache
 			.get(guild.idea_channel)
 			.send({
-				content: `${
-					message.guild.id === "681142809654591501" ? "<@&748859760270639126>, " : ""
-				}Идея от ${message.author}`,
+				content: `${message.guild.id === "681142809654591501" ? "<@&748859760270639126>, " : ""}Идея от ${
+					message.author
+				}`,
 				embeds: [
 					new MessageEmbed()
 						.setColor("RANDOM")

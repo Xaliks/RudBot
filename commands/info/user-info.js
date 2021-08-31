@@ -47,9 +47,9 @@ module.exports = {
 			if (user.id === message.author.id) member = message.member;
 			embed.setColor(member.displayHexColor);
 			description += `\nПрисоединился: \`${
-				Array.from(
-					message.guild.members.cache.map((member) => member.joinedTimestamp).sort((a, b) => a - b),
-				).indexOf(message.member.joinedTimestamp) + 1
+				Array.from(message.guild.members.cache.map((member) => member.joinedTimestamp).sort((a, b) => a - b)).indexOf(
+					message.member.joinedTimestamp,
+				) + 1
 			}\`/\`${message.guild.members.cache.size}\``;
 
 			//Статус

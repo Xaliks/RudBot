@@ -10,9 +10,7 @@ module.exports = {
 	aliases: ["gh"],
 	async execute(message, args, bot) {
 		const username = args.join(" ");
-		const user = await fetch(`https://api.github.com/users/${encodeURIComponent(username)}`).then((res) =>
-			res.json(),
-		);
+		const user = await fetch(`https://api.github.com/users/${encodeURIComponent(username)}`).then((res) => res.json());
 
 		if (user.message === "Not Found") bot.utils.error("Пользователь не найден!", this, message, bot);
 

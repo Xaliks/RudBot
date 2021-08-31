@@ -15,4 +15,4 @@ module.exports = (description, command, message, bot, cooldown = true) => {
 	return message.reply({
 		embeds: [new MessageEmbed().setTitle(`${emoji.error} Ошибка!`).setDescription(description).setColor("RED")],
 	});
-}
+};

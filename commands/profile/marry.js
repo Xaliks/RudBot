@@ -25,7 +25,7 @@ module.exports = {
 Попросите его/её поставить его командой ${guild.prefix}set-gender ${bot.commands.get("set-gender").usage}`,
 				this,
 				message,
-				bot
+				bot,
 			);
 
 		if (DBauthor.gender === null)
@@ -34,14 +34,12 @@ module.exports = {
 Вы можете поставить его командой ${guild.prefix}set-gender ${bot.commands.get("set-gender").usage}`,
 				this,
 				message,
-				bot
+				bot,
 			);
 
 		if (DBuser.gender === DBauthor.gender) return bot.utils.error("У вас совпадает пол! :eyes:", this, message, bot);
 
-		message.channel.send(
-			`${member}, Вы хотите выйти замуж за ${message.author}? **Да/Нет** (У вас есть 15 секунд)`,
-		);
+		message.channel.send(`${member}, Вы хотите выйти замуж за ${message.author}? **Да/Нет** (У вас есть 15 секунд)`);
 
 		message.channel
 			.awaitMessages(filter, {

@@ -14,7 +14,7 @@ module.exports = {
 			res.json(),
 		);
 		if (!country) data = await fetch("https://disease.sh/v3/covid-19/all").then((res) => res.json());
-		if (data.this, message, bot) return bot.utils.error("Страна не найдена!", this, message, bot);
+		if ((data.this, message, bot)) return bot.utils.error("Страна не найдена!", this, message, bot);
 
 		message.channel.send({
 			content: `Обновление было: ${bot.utils.discordTime(data.updated)}`,
@@ -36,10 +36,7 @@ module.exports = {
 Сделано тестов: \`${bot.utils.formatNumber(data.tests)}\``,
 					)
 					.setThumbnail(
-						`${
-							data.countryInfo?.flag ||
-							"https://storage.myseldon.com/news_pict_CD/CDC0F8531BA1D162DE098B176BB260C1"
-						}`,
+						`${data.countryInfo?.flag || "https://storage.myseldon.com/news_pict_CD/CDC0F8531BA1D162DE098B176BB260C1"}`,
 					),
 			],
 		});

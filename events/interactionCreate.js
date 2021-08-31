@@ -70,9 +70,7 @@ module.exports = {
 				components: [
 					{
 						type: 1,
-						components: [
-							new MessageButton().setLabel("ЗАКРЫТЬ ТИКЕТ").setStyle("DANGER").setCustomId("тикет-закрыть"),
-						],
+						components: [new MessageButton().setLabel("ЗАКРЫТЬ ТИКЕТ").setStyle("DANGER").setCustomId("тикет-закрыть")],
 					},
 				],
 			});

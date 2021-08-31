@@ -27,7 +27,7 @@ module.exports = {
 				)} репутации**`,
 				this,
 				message,
-				bot
+				bot,
 			);
 
 		bot.database.member.update(
@@ -37,11 +37,7 @@ module.exports = {
 			},
 		);
 		bot.utils.success(
-			`Вы убрали \`${amount}\` **${bot.utils.plural(
-				amount,
-				["очко", "очка", "очков"],
-				false,
-			)} репутации** у ${member}`,
+			`Вы убрали \`${amount}\` **${bot.utils.plural(amount, ["очко", "очка", "очков"], false)} репутации** у ${member}`,
 			message,
 		);
 	},

@@ -64,7 +64,7 @@ module.exports = {
 					`Правильное использование команды: \`${prefix}${command.name} ${command.usage.join(" ")}\``,
 					command,
 					message,
-					bot
+					bot,
 				);
 			if (command.category === "botowner" && !config.owners.includes(message.author.id))
 				return bot.utils.error(`Эту команду может выполнять только создатель бота!`, this, message, bot, false);
@@ -79,7 +79,7 @@ module.exports = {
 						command,
 						message,
 						bot,
-						false
+						false,
 					);
 				}
 			}

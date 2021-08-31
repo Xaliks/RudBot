@@ -37,9 +37,6 @@ module.exports = {
 				gender,
 			},
 		);
-		bot.utils.success(
-			`Вы успешно поставили себе пол на **${gender === "Male" ? "Мужской" : "Женский"}**!`,
-			message,
-		);
+		bot.utils.success(`Вы успешно поставили себе пол на **${gender === "Male" ? "Мужской" : "Женский"}**!`, message);
 	},
 };

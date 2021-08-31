@@ -8,7 +8,5 @@ const { MessageEmbed } = require("discord.js");
  */
 module.exports = (description, message) =>
 	message.reply({
-		embeds: [
-			new MessageEmbed().setTitle(`${emoji.success} Успешно!`).setDescription(description).setColor("GREEN"),
-		],
+		embeds: [new MessageEmbed().setTitle(`${emoji.success} Успешно!`).setDescription(description).setColor("GREEN")],
 	});

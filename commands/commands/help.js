@@ -39,9 +39,9 @@ module.exports = {
 				new MessageEmbed()
 					.setTitle(`Помощь`)
 					.setDescription(
-						`**Имя:** ${command.name}\n**Описание:** ${
-							command.description
-						}\n${data}\n**Кулдаун:** ${bot.utils.time(command.cooldown * 1000 || 3000)}`,
+						`**Имя:** ${command.name}\n**Описание:** ${command.description}\n${data}\n**Кулдаун:** ${bot.utils.time(
+							command.cooldown * 1000 || 3000,
+						)}`,
 					),
 			],
 		});

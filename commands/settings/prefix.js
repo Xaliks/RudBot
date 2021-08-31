@@ -23,7 +23,12 @@ module.exports = {
 			!message.channel.permissionsFor(message.member).has(Permissions.FLAGS.MANAGE_GUILD) &&
 			!message.channel.permissionsFor(message.member).has(Permissions.FLAGS.ADMINISTRATOR)
 		)
-			return bot.utils.error(`У вас недостаточно прав! (**Управлять сервером** или **Администратор**)`, this, message, bot);
+			return bot.utils.error(
+				`У вас недостаточно прав! (**Управлять сервером** или **Администратор**)`,
+				this,
+				message,
+				bot,
+			);
 		bot.database.guild.update({ id: message.guild.id }, { prefix: Nprefix });
 
 		bot.utils.success(`Вы успешно поставили новый префикс! Теперь он \`${Nprefix}\``, this, message, bot);
