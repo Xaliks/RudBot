@@ -43,69 +43,68 @@ module.exports = {
 			)
 			.setFooter("Дизайн JeggyBot");
 
+		const presence = member ? member.presence : bot.guilds.cache.map((guild) => guild.members.cache.get(user.id)).filter((m) => m)[0]?.presence;
+		//Статус
+		//-----------------------------------------------------------------------------
+		const clientStatus = [];
+		let status;
+		let activity = "";
+		if (presence && presence.status != "offline") {
+		// Система
+		//-----------------------------------------------------------------------------
+		for (let cs in presence.clientStatus) {
+			clientStatus.push(
+				`${emoji[presence.clientStatus[cs]]} ${
+					{
+						desktop: "Компьютер",
+						web: "Сайт",
+						mobile: "Телефон",
+					}[cs]
+				}`,
+			);
+		}
+		//-----------------------------------------------------------------------------
+
+		// Статус
+		//-----------------------------------------------------------------------------
+		presence.activities.forEach((act) => {
+			if (!act) return;
+			if (act.id === "custom") status = act.state;
+			else {
+				activity += require("../../utils/gamesEmoji")(act);
+			}
+		});
+		//-----------------------------------------------------------------------------
+		} else clientStatus.push(`${emoji.offline} Оффлайн`);
+		//----------------------------------------------------------------------------
+
 		if (member) {
 			if (user.id === message.author.id) member = message.member;
-			embed.setColor(member.displayHexColor);
 			description += `\nПрисоединился: \`${
-				Array.from(message.guild.members.cache.map((member) => member.joinedTimestamp).sort((a, b) => a - b)).indexOf(
-					message.member.joinedTimestamp,
+				message.guild.members.cache.map((member) => member.joinedTimestamp).filter((t) => t).sort((a, b) => a - b).indexOf(
+					member.joinedTimestamp,
 				) + 1
 			}\`/\`${message.guild.members.cache.size}\``;
 
-			//Статус
-			//-----------------------------------------------------------------------------
-			const clientStatus = [];
-			let status;
-			let activity = "";
-			if (member.presence && member.presence.status != "offline") {
-				// Система
-				//-----------------------------------------------------------------------------
-				for (let cs in member.presence.clientStatus) {
-					clientStatus.push(
-						`${emoji[member.presence.clientStatus[cs]]} ${
-							{
-								desktop: "Компьютер",
-								web: "Сайт",
-								mobile: "Телефон",
-							}[cs]
-						}`,
-					);
-				}
-				//-----------------------------------------------------------------------------
-
-				// Статус
-				//-----------------------------------------------------------------------------
-				member.presence.activities.forEach((act) => {
-					if (!act) return;
-					if (act.id === "custom") status = act.state;
-					else {
-						activity += require("../../utils/gamesEmoji")(act);
-					}
-				});
-				//-----------------------------------------------------------------------------
-			} else clientStatus.push(`${emoji.offline} Оффлайн`);
-			//----------------------------------------------------------------------------
-
 			//Роли
 			//-----------------------------------------------------------------------------
-			const roles = member.roles.cache
-				.filter((r) => r !== message.guild.id)
+			const roles = Array.from(member.roles.cache)
+				.map((role) => role[1])
 				.sort((a, b) => b.position - a.position)
-				.map((role) => role.toString())
 				.slice(0, -1)
 				.join(", ");
 
-			const RolesCount = bot.utils.formatNumber(member.roles.cache.size - 1);
+			if (roles) embed.addField(`**Роли (${bot.utils.formatNumber(member.roles.cache.size - 1)}):**`, roles, false);
 			//-----------------------------------------------------------------------------
-
-			if (activity != "") embed.addField("Активность:", activity, true);
-			if (clientStatus[0]) embed.addField("Статус:", clientStatus.join("\n"), true);
-			if (status) embed.addField("Пользовательский статус:", status, true);
-			if (roles) embed.addField(`**Роли (${RolesCount}):**`, roles, false);
-			else embed.addField("\u200b", "\u200b", false);
-
-			embed.addField("Зашел на сервер:", bot.utils.discordTime(member.joinedTimestamp), true);
 		}
+
+		if (activity != "") embed.addField("Активность:", activity, true);
+		if (clientStatus[0]) embed.addField("Статус:", clientStatus.join("\n"), true);
+		if (status) embed.addField("Пользовательский статус:", status, true);
+		if (embed.fields.findIndex(field => field.name.startsWith("**Роли (") || field.name === "\u200b") != -1) embed.fields.splice(embed.fields.length - 1, 0, embed.fields.splice(0, 1)[0]);
+		else embed.addField("\u200b", "\u200b", false);
+
+		if (member) embed.addField("Зашел на сервер:", bot.utils.discordTime(member.joinedTimestamp), true);
 		embed.addField("Аккаунт создан:", bot.utils.discordTime(user.createdTimestamp), true);
 		embed.setDescription(description);
 
