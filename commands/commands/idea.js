@@ -22,13 +22,13 @@ module.exports = {
 			.send({
 				content: `${
 					message.guild.id === "681142809654591501" ? "<@&748859760270639126>, " : ""
-				}Идея от ${bot.utils.escapeMarkdown(message.author)}`,
+				}Идея от ${message.author}`,
 				embeds: [
 					new MessageEmbed()
 						.setColor("RANDOM")
 						.setTitle("Идея")
 						.setAuthor(
-							bot.utils.escapeMarkdown(message.author.tag),
+							message.author.tag,
 							message.author.displayAvatarURL({
 								dynamic: true,
 							}),
