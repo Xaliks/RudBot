@@ -28,8 +28,8 @@ module.exports = {
 			})
 			.catch((e) => {
 				if (String(e).startsWith("Error: The language "))
-					return bot.utils.error("Неизвестный код языка! Коды языков: https://jeggybot.xyz/languages", message);
-				else bot.utils.error("Произошла ошибка!", message);
+					return bot.utils.error("Неизвестный код языка! Коды языков: https://jeggybot.xyz/languages", this, message, bot);
+				else bot.utils.error("Произошла ошибка!", this, message, bot);
 			});
 	},
 };

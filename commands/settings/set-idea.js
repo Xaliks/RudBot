@@ -27,15 +27,15 @@ module.exports = {
 			!message.channel.permissionsFor(message.member).has(Permissions.FLAGS.MANAGE_GUILD) &&
 			!message.channel.permissionsFor(message.member).has(Permissions.FLAGS.ADMINISTRATOR)
 		)
-			return bot.utils.error("У вас нет прав! (**Управлять сервером** или **Администратор**)", message);
+			return bot.utils.error("У вас нет прав! (**Управлять сервером** или **Администратор**)", this, message, bot);
 
 		const channel =
 			message.mentions.channels.first() ||
 			message.guild.channels.cache.find((ch) => ch.name === args[0]) ||
 			message.guild.channels.cache.find((ch) => ch.id === args[0]);
-		if (!channel) return bot.utils.error("Канал не найден!", message);
+		if (!channel) return bot.utils.error("Канал не найден!", this, message, bot);
 		if (channel.type != "GUILD_TEXT" && channel.type != "GUILD_NEWS")
-			return bot.utils.error("Это не текстовой канал!", message);
+			return bot.utils.error("Это не текстовой канал!", this, message, bot);
 
 		bot.database.guild.update(
 			{ id: message.guild.id },
@@ -43,6 +43,6 @@ module.exports = {
 				idea_channel: channel.id,
 			},
 		);
-		bot.utils.success(`Канал установлен! (${channel})`, message);
+		bot.utils.success(`Канал установлен! (${channel})`, this, message, bot);
 	},
 };

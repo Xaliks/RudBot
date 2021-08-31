@@ -14,7 +14,7 @@ module.exports = {
 			message.guild.roles.cache.find((role) => role.id === args[0]) ||
 			message.guild.roles.cache.find((role) => role.name.toLowerCase().startsWith(args.join(" ").toLowerCase()));
 
-		if (!role) return bot.utils.error("Не могу найти роль!", message);
+		if (!role) return bot.utils.error("Не могу найти роль!", this, message, bot);
 
 		let mentionable = role.mentionable ? "Да" : "Нет";
 		let hoist = role.hoist ? "Да" : "Нет";

@@ -20,7 +20,7 @@ module.exports = {
 				embeds: [new MessageEmbed().setDescription(`Ваша ссылка: https://hastebin.com/${data.key}`)],
 			});
 		} catch (e) {
-			bot.utils.error("Hastebin не может создать документ! Попробуйте позже", message);
+			bot.utils.error("Hastebin не может создать документ! Попробуйте позже", this, message, bot);
 		}
 	},
 };

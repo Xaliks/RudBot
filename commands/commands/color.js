@@ -20,7 +20,7 @@ module.exports = {
 			},
 		}).then((res) => res.json());
 
-		if (data?.code === 400) return bot.utils.error("Цвет не найден! (пример: `FFFFFF` или `ffffff`)", message);
+		if (data?.code === 400) return bot.utils.error("Цвет не найден! (пример: `FFFFFF` или `ffffff`)", this, message, bot);
 
 		message.channel.send({
 			embeds: [

@@ -62,7 +62,7 @@ module.exports = {
 					}
 				});
 				if (found) return;
-				return bot.utils.error("Команда или категория не найдена!", message);
+				return bot.utils.error("Команда или категория не найдена!", this, message, bot);
 			}
 
 			delete require.cache[require.resolve(`../${command.category}/${command.name}.js`)];
@@ -83,7 +83,7 @@ module.exports = {
 				],
 			});
 		} catch (err) {
-			bot.utils.error(`\`\`\`${err.stack}\`\`\``, message);
+			bot.utils.error(`\`\`\`${err.stack}\`\`\``, this, message, bot);
 		}
 	},
 };

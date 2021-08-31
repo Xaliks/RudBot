@@ -12,7 +12,7 @@ module.exports = {
 			`http://api.xaliks.xyz/info/minecraft?type=player&query=${encodeURIComponent(args[0])}`,
 		).then((res) => res.json());
 
-		if (data.error) return bot.utils.error(`Игрок \`${args[0]}\` не найден!`, message);
+		if (data.error) return bot.utils.error(`Игрок \`${args[0]}\` не найден!`, this, message, bot);
 
 		message.channel.send({
 			embeds: [

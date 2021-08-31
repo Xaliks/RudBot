@@ -11,7 +11,7 @@ module.exports = {
 	async execute(message, args, bot) {
 		const IP = args[0];
 		const data = await fetch(`https://api.mcsrvstat.us/2/${encodeURIComponent(IP)}`).then((res) => res.json());
-		if (data.ip === "") return bot.utils.error("IP не найден!", message);
+		if (data.ip === "") return bot.utils.error("IP не найден!", this, message, bot);
 
 		message.channel.send({
 			embeds: [

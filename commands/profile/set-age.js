@@ -12,9 +12,9 @@ module.exports = {
 			guild_id: message.guild.id,
 		});
 
-		if (!age) return bot.utils.error("Вы должны поставить **правильный** возраст!", message);
-		if (age > 50 || age < 5) return bot.utils.error("Возраст может быть только от `5` до `50`", message);
-		if (user.age === age) return bot.utils.error("У вас уже стоит такой возраст!", message);
+		if (!age) return bot.utils.error("Вы должны поставить **правильный** возраст!", this, message, bot);
+		if (age > 50 || age < 5) return bot.utils.error("Возраст может быть только от `5` до `50`", this, message, bot);
+		if (user.age === age) return bot.utils.error("У вас уже стоит такой возраст!", this, message, bot);
 
 		bot.database.member.update(
 			{ id: message.author.id, guild_id: message.guild.id },
@@ -22,6 +22,6 @@ module.exports = {
 				age,
 			},
 		);
-		bot.utils.success(`Вы успешно поставили себе возраст!`, message);
+		bot.utils.success(`Вы успешно поставили себе возраст!`, this, message, bot);
 	},
 };

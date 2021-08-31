@@ -11,7 +11,7 @@ module.exports = {
 		const data = await fetch("https://nekos.life/api/v2/img/tickle").then((res) => res.json());
 		const user = bot.utils.findMember(message, args.join(" "));
 
-		if (!user) return bot.utils.error("Пользователь не найден!", message);
+		if (!user) return bot.utils.error("Пользователь не найден!", this, message, bot);
 		if (message.author.id === user.id) return message.channel.send(`Вы не можете пощекотать себя!`);
 
 		message.channel.send({

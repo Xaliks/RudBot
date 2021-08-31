@@ -24,7 +24,7 @@ module.exports = {
 
 		const name = args[0].toLowerCase();
 		const command = bot.commands.get(name) || bot.commands.find((c) => c.aliases && c.aliases.includes(name));
-		if (!command) return bot.utils.error("Я не нашел эту команду!", message);
+		if (!command) return bot.utils.error("Я не нашел эту команду!", this, message, bot);
 		if (command.admin && !owners.includes(message.author.id))
 			return message.channel.send("Эта команда только для создателя бота!");
 

@@ -10,7 +10,7 @@ module.exports = {
 		const filter = (m) => message.author.id === m.author.id;
 
 		if (!message.member.permissions.has(["ADMINISTRATOR"]))
-			return bot.utils.error("У вас нет прав! (Администратор)", message);
+			return bot.utils.error("У вас нет прав! (Администратор)", this, message, bot);
 
 		message.reply("Вы уверены что хотите это сделать? **Да/Нет** (У вас есть 15 секунд)");
 
@@ -44,7 +44,7 @@ module.exports = {
 				} else message.channel.send("Действие отклонено!");
 			})
 			.catch(() => {
-				bot.utils.error("Время вышло!", message);
+				bot.utils.error("Время вышло!", this, message, bot);
 			});
 	},
 };

@@ -18,7 +18,7 @@ module.exports = {
 				],
 			});
 		} catch (e) {
-			bot.utils.error(`\`\`\`${e}\`\`\``, message);
+			bot.utils.error(`\`\`\`${e}\`\`\``, this, message, bot);
 		}
 	},
 };

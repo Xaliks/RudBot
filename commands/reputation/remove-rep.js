@@ -7,15 +7,15 @@ module.exports = {
 	usage: ["<@Пользователь>", "<Число>"],
 	async execute(message, args, bot) {
 		if (!message.member.permissions.has(["MANAGE_MESSAGES"]) || !message.member.permissions.has(["ADMINISTRATOR"]))
-			return bot.utils.error("У вас нет прав! (**Управлять сообщениями**)", message);
+			return bot.utils.error("У вас нет прав! (**Управлять сообщениями**)", this, message, bot);
 
 		const member = bot.utils.findMember(message, args[0]);
-		if (!member) return bot.utils.error("Пользователь не найден!", message);
-		if (member.user.bot) return bot.utils.error("Это бот. У ботов нет репутации!", message);
+		if (!member) return bot.utils.error("Пользователь не найден!", this, message, bot);
+		if (member.user.bot) return bot.utils.error("Это бот. У ботов нет репутации!", this, message, bot);
 
 		const amount = Number(args[1]);
-		if (isNaN(amount)) return bot.utils.error(`\`${amount}\` не число!`, message);
-		if (amount <= 0) return bot.utils.error("А зачем?", message);
+		if (isNaN(amount)) return bot.utils.error(`\`${amount}\` не число!`, this, message, bot);
+		if (amount <= 0) return bot.utils.error("А зачем?", this, message, bot);
 
 		const DBuser = await bot.database.member.get({ id: member.id, guild_id: message.guild.id });
 		if (DBuser.reputation < amount)
@@ -25,7 +25,9 @@ module.exports = {
 					["очко", "очка", "очков"],
 					false,
 				)} репутации**`,
+				this,
 				message,
+				bot
 			);
 
 		bot.database.member.update(

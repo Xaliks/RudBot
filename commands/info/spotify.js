@@ -15,7 +15,7 @@ module.exports = {
 
 		switch (type.toLowerCase()) {
 			case "track":
-				if (data.error) return bot.utils.error("Трек не найден!", message);
+				if (data.error) return bot.utils.error("Трек не найден!", this, message, bot);
 				message.channel.send({
 					embeds: [
 						new MessageEmbed()
@@ -43,7 +43,7 @@ URI: \`${data.uri}\`
 				break;
 
 			case "artist":
-				if (data.error) return bot.utils.error("Артист не найден!", message);
+				if (data.error) return bot.utils.error("Артист не найден!", this, message, bot);
 				message.channel.send({
 					embeds: [
 						new MessageEmbed()
@@ -64,7 +64,7 @@ URI: \`${data.uri}\``,
 				break;
 
 			case "album":
-				if (data.error) return bot.utils.error("Альбом не найден!", message);
+				if (data.error) return bot.utils.error("Альбом не найден!", this, message, bot);
 				message.channel.send({
 					embeds: [
 						new MessageEmbed()
@@ -95,7 +95,7 @@ URI: \`${data.uri}\``,
 				break;
 
 			case "playlist":
-				if (data.error) return bot.utils.error("Плейлист не найден!", message);
+				if (data.error) return bot.utils.error("Плейлист не найден!", this, message, bot);
 				message.channel.send({
 					embeds: [
 						new MessageEmbed()
@@ -128,7 +128,7 @@ URI: \`${data.uri}\``,
 				break;
 
 			default:
-				bot.utils.error(`Неизвестный тип! Доступные типы: \`${this.usage[0]}\``, message);
+				bot.utils.error(`Неизвестный тип! Доступные типы: \`${this.usage[0]}\``, this, message, bot);
 				break;
 		}
 	},

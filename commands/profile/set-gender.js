@@ -26,10 +26,10 @@ module.exports = {
 			guild_id: message.guild.id,
 		});
 
-		if (!gender) return bot.utils.error("Вы должны поставить **правильный** пол!", message);
-		if (user.gender === gender) return bot.utils.error("У вас уже стоит такой пол!", message);
+		if (!gender) return bot.utils.error("Вы должны поставить **правильный** пол!", this, message, bot);
+		if (user.gender === gender) return bot.utils.error("У вас уже стоит такой пол!", this, message, bot);
 		if (user.marry && user.marry != null)
-			return bot.utils.error(`У вас есть ${user.gender === "Female" ? "муж" : "жена"}!`, message);
+			return bot.utils.error(`У вас есть ${user.gender === "Female" ? "муж" : "жена"}!`, this, message, bot);
 
 		bot.database.member.update(
 			{ id: message.author.id, guild_id: message.guild.id },

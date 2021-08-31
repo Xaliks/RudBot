@@ -12,7 +12,7 @@ module.exports = {
 		const data = await fetch("https://nekos.life/api/kiss").then((res) => res.json());
 		const user = bot.utils.findMember(message, args.join(" "));
 
-		if (!user) return bot.utils.error("Пользователь не найден!", message);
+		if (!user) return bot.utils.error("Пользователь не найден!", this, message, bot);
 		if (message.author.id === user.id) return message.channel.send(`Вы не можете поцеловать себя!`);
 
 		message.channel.send({

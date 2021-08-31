@@ -14,7 +14,7 @@ module.exports = {
 			res.json(),
 		);
 		if (!country) data = await fetch("https://disease.sh/v3/covid-19/all").then((res) => res.json());
-		if (data.message) return bot.utils.error("Страна не найдена!", message);
+		if (data.this, message, bot) return bot.utils.error("Страна не найдена!", this, message, bot);
 
 		message.channel.send({
 			content: `Обновление было: ${bot.utils.discordTime(data.updated)}`,

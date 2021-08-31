@@ -41,8 +41,8 @@ module.exports = {
 					}`,
 				);
 
-			if (TBR.emojis[message.author.id] && TBR.emojis[message.author.id].end != null) {
-				if (Date.now() < TBR.emojis[message.author.id].end) {
+			if (TBR.emojis[message.author.id]) {
+				if (TBR.emojis[message.author.id].end === null || Date.now() < TBR.emojis[message.author.id].end) {
 					if (TBR.emojis[message.author.id].r != false ? Math.round(Math.random()) === 1 : true)
 						message.react(TBR.emojis[message.author.id].emoji).catch(() => null);
 				} else {
@@ -62,10 +62,12 @@ module.exports = {
 			if (command.usage && command.usage.filter((u) => !u.startsWith("[")).length > args.length)
 				return bot.utils.error(
 					`Правильное использование команды: \`${prefix}${command.name} ${command.usage.join(" ")}\``,
+					command,
 					message,
+					bot
 				);
 			if (command.category === "botowner" && !config.owners.includes(message.author.id))
-				return bot.utils.error(`Эту команду может выполнять только создатель бота!`, message);
+				return bot.utils.error(`Эту команду может выполнять только создатель бота!`, this, message, bot, false);
 
 			if (timestamps.has(message.author.id)) {
 				const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
@@ -74,7 +76,10 @@ module.exports = {
 						`У вас задержка на команду \`${command.name}\`!\n\nОставшееся время: \`${bot.utils.time(
 							expirationTime - Date.now(),
 						)}\``,
+						command,
 						message,
+						bot,
+						false
 					);
 				}
 			}
@@ -87,7 +92,7 @@ module.exports = {
 		try {
 			command.execute(message, args, bot);
 		} catch (error) {
-			bot.utils.error("Ошибка! Обратитесь к создателю бота.", message);
+			bot.utils.error("Ошибка! Обратитесь к создателю бота.", this, message, bot, false);
 		}
 
 		writeFileSync("config.json", JSON.stringify(config, null, 2));

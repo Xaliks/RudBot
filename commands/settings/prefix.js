@@ -16,16 +16,16 @@ module.exports = {
 			return message.channel.send({
 				embeds: [new MessageEmbed().setDescription(`Текущий префикс: \`${guild.prefix}\``)],
 			});
-		if (Nprefix.length > 5) return bot.utils.error("Максимальная длина префикса: `5` символов!", message);
+		if (Nprefix.length > 5) return bot.utils.error("Максимальная длина префикса: `5` символов!", this, message, bot);
 
 		if (
 			!owners.includes(message.author.id) &&
 			!message.channel.permissionsFor(message.member).has(Permissions.FLAGS.MANAGE_GUILD) &&
 			!message.channel.permissionsFor(message.member).has(Permissions.FLAGS.ADMINISTRATOR)
 		)
-			return bot.utils.error(`У вас недостаточно прав! (**Управлять сервером** или **Администратор**)`, message);
+			return bot.utils.error(`У вас недостаточно прав! (**Управлять сервером** или **Администратор**)`, this, message, bot);
 		bot.database.guild.update({ id: message.guild.id }, { prefix: Nprefix });
 
-		bot.utils.success(`Вы успешно поставили новый префикс! Теперь он \`${Nprefix}\``, message);
+		bot.utils.success(`Вы успешно поставили новый префикс! Теперь он \`${Nprefix}\``, this, message, bot);
 	},
 };

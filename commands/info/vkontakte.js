@@ -62,7 +62,7 @@ module.exports = {
 						offset: 0,
 						user_ids: query[0],
 					});
-					if (!userInfo.response) return bot.utils.error(`Пользователь с ID \`${query[0]}\` не найден!`, message);
+					if (!userInfo.response) return bot.utils.error(`Пользователь с ID \`${query[0]}\` не найден!`, this, message, bot);
 				} else if (form === "search") {
 					userInfo = await fetch("users.search", {
 						fields: [
@@ -112,8 +112,8 @@ module.exports = {
 						p: query.join(" "),
 					});
 					if (userInfo.response.count === 0)
-						return bot.utils.error(`Пользователь по запросу \`${query.join(" ")}\` не найден!`, message);
-				} else return bot.utils.error(`Неизвестный тип! Доступные типы: \`${this.usage[0]}\``, message);
+						return bot.utils.error(`Пользователь по запросу \`${query.join(" ")}\` не найден!`, this, message, bot);
+				} else return bot.utils.error(`Неизвестный тип! Доступные типы: \`${this.usage[0]}\``, this, message, bot);
 
 				(form === "get" ? userInfo.response : userInfo.response.items).forEach((info) => {
 					console.log(info);
@@ -174,7 +174,7 @@ module.exports = {
 
 			case "group":
 				if (form != "get" && form != "search")
-					return bot.utils.error(`Неизвестный тип! Доступные типы: \`${this.usage[0]}\``, message);
+					return bot.utils.error(`Неизвестный тип! Доступные типы: \`${this.usage[0]}\``, this, message, bot);
 				const groupInfo = await fetch("groups.getById", {
 					fields: [
 						"city",
@@ -202,7 +202,7 @@ module.exports = {
 					offset: 0,
 					group_ids: query[0],
 				});
-				if (!groupInfo.response) return bot.utils.error(`Группа с ID \`${query[0]}\` не найдена!`, message);
+				if (!groupInfo.response) return bot.utils.error(`Группа с ID \`${query[0]}\` не найдена!`, this, message, bot);
 				groupInfo.response.forEach((info) => {
 					embeds.push(
 						new MessageEmbed()
@@ -235,7 +235,7 @@ ${
 				break;
 
 			default:
-				bot.utils.error(`Неизвестный тип! Доступные типы: \`${this.usage[1]}\``, message);
+				bot.utils.error(`Неизвестный тип! Доступные типы: \`${this.usage[1]}\``, this, message, bot);
 				break;
 		}
 	},

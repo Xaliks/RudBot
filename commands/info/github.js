@@ -14,7 +14,7 @@ module.exports = {
 			res.json(),
 		);
 
-		if (user.message === "Not Found") bot.utils.error("Пользователь не найден!", message);
+		if (user.message === "Not Found") bot.utils.error("Пользователь не найден!", this, message, bot);
 
 		const twitter = user.twitter_username
 			? `[@${user.twitter_username}](https://twitter.com/${user.twitter_username})`

@@ -9,9 +9,9 @@ module.exports = {
 	usage: ["<@Пользователь>"],
 	async execute(message, args, bot) {
 		const user = bot.utils.findMember(message, args.join(" "))?.user;
-		if (!user) return bot.utils.error("Пользователь не найден!", message);
-		if (user.bot) return bot.utils.error("Нельзя играть с ботами!", message);
-		if (user === message.author) return bot.utils.error("Нельзя играть с собой!", message);
+		if (!user) return bot.utils.error("Пользователь не найден!", this, message, bot);
+		if (user.bot) return bot.utils.error("Нельзя играть с ботами!", this, message, bot);
+		if (user === message.author) return bot.utils.error("Нельзя играть с собой!", this, message, bot);
 		const buttons = [
 			new MessageButton().setEmoji("🟦").setCustomId("0").setStyle("PRIMARY"),
 			new MessageButton().setEmoji("🟦").setCustomId("1").setStyle("PRIMARY"),
