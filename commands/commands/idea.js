@@ -43,6 +43,6 @@ module.exports = {
 				m.react("⬇");
 			});
 
-		bot.utils.success(`**Ваша идея:**\n${args.join(" ")}`, this, message, bot);
+		bot.utils.success(`**Ваша идея:**\n${args.join(" ")}`, message);
 	},
 };

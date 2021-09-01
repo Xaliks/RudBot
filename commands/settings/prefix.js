@@ -31,6 +31,6 @@ module.exports = {
 			);
 		bot.database.guild.update({ id: message.guild.id }, { prefix: Nprefix });
 
-		bot.utils.success(`Вы успешно поставили новый префикс! Теперь он \`${Nprefix}\``, this, message, bot);
+		bot.utils.success(`Вы успешно поставили новый префикс! Теперь он \`${Nprefix}\``, message);
 	},
 };

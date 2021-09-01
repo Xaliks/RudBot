@@ -43,6 +43,6 @@ module.exports = {
 				idea_channel: channel.id,
 			},
 		);
-		bot.utils.success(`Канал установлен! (${channel})`, this, message, bot);
+		bot.utils.success(`Канал установлен! (${channel})`, message);
 	},
 };

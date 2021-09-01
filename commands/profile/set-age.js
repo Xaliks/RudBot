@@ -22,6 +22,6 @@ module.exports = {
 				age,
 			},
 		);
-		bot.utils.success(`Вы успешно поставили себе возраст!`, this, message, bot);
+		bot.utils.success(`Вы успешно поставили себе возраст!`, message);
 	},
 };

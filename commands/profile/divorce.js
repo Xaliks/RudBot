@@ -22,6 +22,6 @@ module.exports = {
 		bot.database.member.update({ id: member.id, guild_id: message.guild.id }, { marry: null });
 		bot.database.member.update({ id: message.author.id, guild_id: message.guild.id }, { marry: null });
 
-		bot.utils.success(`Вы развелись с ${member}.`, this, message, bot);
+		bot.utils.success(`Вы развелись с ${member}.`, message);
 	},
 };
