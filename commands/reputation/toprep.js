@@ -6,9 +6,12 @@ module.exports = {
 	category: "reputation",
 	cooldown: 20,
 	async execute(message, args, bot) {
-		const data = await bot.database.member._model.find({
-			guild_id: message.guild.id,
-		});
+		const data = await bot.database.member.get(
+			{
+				guild_id: message.guild.id,
+			},
+			{ one: false },
+		);
 
 		let description = "";
 		let number = 0;
@@ -26,13 +29,11 @@ module.exports = {
 			});
 
 		setTimeout(() => {
-			message.channel.send({
-				embeds: [
-					new MessageEmbed()
-						.setTitle("Топ по репутации")
-						.setDescription(description || "На сервере никто не получил репутацию!"),
-				],
-			});
+			if (!description) message.channel.send("На сервере никто не получил репутацию!");
+			else
+				message.channel.send({
+					embeds: [new MessageEmbed().setTitle("Топ по репутации").setDescription(description)],
+				});
 		}, 400);
 	},
 };

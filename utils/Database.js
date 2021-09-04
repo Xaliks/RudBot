@@ -3,32 +3,31 @@ const { events } = require("../config.json");
 
 class Model {
 	constructor(name) {
-		this._name = name;
-		this._model = require(`../models/${this._name}`);
+		this.db = require(`../models/${name}`);
 	}
 
-	async get(find, createNew = true) {
-		const data = await this._model.findOne(find);
+	async get(find, data = { createNew: true, one: true }) {
+		const result = await this.db[data.one ? "findOne" : "find"](find);
 
-		if (!data && createNew) return this.create(find);
+		if (!result && data.createNew) return this.create(find);
 
-		return data;
+		return result;
 	}
 
 	async update(find, info, createNew = true) {
-		const data = await this._model.findOneAndUpdate(find, info);
+		const result = await this.db.findOneAndUpdate(find, info);
 
-		if (!data && createNew) return this.create(new Object({ ...find, ...info }));
+		if (!result && createNew) return this.create(new Object({ ...find, ...info }));
 
 		return this.get(find);
 	}
 
 	async create(info) {
-		const data = new this._model(info);
+		const result = new this.db(info);
 
-		await data.save();
+		await result.save();
 
-		return data;
+		return result;
 	}
 }
 

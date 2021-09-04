@@ -46,6 +46,7 @@ module.exports = {
 		const presence = member
 			? member.presence
 			: bot.guilds.cache.map((guild) => guild.members.cache.get(user.id)).filter((m) => m)[0]?.presence;
+
 		//Статус
 		//-----------------------------------------------------------------------------
 		const clientStatus = [];
