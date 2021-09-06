@@ -1,20 +1,21 @@
 const { MessageButton } = require("discord.js");
 
 module.exports = async (message, pages, timeout = 180000) => {
+	if (pages.length === 1) return message.channel.send({ embeds: pages });
+
 	let page = 0;
 	const buttons = [
 		new MessageButton().setEmoji("⏪").setCustomId("2left").setStyle("SECONDARY"),
 		new MessageButton().setEmoji("◀️").setCustomId("left").setStyle("SECONDARY"),
-		new MessageButton().setEmoji("🛑").setCustomId("stop").setStyle("DANGER"),
+		new MessageButton().setEmoji("🛑").setLabel(`${page + 1} / ${pages.length}`).setCustomId("stop").setStyle("DANGER"),
 		new MessageButton().setEmoji("▶️").setCustomId("right").setStyle("SECONDARY"),
 		new MessageButton().setEmoji("⏩").setCustomId("2right").setStyle("SECONDARY"),
 	];
-	if (pages.length === 1) return message.channel.send({ embeds: pages });
 	const msg = await message.channel.send({
-		embeds: [pages[page].setFooter(`Страница: ${page + 1} / ${pages.length}`)],
+		embeds: [pages[page]],
 		components: [{ type: 1, components: buttons }],
 	});
-
+	
 	const filter = (m) => m.user.id === message.author.id;
 	const colletor = msg.createMessageComponentCollector({
 		filter,
@@ -42,9 +43,10 @@ module.exports = async (message, pages, timeout = 180000) => {
 				break;
 		}
 
+		buttons[2].setLabel(`${page + 1} / ${pages.length}`)
 		btn
 			.update({
-				embeds: [pages[page].setFooter(`Страница ${page + 1} / ${pages.length}`)],
+				embeds: [pages[page]],
 				components: [{ type: 1, components: buttons }],
 			})
 			.catch(() => null);
