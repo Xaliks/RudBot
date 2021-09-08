@@ -7,7 +7,11 @@ module.exports = async (message, pages, timeout = 180000) => {
 	const buttons = [
 		new MessageButton().setEmoji("⏪").setCustomId("2left").setStyle("SECONDARY"),
 		new MessageButton().setEmoji("◀️").setCustomId("left").setStyle("SECONDARY"),
-		new MessageButton().setEmoji("🛑").setLabel(`${page + 1} / ${pages.length}`).setCustomId("stop").setStyle("DANGER"),
+		new MessageButton()
+			.setEmoji("🛑")
+			.setLabel(`${page + 1} / ${pages.length}`)
+			.setCustomId("stop")
+			.setStyle("DANGER"),
 		new MessageButton().setEmoji("▶️").setCustomId("right").setStyle("SECONDARY"),
 		new MessageButton().setEmoji("⏩").setCustomId("2right").setStyle("SECONDARY"),
 	];
@@ -15,7 +19,7 @@ module.exports = async (message, pages, timeout = 180000) => {
 		embeds: [pages[page]],
 		components: [{ type: 1, components: buttons }],
 	});
-	
+
 	const filter = (m) => m.user.id === message.author.id;
 	const colletor = msg.createMessageComponentCollector({
 		filter,
@@ -43,7 +47,7 @@ module.exports = async (message, pages, timeout = 180000) => {
 				break;
 		}
 
-		buttons[2].setLabel(`${page + 1} / ${pages.length}`)
+		buttons[2].setLabel(`${page + 1} / ${pages.length}`);
 		btn
 			.update({
 				embeds: [pages[page]],
