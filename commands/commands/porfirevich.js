@@ -23,17 +23,23 @@ module.exports = {
 			if (btn.customId === "reload") {
 				generate = bot.utils.escapeMarkdown(await gen(text + generate));
 
-				msg.embeds[0].description = `${text}**${generate}**`;
-				msg.edit({ embeds: msg.embeds });
+				let reply = `${text}**${generate}**`;
+				if (reply.length > 3900) reply = "..." + reply.substr(reply.length - 3800);
+
 				btn.reply({ content: "Новый вариант появился!", ephemeral: true });
+				msg.embeds[0].description = reply;
+				msg.edit({ embeds: msg.embeds });
 			}
 			if (btn.customId === "add") {
 				text += generate;
 				generate = bot.utils.escapeMarkdown(await gen(text));
 
-				msg.embeds[0].description = `${text}**${generate}**`;
-				msg.edit({ embeds: msg.embeds });
+				let reply = `${text}**${generate}**`;
+				if (reply.length > 3900) reply = "..." + reply.substr(reply.length - 3800);
+
 				btn.reply({ content: "Продолжение появилось!", ephemeral: true });
+				msg.embeds[0].description = reply;
+				msg.edit({ embeds: msg.embeds });
 			}
 		});
 	},
@@ -58,7 +64,7 @@ async function gen(text) {
 		.then((resp) => resp.replies[0]);
 }
 function send(message, text) {
-	if (text.length > 4000) text = text.substr(text.length - 4000);
+	if (text.length > 3500) text = text.substr(text.length - 3500);
 
 	return message.channel.send({
 		embeds: [
