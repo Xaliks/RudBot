@@ -1,4 +1,4 @@
-const { MessageEmbed, User } = require("discord.js");
+const { MessageEmbed } = require("discord.js");
 const { emoji } = require("../../data/emojis.json");
 const { badges } = require("../../data/user-info");
 
@@ -12,18 +12,12 @@ module.exports = {
 	async execute(message, args, bot) {
 		let user;
 		let member = bot.utils.findMember(message, args.join(" "));
-		if (args[0] && /\d{17,18}/.test(args[0]))
-			user = await bot.api
-				.users(args[0])
-				.get()
-				.catch(() => null);
-		if (member) user = await bot.api.users(member.user.id).get();
+		if (args[0] && /\d{17,18}/.test(args[0])) user = await bot.users.fetch(args[0], { force: true }).catch(() => null);
+		if (member) user = await bot.users.fetch(member.user.id, { force: true });
 		if (!user) {
-			user = await bot.api.users(message.author.id).get();
+			user = await bot.users.fetch(message.author.id, { force: true });
 			member = message.member;
 		}
-
-		user = new User(bot, user);
 
 		let description = `Аватар: **[Ссылка](${user.displayAvatarURL({ dynamic: true, size: 2048 })})**`;
 		if (user.banner) description += ` | Баннер: **[Ссылка](${user.bannerURL({ dynamic: true, size: 2048 })})**`;
