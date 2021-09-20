@@ -9,17 +9,17 @@ module.exports = {
 	usage: ["<Ник игрока>"],
 	async execute(message, args, bot) {
 		const data = await fetch(
-			`http://api.xaliks.xyz/info/minecraft?type=player&query=${encodeURIComponent(args[0])}`,
-		).then((res) => res.json());
+			`https://api.mojang.com/users/profiles/minecraft/${encodeURIComponent(args[0])}`,
+		).then((res) => res.json()).catch((e) => null);
 
-		if (data.error) return bot.utils.error(`Игрок \`${args[0]}\` не найден!`, this, message, bot);
+		if (!data) return bot.utils.error(`Игрок \`${args[0]}\` не найден!`, this, message, bot);
 
 		message.channel.send({
 			embeds: [
 				new MessageEmbed()
-					.setAuthor(`Скин игрока ${bot.utils.escapeMarkdown(data.username)}`, data.skins.face)
-					.setDescription(`[Скачать скин](${data.skins.skin})`)
-					.setImage(data.skins.full),
+					.setAuthor(`Скин игрока ${bot.utils.escapeMarkdown(data.name)}`, `https://crafatar.com/renders/head/${data.id}`)
+					.setDescription(`[Скачать скин](https://crafatar.com/skins/${data.id})`)
+					.setImage(`https://crafatar.com/renders/body/${data.id}`),
 			],
 		});
 	},
