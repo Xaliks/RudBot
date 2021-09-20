@@ -9,6 +9,7 @@ module.exports = {
 	usage: ["<Начало истории>"],
 	category: "commands",
 	async execute(message, args, bot) {
+		let first = true;
 		let text = bot.utils.escapeMarkdown(args.join(" "));
 		let generate = bot.utils.escapeMarkdown(await gen(args.join(" ")));
 
@@ -21,23 +22,24 @@ module.exports = {
 				return btn.reply({ content: "Ты не можешь использовать это!", ephemeral: true });
 
 			if (btn.customId === "reload") {
-				generate = bot.utils.escapeMarkdown(await gen(text + generate));
+				generate = bot.utils.escapeMarkdown(await gen(text));
 
 				let reply = `${text}**${generate}**`;
 				if (reply.length > 3900) reply = "..." + reply.substr(reply.length - 3800);
 
-				btn.reply({ content: "Новый вариант появился!", ephemeral: true });
+				btn.reply({ content: "Новый вариант появился!", ephemeral: true }).catch(() => null);
 				msg.embeds[0].description = reply;
 				msg.edit({ embeds: msg.embeds });
 			}
 			if (btn.customId === "add") {
 				text += generate;
 				generate = bot.utils.escapeMarkdown(await gen(text));
+				first = false;
 
 				let reply = `${text}**${generate}**`;
 				if (reply.length > 3900) reply = "..." + reply.substr(reply.length - 3800);
 
-				btn.reply({ content: "Продолжение появилось!", ephemeral: true });
+				btn.reply({ content: "Продолжение появилось!", ephemeral: true }).catch(() => null);
 				msg.embeds[0].description = reply;
 				msg.edit({ embeds: msg.embeds });
 			}
@@ -46,9 +48,11 @@ module.exports = {
 };
 
 async function gen(text) {
+	text = String(text);
+
 	if (text.length > 3000) text = text.substr(text.length - 3000);
 	const body = {
-		prompt: String(text),
+		prompt: text,
 		length: 30,
 	};
 
