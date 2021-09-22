@@ -6,34 +6,18 @@ module.exports = {
 	category: "reputation",
 	cooldown: 20,
 	async execute(message, args, bot) {
-		const data = await bot.database.member.get(
-			{
-				guild_id: message.guild.id,
-			},
-			{ one: false },
-		);
+		const members = await bot.database.member.db.find({ guild_id: message.guild.id, reputation: { $ne: 0 }});
+		if (!members[0]) return message.channel.send("На сервере никто не получил репутацию!");
 
-		let description = "";
-		let number = 0;
-		data
-			.sort((a, b) => b.reputation - a.reputation)
-			.slice(0, 10)
-			.forEach(async (user) => {
-				const member = await bot.utils.findMember(message, user.id);
+		const embed = new MessageEmbed().setTitle("Топ по репутации").setDescription("");
 
-				if (user.reputation != 0 && member)
-					description += `\`${++number}\`. **${bot.utils.escapeMarkdown(member.user.tag)}** ${bot.utils.plural(
-						user.reputation,
-						["очко", "очка", "очков"],
-					)}\n`;
-			});
+		members.sort((a, b) => b.reputation - a.reputation).slice(0, 10).forEach(async (member, idx) => {
+			++idx
+			const user = await message.guild.members.fetch(member.id).catch(() => {});
 
-		setTimeout(() => {
-			if (!description) message.channel.send("На сервере никто не получил репутацию!");
-			else
-				message.channel.send({
-					embeds: [new MessageEmbed().setTitle("Топ по репутации").setDescription(description)],
-				});
-		}, 400);
+			embed.description += `\`${idx}\`. **${bot.utils.escapeMarkdown(user.tag || member.id)}** - \`${member.reputation}\`:star:\n`
+
+			if (idx === members.slice(0, 10).length) return message.channel.send({ embeds: [embed] });
+		})
 	},
 };

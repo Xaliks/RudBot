@@ -1,4 +1,4 @@
-const members = require("../../models/member");
+const { MessageButton } = require("discord.js");
 
 module.exports = {
 	name: "reset-rep",
@@ -7,44 +7,48 @@ module.exports = {
 	cooldown: 60,
 	aliases: ["resetrep"],
 	async execute(message, args, bot) {
-		const filter = (m) => message.author.id === m.author.id;
+		if (!message.member.permissions.has(["ADMINISTRATOR"]) || !message.member.permissions.has(["MANAGE_GUILD"]))
+			return bot.utils.error("У вас нет прав! (**Управлять сервером**)", this, message, bot);
 
-		if (!message.member.permissions.has(["ADMINISTRATOR"]))
-			return bot.utils.error("У вас нет прав! (Администратор)", this, message, bot);
+		const msg = await message.reply({
+			content: "Вы действительно хотите это сделать?",
+			components: [
+				{
+					type: 1,
+					components: [
+						new MessageButton().setEmoji("✅").setCustomId("yes").setStyle(2),
+						new MessageButton().setEmoji("🚫").setCustomId("no").setStyle(2),
+					],
+				},
+			],
+		});
+		const collector = msg.createMessageComponentCollector({
+			time: 10000,
+			max: 1
+		});
+		let success = false;
 
-		message.reply("Вы уверены что хотите это сделать? **Да/Нет** (У вас есть 15 секунд)");
+		collector.on("collect", async (button) => {
+			success = true;
+			if (msg.deleted) return;
+			if (button.customId === "no") {
+				collector.stop();
+				return button.update({ content: "Действие отменено!", components: [] });
+			}
 
-		message.channel
-			.awaitMessages(filter, {
-				time: 15000,
-				max: 1,
-				errors: ["time"],
+			bot.database.member.db.updateMany({ guild_id: message.guild.id, reputation: { $ne: 0 }}, { reputation: 0 }).then((result) => {
+				if (result.n === 0) {
+					collector.stop();
+					return button.update({ content: "На сервере никто не получал репутацию!", components: [] })
+				}
+				button.update({ content: "Репутация была успешно сброшена!", components: [] });
 			})
-			.then(async (msgs) => {
-				const msg = msgs.first();
-				if (["y", "yes", "д", "да"].includes(msg.content.toLowerCase())) {
-					const data = (
-						await members.find({
-							guild_id: message.guild.id,
-						})
-					)
-						.map((v) => {
-							return {
-								rep: v.reputation,
-								...v,
-							};
-						})
-						.sort((a, b) => b.rep - a.rep)
-						.filter((u) => u.rep !== 0);
+		});
 
-					data.forEach(async (item, idx) => {
-						bot.database.user.update({ id: item._doc.user_id, guild_id: message.guild.id }, { reputation: 0 });
-					});
-					bot.utils.success("Репутация была полностью сброшена!", msg);
-				} else message.channel.send("Действие отклонено!");
-			})
-			.catch(() => {
-				bot.utils.error("Время вышло!", this, message, bot);
-			});
+		collector.on("end", () => {
+			if (success || msg.deleted) return;
+
+			msg.edit({ content: "Время вышло!", components: [] })
+		})
 	},
 };

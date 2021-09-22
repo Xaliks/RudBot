@@ -14,21 +14,16 @@ module.exports = {
 		if (member.id === message.author.id)
 			return bot.utils.error("Вы не можете выдать себе репутацию", this, message, bot);
 
-		const DBuser = await bot.database.member.get({ id: member.id, guild_id: message.guild.id });
-		const rep = DBuser.reputation + 1;
+		const user = await bot.database.member.db.findOneAndUpdate({ id: member.id, guild_id: message.guild.id }, {
+			$inc: {
+				reputation: 1,
+			}
+		}, { upsert: true, returnNewDocument: true }).catch(() => null);
 
-		bot.database.member.update(
-			{ id: member.id, guild_id: message.guild.id },
-			{
-				reputation: rep,
-			},
-		);
 		message.channel.send({
 			embeds: [
 				new MessageEmbed().setDescription(
-					`Вы повысили репутацию ${member}! Теперь у ${
-						DBuser.gender === "Female" ? "неё" : "него"
-					} \`${rep}\` **${bot.utils.plural(rep, ["очко", "очка", "очков"], false)} репутации**.`,
+					`Вы повысили репутацию ${member}! (\`${user?.reputation || 0}\`:star: -> \`${(user?.reputation || 0) + 1}\`:star:)`,
 				),
 			],
 		});
