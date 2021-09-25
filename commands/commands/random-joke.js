@@ -7,9 +7,8 @@ module.exports = {
 	aliases: ["rj", "randomjoke"],
 	category: "commands",
 	async execute(message, args, bot) {
-		const data = await fetch("http://api.xaliks.xyz/random/joke").then((resp) => {
-			return resp.json();
-		});
+		const data = await fetch("http://api.xaliks.xyz/random/joke").then((resp) => resp.json());
+
 		message.channel.send({
 			embeds: [new MessageEmbed().setTitle("Рандомная шутка").setDescription(data.ru.joke)],
 		});

@@ -73,7 +73,7 @@ module.exports = {
 			}
 
 			msg = await msg.edit({ content: null, embeds: [embed], components: components(buttons) });
-			const SecondCollector = msg.createMessageComponentCollector({ time: 60000 });
+			const SecondCollector = msg.createMessageComponentCollector({ time: 180000 });
 
 			SecondCollector.on("collect", (btn) => {
 				if (msg.deleted) return;
@@ -124,7 +124,7 @@ module.exports = {
 		});
 		FirstCollector.on("end", () => {
 			if (success) return;
-			message.channel.send("Время вышло!");
+			msg.edit({ content: "Время вышло!", components: [] });
 		});
 	},
 };

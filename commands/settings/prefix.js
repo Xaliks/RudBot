@@ -9,7 +9,7 @@ module.exports = {
 	cooldown: 60,
 	usage: ["[Новый префикс]"],
 	async execute(message, args, bot) {
-		const guild = await bot.database.guild.db.findOne({ id: message.guild.id });
+		const guild = await bot.database.guild.findOne({ id: message.guild.id });
 
 		if (!args[0] || args[0] === guild.prefix)
 			return message.channel.send({
@@ -22,15 +22,15 @@ module.exports = {
 			!message.channel.permissionsFor(message.member).has(Permissions.FLAGS.MANAGE_GUILD) &&
 			!message.channel.permissionsFor(message.member).has(Permissions.FLAGS.ADMINISTRATOR)
 		)
-			return bot.utils.error(
-				`У вас недостаточно прав! (**Управлять сервером**)`,
-				this,
-				message,
-				bot,
-			);
+			return bot.utils.error(`У вас недостаточно прав! (**Управлять сервером**)`, this, message, bot);
 
-		bot.database.guild.db.findOneAndUpdate({ id: message.guild.id }, { prefix: args[0] }).then(() => {
-			bot.utils.success(`Вы успешно поставили новый префикс!\n\n\`${bot.utils.escapeMarkdown(guild.prefix)}\` -> \`${bot.utils.escapeMarkdown(args[0])}\``, message);
-		})
+		bot.database.guild.findOneAndUpdate({ id: message.guild.id }, { prefix: args[0] }).then(() => {
+			bot.utils.success(
+				`Вы успешно поставили новый префикс!\n\n\`${bot.utils.escapeMarkdown(
+					guild.prefix,
+				)}\` -> \`${bot.utils.escapeMarkdown(args[0])}\``,
+				message,
+			);
+		});
 	},
 };

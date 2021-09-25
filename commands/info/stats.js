@@ -9,14 +9,15 @@ module.exports = {
 	aliases: ["bot", "bot-info"],
 	cooldown: 10,
 	category: "info",
-	execute(message, args, bot) {
+	async execute(message, args, bot) {
 		message.channel.send({
 			embeds: [
 				new MessageEmbed()
 					.setTitle("Инфо")
 					.setDescription(
-						`**Создатель:** \`${bot.utils.escapeMarkdown(bot.users.cache.get(owners[0]).tag)}\`
+						`**Создатель:** \`${bot.utils.escapeMarkdown(await bot.users.fetch(owners[0]).then((owner) => owner.tag))}\`
 **Создан:** ${bot.utils.discordTime(bot.user.createdTimestamp, true, false)[0]}
+**Обработано команд:** \`${bot.utils.formatNumber(botInfo.commands)}\`
 
 **Кол-во команд:** \`${bot.commands.filter((cmd) => !cmd.admin).size}\`
 **Пользователей:** \`${bot.utils.formatNumber(bot.users.cache.size)}\`
@@ -35,13 +36,9 @@ ${emoji.DiscordJS}**Версия Discord.js:** \`${version}\`
 ${emoji.Linux}**Операционная система:** \`${os.type()} / ${os.arch()}\``,
 					)
 					.addField(
-						"Обработка",
-						`Обработано команд: \`${bot.utils.formatNumber(botInfo.commands)}\`
-Прочтено сообщений: \`${bot.utils.formatNumber(botInfo.messages)}\``,
-					)
-					.addField(
 						"Пригласить меня",
 						`[Пригласить меня на свой сервер](https://discord.com/api/oauth2/authorize?client_id=${bot.user.id}&permissions=8&scope=bot)`,
+						false,
 					)
 					.setFooter(`Аптайм: ${bot.utils.time(bot.uptime)}\nПоследняя перезагрузка была:`)
 					.setTimestamp(Date.now() - bot.uptime)

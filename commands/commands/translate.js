@@ -21,7 +21,6 @@ module.exports = {
 						new MessageEmbed()
 							.setDescription(result.text)
 							.setFooter(message.author.username)
-
 							.setTitle("Google Переводчик"),
 					],
 				});

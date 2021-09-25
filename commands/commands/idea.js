@@ -8,11 +8,16 @@ module.exports = {
 	aliases: ["идея"],
 	category: "commands",
 	async execute(message, args, bot) {
-		const guild = await bot.database.guild.get({ id: message.guild.id });
+		const guild = await bot.database.guild.findOne({ id: message.guild.id });
 		const image = message.attachments.map((a) => a)[0]?.attachment || "";
 
-		if (!guild.idea_channel)
-			return bot.utils.error(`Канал для идей не установлен! \`${guild.prefix}set-idea <#канал>\``, this, message, bot);
+		if (!guild.idea_channel || !message.guild.channels.cache.get(guild.idea_channel))
+			return bot.utils.error(
+				`Канал для идей не установлен, либо удалён! \`${guild.prefix}set-idea <#канал>\``,
+				this,
+				message,
+				bot,
+			);
 
 		if (message.member.roles.cache.has("851520479578816533"))
 			return bot.utils.error(`Клоун, тебе нельзя писать идеи!`, this, message, bot);

@@ -20,14 +20,14 @@ module.exports = {
 		const amount = parseInt(args[1]);
 		if (isNaN(amount)) return bot.utils.error(`\`${amount}\` не число!`, this, message, bot);
 
-		await bot.database.member.db.findOneAndUpdate({ id: user.id, guild_id: message.guild.id }, {
-			$inc: {
-				reputation: -amount,
-			}
-		});
-		bot.utils.success(
-			`Вы убрали \`${amount}\`:star: у ${member || user.id}`,
-			message,
+		await bot.database.member.findOneAndUpdate(
+			{ id: user.id, guild_id: message.guild.id },
+			{
+				$inc: {
+					reputation: -amount,
+				},
+			},
 		);
+		bot.utils.success(`Вы убрали \`${amount}\`:star: у ${member || user.id}`, message);
 	},
 };

@@ -16,6 +16,8 @@ module.exports = {
 		switch (type.toLowerCase()) {
 			case "track":
 				if (data.error) return bot.utils.error("Трек не найден!", this, message, bot);
+
+				console.log(data);
 				message.channel.send({
 					embeds: [
 						new MessageEmbed()
@@ -33,7 +35,7 @@ URI: \`${data.uri}\`
 							.addField(
 								"Альбом",
 								`Название: **${data.album.name}**
-Дата релиза: ${bot.utils.discordTime(data.album.release_date)}
+Дата релиза: ${bot.utils.discordTime(new Date(data.album.release_date).getTime())}
 Артисты: ${data.album.artists.map((artist) => `[\`${artist.name}\`](${artist.url})`).join(", ")}`,
 								true,
 							)
@@ -71,7 +73,7 @@ URI: \`${data.uri}\``,
 							.setTitle(`Инфо об альбоме ${data.name}`)
 							.setURL(data.url)
 							.setDescription(
-								`Дата релиза: ${bot.utils.discordTime(data.release_date)}
+								`Дата релиза: ${bot.utils.discordTime(new Date(data.release_date).getTime())}
 Всего треков: \`${data.total_tracks}\`
 ${
 	data.total_tracks === 0

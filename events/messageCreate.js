@@ -14,14 +14,11 @@ module.exports = {
 		)
 			return;
 
-		++config.botInfo.messages;
-
 		//Команды
 		//------------------------------------------------------------------------------------------------
-		const prefix = await bot.database.guild.get({ id: message.guild.id }).then((g) => g.prefix);
-		const user = await bot.database.user.get({ id: message.author.id });
+		const prefix = await bot.database.guild.findOneOrCreate({ id: message.guild.id }).then((g) => g.prefix);
+		const user = (await bot.database.user.findOne({ id: message.author.id })) || { blacklisted: false };
 		const args = message.content.slice(prefix.length).trim().split(/ +/g);
-		const cooldowns = bot.cooldowns;
 		const commandName = args.shift().toLowerCase();
 		const command = bot.commands.get(commandName) || bot.commands.get(bot.aliases.get(commandName));
 		//------------------------------------------------------------------------------------------------
@@ -57,7 +54,7 @@ module.exports = {
 		if (bot.commands.has(command.name)) {
 			if (user.blacklisted) return message.react("❌");
 
-			const timestamps = cooldowns.get(command.name);
+			const timestamps = bot.cooldowns.get(command.name);
 			const cooldownAmount = (command.cooldown || 3) * 1000;
 			if (command.usage && command.usage.filter((u) => !u.startsWith("[")).length > args.length)
 				return bot.utils.error(
@@ -87,6 +84,7 @@ module.exports = {
 			setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
 
 			++config.botInfo.commands;
+			writeFileSync("config.json", JSON.stringify(config, null, 2));
 		}
 
 		try {
@@ -94,7 +92,5 @@ module.exports = {
 		} catch (error) {
 			bot.utils.error("Ошибка! Обратитесь к создателю бота.", this, message, bot, false);
 		}
-
-		writeFileSync("config.json", JSON.stringify(config, null, 2));
 	},
 };

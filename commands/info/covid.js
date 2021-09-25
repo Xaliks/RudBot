@@ -10,11 +10,12 @@ module.exports = {
 	aliases: ["ковид"],
 	async execute(message, args, bot) {
 		const country = args.join(" ");
-		let data = await fetch("https://disease.sh/v3/covid-19/countries/" + encodeURIComponent(country)).then((res) =>
-			res.json(),
-		);
-		if (!country) data = await fetch("https://disease.sh/v3/covid-19/all").then((res) => res.json());
-		if ((data.this, message, bot)) return bot.utils.error("Страна не найдена!", this, message, bot);
+		let data = await fetch("https://disease.sh/v3/covid-19/all").then((res) => res.json());
+		if (country)
+			data = await fetch("https://disease.sh/v3/covid-19/countries/" + encodeURIComponent(country)).then((res) =>
+				res.json(),
+			);
+		if (data.message) return bot.utils.error("Страна не найдена!", this, message, bot);
 
 		message.channel.send({
 			content: `Обновление было: ${bot.utils.discordTime(data.updated)}`,

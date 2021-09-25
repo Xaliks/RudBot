@@ -7,32 +7,29 @@ module.exports = {
 	category: "commands",
 	usage: ["[@Пользователь/ID]"],
 	async execute(message, args, bot) {
-		let member;
-		member = await bot.users
-			.fetch(args[0])
-			.catch((e) => (member = bot.utils.findMember(message, args.join(" "), true)?.user));
+		const user = await bot.users.fetch(args[0]).catch(() => bot.utils.findMember(message, args.join(" "), true).user);
 
 		message.channel.send({
 			embeds: [
 				new MessageEmbed()
 					.setAuthor(bot.utils.escapeMarkdown(member.tag))
 					.setDescription(
-						`[PNG](${member.displayAvatarURL({
+						`[PNG](${user.displayAvatarURL({
 							size: 2048,
 							dynamic: true,
 							format: "png",
-						})}) / [JPG](${member.displayAvatarURL({
+						})}) / [JPG](${user.displayAvatarURL({
 							size: 2048,
 							dynamic: true,
 							fomat: "jpg",
-						})}) / [GIF](${member.displayAvatarURL({
+						})}) / [GIF](${user.displayAvatarURL({
 							size: 2048,
 							dynamic: true,
 							fomat: "gif",
 						})}) `,
 					)
 					.setImage(
-						member.displayAvatarURL({
+						user.displayAvatarURL({
 							size: 2048,
 							dynamic: true,
 						}),

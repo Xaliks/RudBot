@@ -1,6 +1,6 @@
 const { MessageButton } = require("discord.js");
 
-module.exports = async (message, pages, timeout = 180000) => {
+module.exports = async (message, pages, time = 180000) => {
 	if (pages.length === 1) return message.channel.send({ embeds: pages });
 
 	let page = 0;
@@ -23,7 +23,7 @@ module.exports = async (message, pages, timeout = 180000) => {
 	const filter = (m) => m.user.id === message.author.id;
 	const colletor = msg.createMessageComponentCollector({
 		filter,
-		time: timeout,
+		time,
 	});
 	colletor.on("collect", (btn) => {
 		switch (btn.customId) {

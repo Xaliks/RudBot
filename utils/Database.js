@@ -1,35 +1,21 @@
 const { connect, connection } = require("mongoose");
 const { events } = require("../config.json");
+const db = (name) => {
+	const model = require(`../models/${name}`);
 
-class Model {
-	constructor(name) {
-		this.db = require(`../models/${name}`);
-	}
+	model.findOneOrCreate = async function (find, create = {}) {
+		return (await model.findOne(find)) || (await model.create(new Object({ ...find, ...create })));
+	};
 
-	async get(find, data = { createNew: true, one: true }) {
-		const result = await this.db[data.one ? "findOne" : "find"](find);
+	model.findOneAndUpdateOrCreate = async function (find, update) {
+		return (
+			(await model.findOneAndUpdate(find, update).catch(() => null)) ||
+			model.findOneOrCreate(new Object({ ...find, ...update }))
+		);
+	};
 
-		if (!result && data.createNew) return this.create(find);
-
-		return result;
-	}
-
-	async update(find, info, createNew = true) {
-		const result = await this.db.findOneAndUpdate(find, info);
-
-		if (!result && createNew) return this.create(new Object({ ...find, ...info }));
-
-		return this.get(find);
-	}
-
-	async create(info) {
-		const result = new this.db(info);
-
-		await result.save();
-
-		return result;
-	}
-}
+	return model;
+};
 
 class Database {
 	constructor(token) {
@@ -56,7 +42,7 @@ class Database {
 			.readdirSync("models")
 			.forEach((model) => {
 				model = model.split(".js")[0];
-				this[model] = new Model(model);
+				this[model] = db(model);
 			});
 	}
 }

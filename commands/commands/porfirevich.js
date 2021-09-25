@@ -9,7 +9,6 @@ module.exports = {
 	usage: ["<Начало истории>"],
 	category: "commands",
 	async execute(message, args, bot) {
-		let first = true;
 		let text = bot.utils.escapeMarkdown(args.join(" "));
 		let generate = bot.utils.escapeMarkdown(await gen(args.join(" ")));
 
@@ -34,7 +33,6 @@ module.exports = {
 			if (btn.customId === "add") {
 				text += generate;
 				generate = bot.utils.escapeMarkdown(await gen(text));
-				first = false;
 
 				let reply = `${text}**${generate}**`;
 				if (reply.length > 3900) reply = "..." + reply.substr(reply.length - 3800);

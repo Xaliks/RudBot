@@ -9,7 +9,7 @@ module.exports = {
 	usage: ["[команда]"],
 	category: "commands",
 	async execute(message, args, bot) {
-		const prefix = await bot.database.guild.get({ id: message.guild.id }).then((g) => g.prefix);
+		const prefix = await bot.database.guild.findOne({ id: message.guild.id }).then((g) => g.prefix);
 
 		if (!args[0]) {
 			return bot.utils.pages(message, [
