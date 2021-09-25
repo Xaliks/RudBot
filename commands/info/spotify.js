@@ -17,7 +17,6 @@ module.exports = {
 			case "track":
 				if (data.error) return bot.utils.error("Трек не найден!", this, message, bot);
 
-				console.log(data);
 				message.channel.send({
 					embeds: [
 						new MessageEmbed()
