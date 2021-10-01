@@ -28,7 +28,7 @@ module.exports = {
 		//------------------
 		let success = false;
 		let msg = await message.channel.send({
-			content: `${user}, Вы хотите поиграть в Крестики-нолики с ${message.author}? У вас есть 10 секунд`,
+			content: `${user}, Вы хотите поиграть в Крестики-нолики с ${message.author}? У вас есть 15 секунд`,
 			components: [
 				{
 					type: 1,
@@ -40,15 +40,14 @@ module.exports = {
 			],
 		});
 		const FirstCollector = msg.createMessageComponentCollector({
-			time: 10000,
+			time: 15000,
 		});
 		let last = user.id;
 
 		FirstCollector.on("collect", async (button) => {
-			success = true;
+			if (button.user.id != user.id) return button.reply({ content: "Ты не можешь нажимать на эту кнопку", ephemeral: true });
 
-			if (button.user.id != user.id)
-				return button.reply({ content: "Ты не можешь нажимать на эту кнопку", ephemeral: true });
+			success = true;
 			if (button.customId === "no") {
 				FirstCollector.stop();
 				return message.channel.send(`${user} не захотел играть с вами!`);
