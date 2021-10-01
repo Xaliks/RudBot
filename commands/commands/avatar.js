@@ -12,7 +12,7 @@ module.exports = {
 		message.channel.send({
 			embeds: [
 				new MessageEmbed()
-					.setAuthor(bot.utils.escapeMarkdown(member.tag))
+					.setAuthor(bot.utils.escapeMarkdown(user.tag))
 					.setDescription(
 						`[PNG](${user.displayAvatarURL({
 							size: 2048,
