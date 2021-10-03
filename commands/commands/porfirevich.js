@@ -13,7 +13,7 @@ module.exports = {
 		let generate = bot.utils.escapeMarkdown(await gen(args.join(" ")));
 
 		const msg = await send(message, `${text}**${generate}**`);
-		bot.temp.set(`porfirevich-${message.author.id}-${msg.id}`, [text, generate, gen])
+		bot.temp.set(`porfirevich-${message.author.id}-${msg.id}`, [text, generate, gen]);
 	},
 };
 
@@ -29,8 +29,7 @@ async function gen(text) {
 	return await fetch("https://pelevin.gpt.dobro.ai/generate/", {
 		method: "POST",
 		headers: {
-			"User-Agent":
-				"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:56.0) Gecko/20100101 Firefox/56.0",
+			"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:56.0) Gecko/20100101 Firefox/56.0",
 		},
 		body: JSON.stringify(body),
 	})
@@ -51,9 +50,15 @@ function send(message, text) {
 			{
 				type: 1,
 				components: [
-					new MessageButton().setEmoji("<a:loading:685215553312653312>").setStyle(2).setCustomId(`porfirevich_reload-${message.author.id}`),
-					new MessageButton().setEmoji("<:plus:864634807060398110>").setStyle(2).setCustomId(`porfirevich_add-${message.author.id}`),
-					new MessageButton().setEmoji("❌").setStyle(2).setCustomId(`porfirevich_delete-${message.author.id}`)
+					new MessageButton()
+						.setEmoji("<a:loading:685215553312653312>")
+						.setStyle(2)
+						.setCustomId(`porfirevich_reload-${message.author.id}`),
+					new MessageButton()
+						.setEmoji("<:plus:864634807060398110>")
+						.setStyle(2)
+						.setCustomId(`porfirevich_add-${message.author.id}`),
+					new MessageButton().setEmoji("❌").setStyle(2).setCustomId(`porfirevich_delete-${message.author.id}`),
 				],
 			},
 		],

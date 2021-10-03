@@ -1,21 +1,29 @@
 module.exports = (interaction, authorId, userId, bot) => {
-    const { message, user } = interaction;
-    if (message.deleted) return;
-    if (user.id != authorId && user.id != userId) return interaction.reply({ content: "Ты сейчас не играешь!", ephemeral: true })
+	const { message, user } = interaction;
+	if (message.deleted) return;
+	if (user.id != authorId && user.id != userId)
+		return interaction.reply({ content: "Ты сейчас не играешь!", ephemeral: true });
 
-    const embed = message.embeds[0];
-    let [components, buttons, table, last] = bot.temp.get(`tictactoe-${authorId}-${message.id}`);
-    if (last === user.id) return interaction.reply({ content: `Сейчас ходит <@${last === authorId ? userId : authorId}>!`, ephemeral: true })
+	const embed = message.embeds[0];
+	let [components, buttons, table, last] = bot.temp.get(`tictactoe-${authorId}-${message.id}`);
+	if (last === user.id)
+		return interaction.reply({ content: `Сейчас ходит <@${last === authorId ? userId : authorId}>!`, ephemeral: true });
 
-    if (user.id === authorId) {
-        buttons.find(btn => btn.customId === interaction.customId).setEmoji("❌").setDisabled(true);
-        table[buttons.findIndex(btn => btn.customId === interaction.customId)] = 0;
-    } else {
-        buttons.find(btn => btn.customId === interaction.customId).setEmoji("⭕").setDisabled(true);
-        table[buttons.findIndex(btn => btn.customId === interaction.customId)] = 1;
-    }
+	if (user.id === authorId) {
+		buttons
+			.find((btn) => btn.customId === interaction.customId)
+			.setEmoji("❌")
+			.setDisabled(true);
+		table[buttons.findIndex((btn) => btn.customId === interaction.customId)] = 0;
+	} else {
+		buttons
+			.find((btn) => btn.customId === interaction.customId)
+			.setEmoji("⭕")
+			.setDisabled(true);
+		table[buttons.findIndex((btn) => btn.customId === interaction.customId)] = 1;
+	}
 
-    const winner = checkWinner(table, authorId, userId);
+	const winner = checkWinner(table, authorId, userId);
 	if (winner) {
 		if (winner === "draw") {
 			embed.setDescription("Ничья!");
@@ -28,17 +36,17 @@ module.exports = (interaction, authorId, userId, bot) => {
 		buttons.forEach((b) => {
 			b.setDisabled(true);
 		});
-        bot.temp.delete(`tictactoe-${authorId}-${message.id}`);
+		bot.temp.delete(`tictactoe-${authorId}-${message.id}`);
 
-        return interaction.update({ embeds: [embed], components: components(buttons) });
+		return interaction.update({ embeds: [embed], components: components(buttons) });
 	} else {
 		last = user.id;
 		embed.setDescription(`Ходит: <@${last === authorId ? userId : authorId}>`);
-    }
+	}
 
 	interaction.update({ embeds: [embed], components: components(buttons) });
-    bot.temp.set(`tictactoe-${authorId}-${message.id}`, [components, buttons, table, last]);
-}
+	bot.temp.set(`tictactoe-${authorId}-${message.id}`, [components, buttons, table, last]);
+};
 
 function checkWinner(t, p, u) {
 	if (
