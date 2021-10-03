@@ -20,7 +20,7 @@ module.exports = async (interaction) => {
     const { member, values } = interaction;
 
     Object.keys(roles).forEach(value => {
-        if (values.includes(value) || !member.roles.cache.has(roles[value])) {
+        if (values.includes(value)) {
             added.push(roles[value])
             member.roles.add(roles[value])
         } else if (member.roles.cache.has(roles[value])) {
