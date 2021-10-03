@@ -1,4 +1,4 @@
-const { errorLogsChannelId } = require("../config.json");
+const { errorLogsChannelId } = require("../../config.json");
 const { MessageEmbed } = require("discord.js");
 
 module.exports = (bot, error) => {

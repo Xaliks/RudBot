@@ -1,4 +1,4 @@
-const { emoji } = require("../data/emojis.json");
+const { emoji } = require("../../data/emojis.json");
 const { MessageEmbed, Message, Client } = require("discord.js");
 
 /**

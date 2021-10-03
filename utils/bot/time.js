@@ -1,4 +1,4 @@
-const plural = require("../functions/plural");
+const plural = require("./plural");
 
 /**
  * @param {Number} number Время в миллисекундах

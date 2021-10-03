@@ -13,35 +13,7 @@ module.exports = {
 		let generate = bot.utils.escapeMarkdown(await gen(args.join(" ")));
 
 		const msg = await send(message, `${text}**${generate}**`);
-		const collector = msg.createMessageComponentCollector();
-
-		collector.on("collect", async (btn) => {
-			if (msg.deleted) return collector.stop();
-			if (btn.user.id != message.author.id)
-				return btn.reply({ content: "Ты не можешь использовать это!", ephemeral: true });
-
-			if (btn.customId === "reload") {
-				generate = bot.utils.escapeMarkdown(await gen(text));
-
-				let reply = `${text}**${generate}**`;
-				if (reply.length > 3900) reply = "..." + reply.substr(reply.length - 3800);
-
-				btn.reply({ content: "Новый вариант появился!", ephemeral: true }).catch(() => null);
-				msg.embeds[0].description = reply;
-				msg.edit({ embeds: msg.embeds });
-			}
-			if (btn.customId === "add") {
-				text += generate;
-				generate = bot.utils.escapeMarkdown(await gen(text));
-
-				let reply = `${text}**${generate}**`;
-				if (reply.length > 3900) reply = "..." + reply.substr(reply.length - 3800);
-
-				btn.reply({ content: "Продолжение появилось!", ephemeral: true }).catch(() => null);
-				msg.embeds[0].description = reply;
-				msg.edit({ embeds: msg.embeds });
-			}
-		});
+		bot.temp.set(`porfirevich-${message.author.id}-${msg.id}`, [text, generate, gen])
 	},
 };
 
@@ -58,7 +30,7 @@ async function gen(text) {
 		method: "POST",
 		headers: {
 			"User-Agent":
-				"Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.97 Safari/537.36 Vivaldi/1.94.1008.34",
+				"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:56.0) Gecko/20100101 Firefox/56.0",
 		},
 		body: JSON.stringify(body),
 	})
@@ -79,8 +51,9 @@ function send(message, text) {
 			{
 				type: 1,
 				components: [
-					new MessageButton().setEmoji("<a:loading:685215553312653312>").setStyle(2).setCustomId("reload"),
-					new MessageButton().setEmoji("<:plus:864634807060398110>").setStyle(2).setCustomId("add"),
+					new MessageButton().setEmoji("<a:loading:685215553312653312>").setStyle(2).setCustomId(`porfirevich_reload-${message.author.id}`),
+					new MessageButton().setEmoji("<:plus:864634807060398110>").setStyle(2).setCustomId(`porfirevich_add-${message.author.id}`),
+					new MessageButton().setEmoji("❌").setStyle(2).setCustomId(`porfirevich_delete-${message.author.id}`)
 				],
 			},
 		],

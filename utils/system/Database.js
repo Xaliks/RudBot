@@ -1,7 +1,7 @@
 const { connect, connection } = require("mongoose");
-const { events } = require("../config.json");
+const { events } = require("../../config.json");
 const db = (name) => {
-	const model = require(`../models/${name}`);
+	const model = require(`../../models/${name}`);
 
 	model.findOneOrCreate = async function (find, create = {}) {
 		return (await model.findOne(find)) || (await model.create(new Object({ ...find, ...create })));

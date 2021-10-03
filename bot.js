@@ -1,4 +1,4 @@
-﻿require("./utils/Structures")();
+﻿require("./utils/system/Structures")();
 const { Client } = require("discord.js");
 const { token } = require("./config.json");
 
