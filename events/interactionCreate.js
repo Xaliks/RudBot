@@ -13,5 +13,6 @@ module.exports = {
 		if (id === "reaction_roles" && interaction.guildId === "681142809654591501") return bot.interactions.reaction_roles(interaction)
 
 		if (id.startsWith("porfirevich_")) return bot.interactions.porfirevich(interaction, id.split("-")[1], bot)
+		if (id.startsWith("tictactoe_")) return bot.interactions.tictactoe(interaction, id.split("-")[1], id.split("-")[2], bot)
 	},
 };
