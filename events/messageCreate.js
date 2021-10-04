@@ -40,7 +40,7 @@ module.exports = {
 
 			if (TBR.emojis[message.author.id]) {
 				if (TBR.emojis[message.author.id].end === null || Date.now() < TBR.emojis[message.author.id].end) {
-					if (TBR.emojis[message.author.id].r != false ? Math.round(Math.random()) === 1 : true)
+					if (TBR.emojis[message.author.id].r === false || Math.random() < 0.4)
 						message.react(TBR.emojis[message.author.id].emoji).catch(() => null);
 				} else {
 					delete TBR.emojis[message.author.id];
