@@ -1,4 +1,4 @@
-const roles = {
+const general_roles = {
 	news: "733052356564091051",
 	ideas: "748859760270639126",
 	poll: "733052465246896279",
@@ -12,12 +12,20 @@ const roles = {
 	white: "759706348014927882",
 	pink: "759702741962063883",
 };
+const staff_roles = {
+	staff_green: "793594413317226566",
+	staff_pink: "803602083650469888",
+	staff_red: "805442959709438024",
+	staff_dark: "808351547687305246",
+	staff_aqua: "808338239583944704",
+};
 
 // message.channel.send({ content: `123`, components: [{ type: 1, components: [new Discord.MessageSelectMenu().setMinValues(0).setMaxValues(Object.keys(roles).length).setCustomId("reaction_roles").addOptions([{ label: "Новости", value: "news", emoji: "📰" }, { label: "Идеи", value: "ideas", emoji: "💡" }, { label: "Голосования", value: "poll", emoji: "📊" }, { label: "Оповещения", value: "youtube", emoji: "<:a_heart:787524329797582898>" }, { label: "Ивенты", value: "events", emoji: "🆚"}, { label: "Жёлтый", value: "yellow", emoji: "🟡" }, { label: "Зелёный", value: "green", emoji: "🟢" }, { label: "Чёрный", value: "black", emoji: "<a:blackHeart:756142632287076433>" }, { label: "Лаймовый", value: "lime", emoji: "🥒" }, { label: "Серый", value: "gray", emoji: "⚫" }, { label: "Белый", value: "white", emoji: "⚪" }, { label: "Розовый", value: "pink", emoji: "🔴"}])]}] })
 
 module.exports = async (interaction) => {
 	const added = [];
 	const { member, values } = interaction;
+	const roles = values.some((value) => value.includes("staff_")) ? staff_roles : general_roles;
 
 	Object.keys(roles).forEach((value) => {
 		if (values.includes(value)) {
