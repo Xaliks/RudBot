@@ -26,7 +26,6 @@ module.exports = {
 		];
 
 		//------------------
-		let success = false;
 		const msg = await message.channel.send({
 			content: `${user}, Вы хотите поиграть в Крестики-нолики с ${message.author}? У вас есть 15 секунд`,
 			components: [
@@ -48,9 +47,8 @@ module.exports = {
 			if (button.user.id != user.id)
 				return button.reply({ content: "Ты не можешь нажимать на эту кнопку", ephemeral: true });
 
-			success = true;
 			if (button.customId === "no") {
-				FirstCollector.stop();
+				collector.stop(true);
 				return message.channel.send(`${user} не захотел играть с вами!`);
 			}
 
@@ -60,9 +58,9 @@ module.exports = {
 				components: components(buttons),
 			});
 
-			collector.stop();
+			collector.stop(true);
 		});
-		collector.on("end", () => {
+		collector.on("end", (success) => {
 			if (success) return;
 			msg.edit({ content: "Время вышло!", components: [] });
 		});
