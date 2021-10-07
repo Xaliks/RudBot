@@ -68,7 +68,7 @@ module.exports = {
 				if (!act) return;
 				if (act.id === "custom") status = act.state;
 				else {
-					activity += require("../../utils/msg/gamesEmoji")(act);
+					activity += require("../../utils/commands/msg/gamesEmoji")(act);
 				}
 			});
 			//-----------------------------------------------------------------------------
