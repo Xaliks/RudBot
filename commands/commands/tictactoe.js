@@ -58,7 +58,7 @@ module.exports = {
 				components: components(buttons),
 			});
 
-			collector.stop(true);
+			collector.stop(false);
 		});
 		collector.on("end", (success) => {
 			if (success) return;
@@ -81,5 +81,9 @@ function components(btns) {
 			type: 1,
 			components: [btns[6], btns[7], btns[8]],
 		},
+		{
+			type: 1,
+			components: [new MessageButton().setEmoji("❌").setCustomId(`tictactoe_x-${message.author.id}-${user.id}`).setStyle(2)]
+		}
 	];
 }

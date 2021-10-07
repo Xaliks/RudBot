@@ -5,6 +5,7 @@ module.exports = (interaction, bot) => {
 	if (message.deleted) return;
 	if (user.id != authorId && user.id != userId)
 		return interaction.reply({ content: "Ты сейчас не играешь!", ephemeral: true });
+	if (_ === "tictactoe_x") return message.delete()
 
 	const embed = message.embeds[0];
 	let [components, buttons, table, last] = bot.temp.get(`tictactoe-${authorId}-${message.id}`);
