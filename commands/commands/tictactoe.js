@@ -23,6 +23,7 @@ module.exports = {
 			new MessageButton().setEmoji("⬛").setCustomId(`tictactoe_6-${message.author.id}-${user.id}`).setStyle(2),
 			new MessageButton().setEmoji("⬛").setCustomId(`tictactoe_7-${message.author.id}-${user.id}`).setStyle(2),
 			new MessageButton().setEmoji("⬛").setCustomId(`tictactoe_8-${message.author.id}-${user.id}`).setStyle(2),
+			new MessageButton().setEmoji("❌").setCustomId(`tictactoe_x-${message.author.id}-${user.id}`).setStyle(2),
 		];
 
 		//------------------
@@ -38,7 +39,6 @@ module.exports = {
 				},
 			],
 		});
-		bot.temp.set(`tictactoe-${message.author.id}-${msg.id}`, [components, buttons, new Array(9), user.id]);
 		const collector = msg.createMessageComponentCollector({
 			time: 15000,
 		});
@@ -51,6 +51,8 @@ module.exports = {
 				collector.stop(true);
 				return message.channel.send(`${user} не захотел играть с вами!`);
 			}
+
+			await bot.temp.set(`tictactoe-${message.author.id}-${msg.id}`, [components, buttons, new Array(9), user.id]);
 
 			await msg.edit({
 				content: null,
@@ -83,7 +85,7 @@ function components(btns) {
 		},
 		{
 			type: 1,
-			components: [new MessageButton().setEmoji("❌").setCustomId(`tictactoe_x-${message.author.id}-${user.id}`).setStyle(2)]
+			components: [btns[9]]
 		}
 	];
 }

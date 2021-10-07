@@ -1,6 +1,6 @@
 module.exports = (interaction, bot) => {
 	const { message, user } = interaction;
-	const [_, userId, authorId] = interaction.customId.split("-");
+	const [_, authorId, userId] = interaction.customId.split("-");
 
 	if (message.deleted) return;
 	if (user.id != authorId && user.id != userId)
