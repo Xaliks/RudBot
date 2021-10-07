@@ -1,5 +1,6 @@
-module.exports = async (interaction, authorId, bot) => {
+module.exports = async (interaction, bot) => {
 	const { message, user } = interaction;
+	const [_, authorId] = interaction.customId.split("-")
 	let [text, generate, gen] = bot.temp.get(`porfirevich-${authorId}-${message.id}`);
 
 	if (message.deleted) return;

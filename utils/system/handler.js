@@ -41,12 +41,12 @@ module.exports = (bot) => {
 
 	// Функции
 	//-----------------------------------------------------------------------------
-	readdirSync("./utils/bot/")
+	readdirSync("./utils/functions/")
 		.filter((file) => file.endsWith(".js"))
 		.forEach((file) => {
-			bot.utils[file.replace(".js", "")] = require(`../../utils/bot/${file}`);
+			bot.utils[file.replace(".js", "")] = require(`../functions/${file}`);
 
-			delete require.cache[require.resolve(`../../utils/bot/${file}`)];
+			delete require.cache[require.resolve(`../functions/${file}`)];
 		});
 	//-----------------------------------------------------------------------------
 
@@ -55,9 +55,9 @@ module.exports = (bot) => {
 	readdirSync("./utils/commands/interact")
 		.filter((file) => file.endsWith(".js"))
 		.forEach((file) => {
-			bot.interactions[file.replace(".js", "")] = require(`../../utils/commands/interact/${file}`);
+			bot.interactions[file.replace(".js", "")] = require(`../commands/interact/${file}`);
 
-			delete require.cache[require.resolve(`../../utils/commands/interact/${file}`)];
+			delete require.cache[require.resolve(`../commands/interact/${file}`)];
 		});
 	//-----------------------------------------------------------------------------
 };
