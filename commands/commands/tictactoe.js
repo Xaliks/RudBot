@@ -23,7 +23,9 @@ module.exports = {
 			new MessageButton().setEmoji("⬛").setCustomId(`tictactoe_6-${message.author.id}-${user.id}`).setStyle(2),
 			new MessageButton().setEmoji("⬛").setCustomId(`tictactoe_7-${message.author.id}-${user.id}`).setStyle(2),
 			new MessageButton().setEmoji("⬛").setCustomId(`tictactoe_8-${message.author.id}-${user.id}`).setStyle(2),
-			new MessageButton().setEmoji("❌").setCustomId(`tictactoe_x-${message.author.id}-${user.id}`).setStyle(2),
+			new MessageButton().setEmoji("⬛").setCustomId(`tictactoe__-${message.author.id}-${user.id}`).setStyle(2).setDisabled(true),
+			new MessageButton().setEmoji("🚫").setCustomId(`tictactoe_x-${message.author.id}-${user.id}`).setStyle(2),
+			new MessageButton().setEmoji("⬛").setCustomId(`tictactoe___-${message.author.id}-${user.id}`).setStyle(2).setDisabled(true),
 		];
 
 		//------------------
@@ -85,7 +87,7 @@ function components(btns) {
 		},
 		{
 			type: 1,
-			components: [btns[9]]
+			components: [btns[9], btns[10], btns[11]]
 		}
 	];
 }
