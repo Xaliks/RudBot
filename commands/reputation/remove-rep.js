@@ -20,7 +20,7 @@ module.exports = {
 		const amount = parseInt(args[1]);
 		if (isNaN(amount)) return bot.utils.error(`\`${amount}\` не число!`, this, message, bot);
 
-		await bot.database.member.findOneAndUpdate(
+		await bot.database.member.findOneAndUpdateOrCreate(
 			{ id: user.id, guild_id: message.guild.id },
 			{
 				$inc: {
