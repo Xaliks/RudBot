@@ -1,4 +1,5 @@
 const { MessageEmbed } = require("discord.js");
+const { prefix } = require("../../config.json");
 
 module.exports = {
 	name: "idea",
@@ -8,7 +9,7 @@ module.exports = {
 	aliases: ["идея"],
 	category: "commands",
 	async execute(message, args, bot) {
-		const guild = await bot.database.guild.findOne({ id: message.guild.id });
+		const guild = (await bot.database.guild.findOne({ id: message.guild.id })) || { idea_channel: null, prefix };
 		const image = message.attachments.map((a) => a)[0]?.attachment || "";
 
 		if (!guild.idea_channel || !message.guild.channels.cache.get(guild.idea_channel))

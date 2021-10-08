@@ -16,7 +16,7 @@ module.exports = {
 
 		//Команды
 		//------------------------------------------------------------------------------------------------
-		const prefix = await bot.database.guild.findOneOrCreate({ id: message.guild.id }).then((g) => g.prefix);
+		const guild = (await bot.database.guild.findOne({ id: message.guild.id })) || { prefix: "r!" };
 		const user = (await bot.database.user.findOne({ id: message.author.id })) || { blacklisted: false };
 		const args = message.content.slice(prefix.length).trim().split(/ +/g);
 		const commandName = args.shift().toLowerCase();
@@ -50,21 +50,21 @@ module.exports = {
 		}
 		//------------------------------------------------------------------------------------------------
 
-		if (!commandName || !command || !message.content.startsWith(prefix) || message.content === prefix) return;
+		if (!commandName || !command || !message.content.startsWith(guild.prefix) || message.content === guild.prefix)
+			return;
 		if (bot.commands.has(command.name)) {
+			if (command.category === "botowner" && !config.owners.includes(message.author.id)) return;
 			if (user.blacklisted) return message.react("❌");
 
 			const timestamps = bot.cooldowns.get(command.name);
 			const cooldownAmount = (command.cooldown || 3) * 1000;
 			if (command.usage && command.usage.filter((u) => !u.startsWith("[")).length > args.length)
 				return bot.utils.error(
-					`Правильное использование команды: \`${prefix}${command.name} ${command.usage.join(" ")}\``,
+					`Правильное использование команды: \`${guild.prefix}${command.name} ${command.usage.join(" ")}\``,
 					command,
 					message,
 					bot,
 				);
-			if (command.category === "botowner" && !config.owners.includes(message.author.id))
-				return bot.utils.error(`Эту команду может выполнять только создатель бота!`, this, message, bot, false);
 
 			if (timestamps.has(message.author.id)) {
 				const expirationTime = timestamps.get(message.author.id) + cooldownAmount;

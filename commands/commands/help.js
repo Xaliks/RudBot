@@ -1,5 +1,5 @@
 const { MessageEmbed } = require("discord.js");
-const { owners } = require("../../config.json");
+const { owners, prefix } = require("../../config.json");
 
 module.exports = {
 	name: "help",
@@ -9,7 +9,7 @@ module.exports = {
 	usage: ["[команда]"],
 	category: "commands",
 	async execute(message, args, bot) {
-		const prefix = await bot.database.guild.findOne({ id: message.guild.id }).then((g) => g.prefix);
+		const guild = (await bot.database.guild.findOne({ id: message.guild.id })) || { prefix };
 
 		if (!args[0]) {
 			return bot.utils.pages(message, [
@@ -25,13 +25,12 @@ module.exports = {
 		const name = args[0].toLowerCase();
 		const command = bot.commands.get(name) || bot.commands.find((c) => c.aliases && c.aliases.includes(name));
 		if (!command) return bot.utils.error("Я не нашел эту команду!", this, message, bot);
-		if (command.admin && !owners.includes(message.author.id))
-			return message.channel.send("Эта команда только для создателя бота!");
+		if (command.admin && !owners.includes(message.author.id)) return;
 
 		const data = [];
 		if (command.aliases) data.push(`\n**Псевдоним(-ы):** ${command.aliases.join(", ")}`);
 		data.push(
-			`\n**Использование:** ${prefix}${command.name} ${command.usage?.map((us) => `\`${us}\``).join(" ") || ""}`,
+			`\n**Использование:** ${guild.prefix}${command.name} ${command.usage?.map((us) => `\`${us}\``).join(" ") || ""}`,
 		);
 
 		message.channel.send({
@@ -53,7 +52,7 @@ module.exports = {
 
 ${bot.commands
 	.filter((c) => c.category === category)
-	.map((c) => `${prefix}**${c.name}** ${c.usage?.map((us) => `\`${us}\``).join(" ") || ""} - ${c.description}`)
+	.map((c) => `${guild.prefix}**${c.name}** ${c.usage?.map((us) => `\`${us}\``).join(" ") || ""} - ${c.description}`)
 	.join(`\n`)}`);
 		}
 	},

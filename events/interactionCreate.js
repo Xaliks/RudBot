@@ -15,7 +15,6 @@ module.exports = {
 			return bot.interactions.reaction_roles(interaction);
 
 		if (id.startsWith("porfirevich_")) return bot.interactions.porfirevich(interaction, bot);
-		if (id.startsWith("tictactoe_"))
-			return bot.interactions.tictactoe(interaction, bot);
+		if (id.startsWith("tictactoe_")) return bot.interactions.tictactoe(interaction, bot);
 	},
 };

@@ -1,4 +1,3 @@
-const { owners } = require("../../config.json");
 const { Permissions } = require("discord.js");
 
 module.exports = {
@@ -9,7 +8,7 @@ module.exports = {
 	cooldown: 30,
 	aliases: ["setidea"],
 	async execute(message, args, bot) {
-		const guild = await bot.database.guild.findOne({ id: message.guild.id });
+		const guild = (await bot.database.guild.findOne({ id: message.guild.id })) || { idea_channel: null };
 
 		if (!args[0])
 			return message.channel.send({
@@ -19,7 +18,6 @@ module.exports = {
 			});
 
 		if (
-			!owners.includes(message.author.id) &&
 			!message.channel.permissionsFor(message.member).has(Permissions.FLAGS.MANAGE_GUILD) &&
 			!message.channel.permissionsFor(message.member).has(Permissions.FLAGS.ADMINISTRATOR)
 		)
@@ -30,9 +28,8 @@ module.exports = {
 		if (channel.type != "GUILD_TEXT" && channel.type != "GUILD_NEWS")
 			return bot.utils.error("Это не текстовой канал!", this, message, bot);
 
-		await bot.database.guild.findOneAndUpdate({ id: message.guild.id }, { idea_channel: channel.id }).then(() => {
-			bot.utils.success(`Канал установлен! (${channel})`, message);
-		});
+		await bot.database.guild.findOneAndUpdateOrCreate({ id: message.guild.id }, { idea_channel: channel.id });
+		bot.utils.success(`Канал установлен! (${channel})`, message);
 	},
 };
 

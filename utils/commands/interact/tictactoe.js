@@ -7,7 +7,7 @@ module.exports = (interaction, bot) => {
 		return interaction.reply({ content: "Ты сейчас не играешь!", ephemeral: true });
 	if (_ === "tictactoe_x") {
 		bot.temp.delete(`tictactoe-${authorId}-${message.id}`);
-		return message.delete()
+		return message.delete();
 	}
 
 	const embed = message.embeds[0];

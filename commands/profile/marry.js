@@ -1,4 +1,5 @@
 const { MessageButton } = require("discord.js");
+const { prefix } = require("../../config.json");
 
 module.exports = {
 	name: "marry",
@@ -14,7 +15,7 @@ module.exports = {
 
 		const author = await bot.database.member.findOneOrCreate({ id: message.author.id, guild_id: message.guild.id });
 		const user = await bot.database.member.findOneOrCreate({ id: member.id, guild_id: message.guild.id });
-		const guild = await bot.database.guild.findOne({ id: message.guild.id });
+		const guild = (await bot.database.guild.findOne({ id: message.guild.id })) || { prefix };
 
 		if (user.marry) return bot.utils.error("Он(-а) уже состоит в браке!", this, message, bot);
 		if (author.marry) return bot.utils.error("Вы уже состоите в браке!", this, message, bot);
