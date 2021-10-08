@@ -13,8 +13,8 @@ module.exports = {
 		if (member.user.bot) return bot.utils.error("Это бот!", this, message, bot);
 		if (member.id === message.author.id) bot.utils.error("Как вы поженитесь на себе?", this, message, bot);
 
-		const author = await bot.database.member.findOneOrCreate({ id: message.author.id, guild_id: message.guild.id });
-		const user = await bot.database.member.findOneOrCreate({ id: member.id, guild_id: message.guild.id });
+		const author = await bot.database.member.findOne({ id: message.author.id, guild_id: message.guild.id }) || { gender: null, marry: null };
+		const user = await bot.database.member.findOne({ id: member.id, guild_id: message.guild.id }) || { gender: null, marry: null };;
 		const guild = (await bot.database.guild.findOne({ id: message.guild.id })) || { prefix };
 
 		if (user.marry) return bot.utils.error("Он(-а) уже состоит в браке!", this, message, bot);
@@ -69,11 +69,11 @@ module.exports = {
 				});
 			}
 
-			await bot.database.member.findOneAndUpdate(
+			await bot.database.member.findOneAndUpdateOrCreate(
 				{ id: message.author.id, guild_id: message.guild.id },
 				{ marry: member.id },
 			);
-			await bot.database.member.findOneAndUpdate(
+			await bot.database.member.findOneAndUpdateOrCreate(
 				{ id: member.id, guild_id: message.guild.id },
 				{ marry: message.author.id },
 			);
