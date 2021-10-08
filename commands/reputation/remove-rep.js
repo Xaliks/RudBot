@@ -5,10 +5,8 @@ module.exports = {
 	aliases: ["removerep", "delete-rep", "delrep", "deleterep", "remrep"],
 	cooldown: 20,
 	usage: ["<@Пользователь>", "<Число>"],
+	userPerms: ["MANAGE_GUILD"],
 	async execute(message, args, bot) {
-		if (!message.member.permissions.has(["MANAGE_GUILD"]) || !message.member.permissions.has(["ADMINISTRATOR"]))
-			return bot.utils.error("У вас нет прав! (**Управлять сервером**)", this, message, bot);
-
 		let user;
 		let member = bot.utils.findMember(message, args[0]);
 

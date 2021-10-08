@@ -1,5 +1,5 @@
 const { VkToken } = require("../../config.json");
-const vk = require("../../data/vk.json");
+const { vk } = require("../../data/data.json");
 const { emoji } = require("../../data/emojis.json");
 const { MessageEmbed } = require("discord.js");
 

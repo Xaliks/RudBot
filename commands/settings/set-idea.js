@@ -1,28 +1,12 @@
-const { Permissions } = require("discord.js");
-
 module.exports = {
 	name: "set-idea",
 	description: "Поставить канал для идей",
 	category: "settings",
-	usage: ["[#Канал для идей]"],
+	usage: ["<#Канал для идей>"],
 	cooldown: 30,
 	aliases: ["setidea"],
+	userPerms: ["MANAGE_GUILD"],
 	async execute(message, args, bot) {
-		const guild = (await bot.database.guild.findOne({ id: message.guild.id })) || { idea_channel: null };
-
-		if (!args[0])
-			return message.channel.send({
-				content: guild.idea_channel
-					? `Текущий канал для идей: <#${guild.idea_channel}>`
-					: "Канал для идей не установлен!",
-			});
-
-		if (
-			!message.channel.permissionsFor(message.member).has(Permissions.FLAGS.MANAGE_GUILD) &&
-			!message.channel.permissionsFor(message.member).has(Permissions.FLAGS.ADMINISTRATOR)
-		)
-			return bot.utils.error("У вас нет прав! (**Управлять сервером**)", this, message, bot);
-
 		const channel = findChannel(message, args[0]);
 		if (!channel) return bot.utils.error("Канал не найден!", this, message, bot);
 		if (channel.type != "GUILD_TEXT" && channel.type != "GUILD_NEWS")

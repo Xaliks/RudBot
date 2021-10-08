@@ -1,6 +1,7 @@
 let config = require("../config.json");
 const { writeFileSync } = require("fs");
-const TBR = require("../data/TBR.json");
+const { Permissions } = require("discord.js");
+const data = require("../data/data.json");
 
 module.exports = {
 	name: "messageCreate",
@@ -9,8 +10,8 @@ module.exports = {
 		if (["739809196677267478", "782548346862043176"].includes(message.channel.id)) message.crosspost();
 		if (message.author.bot) return;
 		if (
-			!message.channel.permissionsFor(message.guild.me).has("SEND_MESSAGES") &&
-			!message.channel.permissionsFor(message.guild.me).has("ADMINISTRATOR")
+			!message.channel.permissionsFor(bot.user.id).has(Permissions.FLAGS.SEND_MESSAGES) &&
+			!message.channel.permissionsFor(bot.user.id).has(Permissions.FLAGS.ADMINISTRATOR)
 		)
 			return;
 
@@ -18,7 +19,7 @@ module.exports = {
 		//------------------------------------------------------------------------------------------------
 		const guild = (await bot.database.guild.findOne({ id: message.guild.id })) || { prefix: "r!" };
 		const user = (await bot.database.user.findOne({ id: message.author.id })) || { blacklisted: false };
-		const args = message.content.slice(prefix.length).trim().split(/ +/g);
+		const args = message.content.slice(guild.prefix.length).trim().split(/ +/g);
 		const commandName = args.shift().toLowerCase();
 		const command = bot.commands.get(commandName) || bot.commands.get(bot.aliases.get(commandName));
 		//------------------------------------------------------------------------------------------------
@@ -38,13 +39,13 @@ module.exports = {
 					}`,
 				);
 
-			if (TBR.emojis[message.author.id]) {
-				if (TBR.emojis[message.author.id].end === null || Date.now() < TBR.emojis[message.author.id].end) {
-					if (TBR.emojis[message.author.id].r === false || Math.random() < 0.4)
-						message.react(TBR.emojis[message.author.id].emoji).catch(() => null);
+			if (data.TBR.emojis[message.author.id]) {
+				if (data.TBR.emojis[message.author.id].end === null || Date.now() < data.TBR.emojis[message.author.id].end) {
+					if (data.TBR.emojis[message.author.id].r === false || Math.random() < 0.4)
+						message.react(data.TBR.emojis[message.author.id].emoji).catch(() => null);
 				} else {
-					delete TBR.emojis[message.author.id];
-					writeFileSync("./data/TBR.json", JSON.stringify(TBR, null, 2));
+					delete data.TBR.emojis[message.author.id];
+					writeFileSync("./data/data.json", JSON.stringify(data, null, 2));
 				}
 			}
 		}
@@ -56,8 +57,6 @@ module.exports = {
 			if (command.category === "botowner" && !config.owners.includes(message.author.id)) return;
 			if (user.blacklisted) return message.react("❌");
 
-			const timestamps = bot.cooldowns.get(command.name);
-			const cooldownAmount = (command.cooldown || 3) * 1000;
 			if (command.usage && command.usage.filter((u) => !u.startsWith("[")).length > args.length)
 				return bot.utils.error(
 					`Правильное использование команды: \`${guild.prefix}${command.name} ${command.usage.join(" ")}\``,
@@ -66,6 +65,9 @@ module.exports = {
 					bot,
 				);
 
+			// ------ Кулдаун ------
+			const timestamps = bot.cooldowns.get(command.name);
+			const cooldownAmount = (command.cooldown || 3) * 1000;
 			if (timestamps.has(message.author.id)) {
 				const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
 				if (Date.now() < expirationTime && !config.owners.includes(message.author.id)) {
@@ -82,6 +84,44 @@ module.exports = {
 			}
 			timestamps.set(message.author.id, Date.now());
 			setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+			// !------ Кулдаун ------!
+
+			// ------ Проверка прав ------
+			if (command.userPerms) {
+				const neededPerms = command.userPerms.map((perm) => {
+					const permission = perm === "STAGE_MODERATOR" ? Permissions.STAGE_MODERATOR : Permissions.FLAGS[perm];
+
+					if (
+						!message.channel.permissionsFor(message.author.id).has(permission) &&
+						!message.channel.permissionsFor(message.author.id).has(Permissions.FLAGS.ADMINISTRATOR)
+					)
+						return data.permissions[permission];
+				});
+				if (neededPerms[0])
+					return bot.utils.error(`У вас недостаточно прав! (${neededPerms.map((perm) => `**${perm}**`).join(", ")})`,
+					command,
+					message,
+					bot,
+					false);
+			}
+			if (command.botPerms) {
+				const neededPerms = command.botPerms.map((perm) => {
+					const permission = perm === "STAGE_MODERATOR" ? Permissions.STAGE_MODERATOR : Permissions.FLAGS[perm];
+
+					if (
+						!message.channel.permissionsFor(bot.user.id).has(permission) &&
+						!message.channel.permissionsFor(bot.user.id).has(Permissions.FLAGS.ADMINISTRATOR)
+					)
+						return data.permissions[permission];
+				});
+				if (neededPerms[0])
+					return bot.utils.error(`У бота недостаточно прав! (${neededPerms.map((perm) => `**${perm}**`).join(", ")})`,
+					command,
+					message,
+					bot,
+					false);
+			}
+			// !------ Проверка прав ------!
 
 			++config.botInfo.commands;
 			writeFileSync("config.json", JSON.stringify(config, null, 2));

@@ -6,10 +6,8 @@ module.exports = {
 	category: "reputation",
 	cooldown: 60,
 	aliases: ["resetrep"],
+	userPerms: ["MANAGE_GUILD"],
 	async execute(message, args, bot) {
-		if (!message.member.permissions.has(["ADMINISTRATOR"]) || !message.member.permissions.has(["MANAGE_GUILD"]))
-			return bot.utils.error("У вас нет прав! (**Управлять сервером**)", this, message, bot);
-
 		const msg = await message.reply({
 			content: "Вы действительно хотите это сделать?",
 			components: [

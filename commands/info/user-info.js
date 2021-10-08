@@ -1,6 +1,6 @@
 const { MessageEmbed } = require("discord.js");
 const { emoji } = require("../../data/emojis.json");
-const { badges } = require("../../data/user-info");
+const { userinfo } = require("../../data/data.json");
 
 module.exports = {
 	name: "user-info",
@@ -24,7 +24,7 @@ module.exports = {
 		if (!user.bot && user.flags && user.flags.bitfield != 0)
 			description += `\nЗначки: ${user.flags
 				.toArray()
-				.map((flag) => badges[flag])
+				.map((flag) => userinfo.badges[flag])
 				.join(" ")}`;
 
 		const embed = new MessageEmbed()

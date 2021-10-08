@@ -5,7 +5,7 @@ module.exports = {
 	description: "Поднять репутацию пользователю",
 	category: "reputation",
 	cooldown: 300,
-	aliases: ["reputation"],
+	aliases: ["reputation", "+rep"],
 	usage: ["<@Пользователь>"],
 	async execute(message, args, bot) {
 		const member = bot.utils.findMember(message, args.join(" "));

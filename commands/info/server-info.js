@@ -1,5 +1,5 @@
 const { MessageEmbed } = require("discord.js");
-const { verification } = require("../../data/server-info");
+const { serverinfo } = require("../../data/data.json");
 const { emoji } = require("../../data/emojis.json");
 
 module.exports = {
@@ -15,7 +15,7 @@ module.exports = {
 			.setDescription(
 				`ID: **${message.guild.id}**
 Владелец: **${await message.guild.fetchOwner()}**
-Уровень верификации: **${verification[message.guild.verificationLevel]}**
+Уровень верификации: **${serverinfo.verification[message.guild.verificationLevel]}**
 ${
 	message.guild.afkChannel
 		? `AFK канал: **${message.guild.afkChannel.name}** | Тайм-аут: **${bot.utils.time(
