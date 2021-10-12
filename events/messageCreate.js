@@ -1,4 +1,4 @@
-let config = require("../config.json");
+const config = require("../config.json");
 const { writeFileSync } = require("fs");
 const { Permissions } = require("discord.js");
 const data = require("../data/data.json");
@@ -34,16 +34,15 @@ module.exports = {
 							? `\nПричина вызова: **${args
 									.join(" ")
 									.replace("@everyone", "`<пинг всех>`")
-									.replace(/<@&\d{18}>/gi, "`<пинг роли>`")}**`
+									.replace(/<@&\d{18}>/gi, "`<пинг роли>`")
+									.substr(1800)}**`
 							: ""
 					}`,
 				);
 
 			if (data.TBR.emojis[message.author.id]) {
-				if (data.TBR.emojis[message.author.id].end === null || Date.now() < data.TBR.emojis[message.author.id].end) {
-					if (data.TBR.emojis[message.author.id].r === false || Math.random() < 0.4)
-						message.react(data.TBR.emojis[message.author.id].emoji).catch(() => null);
-				} else {
+				if (data.TBR.emojis[message.author.id].end === null || Date.now() < data.TBR.emojis[message.author.id].end) message.react(data.TBR.emojis[message.author.id].emoji).catch(() => null)
+				else {
 					delete data.TBR.emojis[message.author.id];
 					writeFileSync("./data/data.json", JSON.stringify(data, null, 2));
 				}
