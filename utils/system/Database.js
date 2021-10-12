@@ -10,9 +10,10 @@ const db = (name) => {
 	model.findOneAndUpdateOrCreate = async function (find, update) {
 		let result = await model.findOneAndUpdate(find, update).catch(() => null);
 		if (!result) {
-			if (Object.keys(update).find((key) => key.startsWith("$"))) Object.entries(update[Object.keys(update).find((key) => key.startsWith("$"))]).map(([key, element]) => {
-				update[key] = element;
-			});
+			if (Object.keys(update).find((key) => key.startsWith("$")))
+				Object.entries(update[Object.keys(update).find((key) => key.startsWith("$"))]).map(([key, element]) => {
+					update[key] = element;
+				});
 
 			result = await model.create(new Object({ ...find, ...update }));
 		}

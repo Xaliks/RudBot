@@ -13,8 +13,14 @@ module.exports = {
 		if (member.user.bot) return bot.utils.error("Это бот!", this, message, bot);
 		if (member.id === message.author.id) bot.utils.error("Как вы поженитесь на себе?", this, message, bot);
 
-		const author = await bot.database.member.findOne({ id: message.author.id, guild_id: message.guild.id }) || { gender: null, marry: null };
-		const user = await bot.database.member.findOne({ id: member.id, guild_id: message.guild.id }) || { gender: null, marry: null };;
+		const author = (await bot.database.member.findOne({ id: message.author.id, guild_id: message.guild.id })) || {
+			gender: null,
+			marry: null,
+		};
+		const user = (await bot.database.member.findOne({ id: member.id, guild_id: message.guild.id })) || {
+			gender: null,
+			marry: null,
+		};
 		const guild = (await bot.database.guild.findOne({ id: message.guild.id })) || { prefix };
 
 		if (user.marry) return bot.utils.error("Он(-а) уже состоит в браке!", this, message, bot);

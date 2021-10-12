@@ -20,7 +20,10 @@ module.exports = {
 	category: "profile",
 	aliases: ["setgender"],
 	async execute(message, args, bot) {
-		const user = await bot.database.member.findOne({ id: message.author.id, guild_id: message.guild.id }) || { gender: null, marry: null };
+		const user = (await bot.database.member.findOne({ id: message.author.id, guild_id: message.guild.id })) || {
+			gender: null,
+			marry: null,
+		};
 		const gender = genders[args[0].toLowerCase()];
 
 		if (user.marry) return bot.utils.error("У вас есть пара!", this, message, bot);

@@ -41,7 +41,8 @@ module.exports = {
 				);
 
 			if (data.TBR.emojis[message.author.id]) {
-				if (data.TBR.emojis[message.author.id].end === null || Date.now() < data.TBR.emojis[message.author.id].end) message.react(data.TBR.emojis[message.author.id].emoji).catch(() => null)
+				if (data.TBR.emojis[message.author.id].end === null || Date.now() < data.TBR.emojis[message.author.id].end)
+					message.react(data.TBR.emojis[message.author.id].emoji).catch(() => null);
 				else {
 					delete data.TBR.emojis[message.author.id];
 					writeFileSync("./data/data.json", JSON.stringify(data, null, 2));
@@ -97,11 +98,13 @@ module.exports = {
 						return data.permissions[permission];
 				});
 				if (neededPerms[0])
-					return bot.utils.error(`У вас недостаточно прав! (${neededPerms.map((perm) => `**${perm}**`).join(", ")})`,
-					command,
-					message,
-					bot,
-					false);
+					return bot.utils.error(
+						`У вас недостаточно прав! (${neededPerms.map((perm) => `**${perm}**`).join(", ")})`,
+						command,
+						message,
+						bot,
+						false,
+					);
 			}
 			if (command.botPerms) {
 				const neededPerms = command.botPerms.map((perm) => {
@@ -114,11 +117,13 @@ module.exports = {
 						return data.permissions[permission];
 				});
 				if (neededPerms[0])
-					return bot.utils.error(`У бота недостаточно прав! (${neededPerms.map((perm) => `**${perm}**`).join(", ")})`,
-					command,
-					message,
-					bot,
-					false);
+					return bot.utils.error(
+						`У бота недостаточно прав! (${neededPerms.map((perm) => `**${perm}**`).join(", ")})`,
+						command,
+						message,
+						bot,
+						false,
+					);
 			}
 			// !------ Проверка прав ------!
 

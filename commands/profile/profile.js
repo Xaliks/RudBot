@@ -16,7 +16,12 @@ module.exports = {
 		const member = await bot.utils.findMember(message, args.join(" "), true);
 		if (member.user.bot) return bot.utils.error("Это бот!", this, message, bot);
 
-		const user = await bot.database.member.findOne({ id: member.id, guild_id: message.guild.id }) || { reputation: 0, gender: null, age: null, marry: null };
+		const user = (await bot.database.member.findOne({ id: member.id, guild_id: message.guild.id })) || {
+			reputation: 0,
+			gender: null,
+			age: null,
+			marry: null,
+		};
 		const marry = user.marry ? await message.guild.members.fetch(user.marry).catch(() => null) : "Никого нет";
 		if (!marry) {
 			await bot.database.member.updateMany(
@@ -34,7 +39,9 @@ module.exports = {
 					user.reputation === 0
 						? "Нет репутации"
 						: bot.utils.formatNumber(
-							(await bot.database.member.find({ guild_id: message.guild.id, reputation: { $ne: 0 } })).sort((a, b) => b.reputation - a.reputation).findIndex((m) => m.id === member.id),
+								(await bot.database.member.find({ guild_id: message.guild.id, reputation: { $ne: 0 } }))
+									.sort((a, b) => b.reputation - a.reputation)
+									.findIndex((m) => m.id === member.id),
 						  )
 				}\``,
 			)
