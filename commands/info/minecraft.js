@@ -1,6 +1,10 @@
 const { MessageEmbed } = require("discord.js");
 const fetch = require("node-fetch");
 
+/**
+ * TODO: Переписать здесь ВСЁ
+ * TODO: Попробовать Mojang API
+ */
 module.exports = {
 	name: "minecraft",
 	description: "Инфо о minecraft сервере",

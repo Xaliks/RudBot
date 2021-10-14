@@ -1,6 +1,9 @@
 const { MessageEmbed } = require("discord.js");
 const { owners, prefix } = require("../../config.json");
 
+/**
+ * TODO: Полностью переписать этот cringe
+ */
 module.exports = {
 	name: "help",
 	description: "Помощь",

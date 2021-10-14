@@ -1,6 +1,9 @@
 const fetch = require("node-fetch");
 const { MessageEmbed } = require("discord.js");
 
+/**
+ * TODO: Сделать калькулятор по кнопкам
+ */
 module.exports = {
 	name: "calc",
 	description: "Калькулятор",

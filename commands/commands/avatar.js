@@ -1,5 +1,9 @@
 ﻿const { MessageEmbed } = require("discord.js");
 
+/**
+ * TODO: Сделать проверку на анимированную аву
+ * TODO: Добавить серверный аватар
+ */
 module.exports = {
 	name: "avatar",
 	description: "Ава пользователя",

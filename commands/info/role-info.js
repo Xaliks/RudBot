@@ -1,5 +1,8 @@
 const { MessageEmbed } = require("discord.js");
 
+/**
+ * TODO: Иконка роли
+ */
 module.exports = {
 	name: "role-info",
 	description: "Информация о роли",

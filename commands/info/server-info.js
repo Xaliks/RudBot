@@ -2,6 +2,9 @@ const { MessageEmbed } = require("discord.js");
 const { serverinfo } = require("../../data/data.json");
 const { emoji } = require("../../data/emojis.json");
 
+/**
+ * TODO: Оптимизировать все что можно
+ */
 module.exports = {
 	name: "server-info",
 	description: "Инфо о сервере",

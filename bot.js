@@ -2,6 +2,9 @@
 const { Client } = require("discord.js");
 const { token } = require("./config.json");
 
+/**
+ * TODO: Уменьшить кол-во используемых интентов
+ */
 const bot = new Client({
 	partials: ["USER", "CHANNEL", "GUILD_MEMBER", "MESSAGE", "REACTION"],
 	intents: 32767,

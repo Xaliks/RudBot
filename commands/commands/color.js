@@ -2,6 +2,10 @@ const { MessageEmbed } = require("discord.js");
 const { AlexFlipNoteKey } = require("../../config.json");
 const fetch = require("node-fetch");
 
+/**
+ * TODO: Прекратить юзать этот апи
+ * TODO: Сделать больше инфы о цвете
+ */
 module.exports = {
 	name: "color",
 	description: "Цвет",
