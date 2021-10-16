@@ -1,10 +1,8 @@
 const { MessageEmbed } = require("discord.js");
 const { emoji } = require("../../data/emojis.json");
 const { userinfo } = require("../../data/data.json");
+const emojis = require("../../utils/commands/msg/gamesEmoji")
 
-/**
- * TODO: Оптимизировать все что можно
- */
 module.exports = {
 	name: "user-info",
 	description: "Инфо о пользователе",
@@ -39,22 +37,17 @@ module.exports = {
 				}),
 			)
 			.setFooter("Дизайн JeggyBot");
-
-		const presence = member
-			? member.presence
-			: bot.guilds.cache.map((guild) => guild.members.cache.get(user.id)).filter((m) => m)[0]?.presence;
-
 		//Статус
 		//-----------------------------------------------------------------------------
 		const clientStatus = [];
 		let status;
 		let activity = "";
-		if (presence && presence.status != "offline") {
+		if (member.presence && member.presence.status != "offline") {
 			// Система
 			//-----------------------------------------------------------------------------
-			for (let cs in presence.clientStatus) {
+			for (const cs in member.presence.clientStatus) {
 				clientStatus.push(
-					`${emoji[presence.clientStatus[cs]]} ${
+					`${emoji[member.presence.clientStatus[cs]]} ${
 						{
 							desktop: "Компьютер",
 							web: "Сайт",
@@ -67,11 +60,11 @@ module.exports = {
 
 			// Статус
 			//-----------------------------------------------------------------------------
-			presence.activities.forEach((act) => {
+			member.presence.activities.forEach((act) => {
 				if (!act) return;
 				if (act.id === "custom") status = act.state;
 				else {
-					activity += require("../../utils/commands/msg/gamesEmoji")(act);
+					activity += emojis(act);
 				}
 			});
 			//-----------------------------------------------------------------------------
@@ -83,20 +76,19 @@ module.exports = {
 			description += `\nПрисоединился: \`${
 				message.guild.members.cache
 					.map((member) => member.joinedTimestamp)
-					.filter((t) => t)
 					.sort((a, b) => a - b)
 					.indexOf(member.joinedTimestamp) + 1
 			}\`/\`${message.guild.members.cache.size}\``;
 
 			//Роли
 			//-----------------------------------------------------------------------------
-			const roles = Array.from(member.roles.cache)
-				.map((role) => role[1])
-				.sort((a, b) => b.position - a.position)
+			const roles = member.roles.cache
+				.sort((a, b) => b.rawPosition - a.rawPosition)
+				.toJSON()
 				.slice(0, -1)
 				.join(", ");
 
-			if (roles) embed.addField(`**Роли (${bot.utils.formatNumber(member.roles.cache.size - 1)}):**`, roles, false);
+			if (roles) embed.addField(`**Роли (${bot.utils.formatNumber(roles.length - 1)}):**`, roles, false);
 			//-----------------------------------------------------------------------------
 		}
 
