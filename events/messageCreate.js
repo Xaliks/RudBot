@@ -34,8 +34,7 @@ module.exports = {
 							? `\nПричина вызова: **${args
 									.join(" ")
 									.replace("@everyone", "`<пинг всех>`")
-									.replace(/<@&\d{18}>/gi, "`<пинг роли>`")
-									.substr(1800)}**`
+									.replace(/<@&\d{18}>/gi, "`<пинг роли>`")}**`
 							: ""
 					}`,
 				);
@@ -134,6 +133,7 @@ module.exports = {
 		try {
 			command.execute(message, args, bot);
 		} catch (error) {
+			bot.utils.sendError(bot, { ...error, command: command.name, args: message.content })
 			bot.utils.error("Ошибка! Обратитесь к создателю бота.", this, message, bot, false);
 		}
 	},

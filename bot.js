@@ -1,6 +1,7 @@
 ﻿require("./utils/system/Structures")();
 const { Client, Intents } = require("discord.js");
 const { token } = require("./config.json");
+
 const bot = new Client({
 	intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_PRESENCES],
 	ws: {
