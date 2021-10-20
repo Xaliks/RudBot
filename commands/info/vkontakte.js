@@ -40,7 +40,13 @@ module.exports = {
 						sort: 0,
 						q: query.join(" "),
 						fields,
-					}).then((resp) => resp.response.items)) || user
+					}).then((resp) => {
+						if (resp.error) {
+							bot.utils.error("Достигнут глобальный лимит запросов в вконтакте! Обратитесь к создателю бота", this, message, bot)
+							return;
+						}
+						return resp.response.items
+					})) || get
 				).filter((user) => user.domain != get[0]?.domain),
 			);
 			if (!users[0])
@@ -144,7 +150,13 @@ module.exports = {
 						q: query.join(" "),
 						type: "group",
 						fields,
-					}).then((resp) => resp.response.items)) || user
+					}).then((resp) => {
+						if (resp.error) {
+							bot.utils.error("Достигнут глобальный лимит запросов в вконтакте! Обратитесь к создателю бота", this, message, bot)
+							return;
+						}
+						return resp.response.items
+					})) || get
 				).filter((group) => group.id != get[0]?.id),
 			);
 			if (!groups[0]) return bot.utils.error(`Группа по запросу \`${query.join(" ")}\` не найден!`, this, message, bot);
