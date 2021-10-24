@@ -47,6 +47,8 @@ module.exports = {
 					writeFileSync("./data/data.json", JSON.stringify(data, null, 2));
 				}
 			}
+
+			if (message.author.id != "448799481777881089" && message.member.nickname === "услуги топ канал") message.react("702203135287885965")
 		}
 		//------------------------------------------------------------------------------------------------
 
