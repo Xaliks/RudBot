@@ -1,8 +1,6 @@
 const { MessageEmbed } = require("discord.js");
+const { permissions } = require("../../data/data.json")
 
-/**
- * TODO: Иконка роли
- */
 module.exports = {
 	name: "role-info",
 	description: "Информация о роли",
@@ -21,9 +19,8 @@ module.exports = {
 		message.channel.send({
 			embeds: [
 				new MessageEmbed()
-					.setTitle(`**ИНФОРМАЦИЯ О РОЛИ**`)
+					.setAuthor(role.name, role.iconURL({ format: "png" }))
 					.setColor(role.color)
-					.addField(`**Имя**`, `${bot.utils.escapeMarkdown(role.name)}`, true)
 					.addField("**ID**", role.id, true)
 					.addField("**Упоминание**", `\`${role}\` / ${role}`, true)
 					.addField("**Пользователей с этой ролью:**", role.members.size, true)
@@ -32,7 +29,7 @@ module.exports = {
 					.addField("**Отображаемая роль?**", role.hoist ? "Да" : "Нет", true)
 					.addField("**Упоминается?**", role.mentionable ? "Да" : "Нет", true)
 					.addField("**Создана**", bot.utils.discordTime(data.createdTimestamp), true)
-
+					.addField("Права", role.permissions.toArray().map(r => `**${permissions[r]}**`).join(", "))
 					.setFooter(message.author.username),
 			],
 		});
