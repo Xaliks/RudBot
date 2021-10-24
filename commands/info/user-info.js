@@ -42,7 +42,7 @@ module.exports = {
 		const clientStatus = [];
 		let status;
 		let activity = "";
-		if (member.presence && member.presence.status != "offline") {
+		if (member && member.presence && member.presence.status != "offline") {
 			// Система
 			//-----------------------------------------------------------------------------
 			for (const cs in member.presence.clientStatus) {
@@ -85,10 +85,9 @@ module.exports = {
 			const roles = member.roles.cache
 				.sort((a, b) => b.rawPosition - a.rawPosition)
 				.toJSON()
-				.slice(0, -1)
-				.join(", ");
+				.slice(0, -1);
 
-			if (roles) embed.addField(`**Роли (${bot.utils.formatNumber(roles.length - 1)}):**`, roles, false);
+			if (roles) embed.addField(`**Роли (${bot.utils.formatNumber(roles.length)}):**`, roles.join(", "), false);
 			//-----------------------------------------------------------------------------
 		}
 
