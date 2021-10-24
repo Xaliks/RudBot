@@ -90,14 +90,13 @@ module.exports = {
 			// ------ Проверка прав ------
 			if (command.userPerms) {
 				const neededPerms = command.userPerms.map((perm) => {
-					const permission = perm === "STAGE_MODERATOR" ? Permissions.STAGE_MODERATOR : Permissions.FLAGS[perm];
-
 					if (
-						!message.channel.permissionsFor(message.author.id).has(permission) &&
+						!message.channel.permissionsFor(message.author.id).has(Permissions.FLAGS[perm]) &&
 						!message.channel.permissionsFor(message.author.id).has(Permissions.FLAGS.ADMINISTRATOR)
 					)
-						return data.permissions[permission];
+						return data.permissions[perm];
 				});
+
 				if (neededPerms[0])
 					return bot.utils.error(
 						`У вас недостаточно прав! (${neededPerms.map((perm) => `**${perm}**`).join(", ")})`,
@@ -107,15 +106,14 @@ module.exports = {
 						false,
 					);
 			}
+
 			if (command.botPerms) {
 				const neededPerms = command.botPerms.map((perm) => {
-					const permission = perm === "STAGE_MODERATOR" ? Permissions.STAGE_MODERATOR : Permissions.FLAGS[perm];
-
 					if (
-						!message.channel.permissionsFor(bot.user.id).has(permission) &&
+						!message.channel.permissionsFor(bot.user.id).has(Permissions.FLAGS[perm]) &&
 						!message.channel.permissionsFor(bot.user.id).has(Permissions.FLAGS.ADMINISTRATOR)
 					)
-						return data.permissions[permission];
+						return data.permissions[perm];
 				});
 				if (neededPerms[0])
 					return bot.utils.error(
