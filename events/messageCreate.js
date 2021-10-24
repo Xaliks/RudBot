@@ -135,6 +135,7 @@ module.exports = {
 		} catch (error) {
 			bot.utils.sendError(bot, { ...error, command: command.name, args: message.content })
 			bot.utils.error("Ошибка! Обратитесь к создателю бота.", this, message, bot, false);
+			console.error(error)
 		}
 	},
 };
