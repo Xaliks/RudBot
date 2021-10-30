@@ -47,8 +47,6 @@ module.exports = {
 					writeFileSync("./data/data.json", JSON.stringify(data, null, 2));
 				}
 			}
-
-			if (message.author.id != "448799481777881089" && message.member.nickname === "услуги топ канал") message.react("702203135287885965")
 		}
 		//------------------------------------------------------------------------------------------------
 
@@ -133,9 +131,9 @@ module.exports = {
 		try {
 			command.execute(message, args, bot);
 		} catch (error) {
-			bot.utils.sendError(bot, { ...error, command: command.name, args: message.content })
+			bot.utils.sendError(bot, { ...error, command: command.name, args: message.content });
 			bot.utils.error("Ошибка! Обратитесь к создателю бота.", this, message, bot, false);
-			console.error(error)
+			console.error(error);
 		}
 	},
 };

@@ -42,10 +42,15 @@ module.exports = {
 						fields,
 					}).then((resp) => {
 						if (resp.error) {
-							bot.utils.error("Достигнут глобальный лимит запросов в вконтакте! Обратитесь к создателю бота", this, message, bot)
+							bot.utils.error(
+								"Достигнут глобальный лимит запросов в вконтакте! Обратитесь к создателю бота",
+								this,
+								message,
+								bot,
+							);
 							return;
 						}
-						return resp.response.items
+						return resp.response.items;
 					})) || get
 				).filter((user) => user.domain != get[0]?.domain),
 			);
@@ -152,10 +157,15 @@ module.exports = {
 						fields,
 					}).then((resp) => {
 						if (resp.error) {
-							bot.utils.error("Достигнут глобальный лимит запросов в вконтакте! Обратитесь к создателю бота", this, message, bot)
+							bot.utils.error(
+								"Достигнут глобальный лимит запросов в вконтакте! Обратитесь к создателю бота",
+								this,
+								message,
+								bot,
+							);
 							return;
 						}
-						return resp.response.items
+						return resp.response.items;
 					})) || get
 				).filter((group) => group.id != get[0]?.id),
 			);

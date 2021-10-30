@@ -1,7 +1,7 @@
 const { MessageEmbed } = require("discord.js");
 const { emoji } = require("../../data/emojis.json");
 const { userinfo } = require("../../data/data.json");
-const emojis = require("../../utils/commands/msg/gamesEmoji")
+const emojis = require("../../utils/commands/msg/gamesEmoji");
 
 module.exports = {
 	name: "user-info",
