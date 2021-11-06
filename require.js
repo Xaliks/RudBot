@@ -4,8 +4,7 @@ const { mongooseKey } = require("./config.json");
 
 module.exports = (bot) => {
 	bot.commands = new Collection();
-	bot.cooldowns = new Collection();
-	bot.aliases = new Collection();
+	bot.timestamps = new Collection();
 	bot.temp = new Collection();
 	bot.utils = new Object();
 	bot.interactions = new Object();

@@ -20,13 +20,15 @@ module.exports = {
 		const user = (await bot.database.user.findOne({ id: message.author.id })) || { blacklisted: false };
 		const args = message.content.slice(guild.prefix.length).trim().split(/ +/g);
 		const commandName = args.shift().toLowerCase();
-		const command = bot.commands.get(commandName) || bot.commands.get(bot.aliases.get(commandName));
+		const command = bot.commands.find(
+			(command) => command.name === commandName || (command.aliases || []).some((alias) => alias === commandName),
+		);
 		//------------------------------------------------------------------------------------------------
 
 		if (!commandName || !command || !message.content.startsWith(guild.prefix) || message.content === guild.prefix)
 			return;
 		if (bot.commands.has(command.name)) {
-			if (command.category === "botowner" && !owners.includes(message.author.id)) return;
+			if (command.category === "botowner" && !isDeveloper(message.author.id)) return;
 			if (user.blacklisted) return message.react("❌");
 
 			if (command.usage && command.usage.filter((u) => !u.startsWith("[")).length > args.length)
@@ -38,28 +40,27 @@ module.exports = {
 				);
 
 			// ------ Кулдаун ------
-			const timestamps = bot.cooldowns.get(command.name);
-			const cooldownAmount = (command.cooldown || 3) * 1000;
-			if (timestamps.has(message.author.id)) {
-				const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
-				if (Date.now() < expirationTime && !owners.includes(message.author.id)) {
+			if (!isDeveloper(message.author.id)) {
+				const timestamp = bot.timestamps.get(`${command.name}_${message.author.id}`) || 0;
+				const cooldown = (command.cooldown || 3) * 1000;
+				const now = new Date().getTime();
+				if (now - timestamp < cooldown)
 					return bot.utils.error(
 						`У вас задержка на команду \`${command.name}\`!\n\nОставшееся время: \`${bot.utils.time(
-							expirationTime - Date.now(),
+							cooldown - (now - timestamp),
 						)}\``,
 						command,
 						message,
 						bot,
 						false,
 					);
-				}
+
+				bot.timestamps.set(`${command.name}_${message.author.id}`, now);
 			}
-			timestamps.set(message.author.id, Date.now());
-			setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
 			// !------ Кулдаун ------!
 
 			// ------ Проверка прав ------
-			if (command.userPerms) {
+			if (!isDeveloper(message.author.id) && command.userPerms) {
 				const neededPerms = command.userPerms.map((perm) => {
 					if (
 						!message.channel.permissionsFor(message.author.id).has(Permissions.FLAGS[perm]) &&
@@ -107,3 +108,7 @@ module.exports = {
 		}
 	},
 };
+
+function isDeveloper(id) {
+	return owners.includes(id)
+}

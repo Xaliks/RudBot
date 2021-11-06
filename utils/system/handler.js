@@ -1,5 +1,4 @@
 const { readdirSync } = require("fs");
-const { Collection } = require("discord.js");
 
 module.exports = (bot) => {
 	// Команды
@@ -9,15 +8,6 @@ module.exports = (bot) => {
 			.filter((f) => f.endsWith(".js"))
 			.forEach((file) => {
 				const command = require(`../../commands/${dir}/${file}`);
-
-				if (command.aliases) {
-					for (const alias of command.aliases) {
-						bot.aliases.set(alias, command.name);
-					}
-				}
-				if (!bot.cooldowns.has(command.name)) {
-					bot.cooldowns.set(command.name, new Collection());
-				}
 
 				bot.commands.set(command.name, command);
 
