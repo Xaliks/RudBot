@@ -1,5 +1,5 @@
 const { MessageEmbed, version } = require("discord.js");
-const { owners, botInfo } = require("../../config.json");
+const { owners } = require("../../config.json");
 const os = require("os");
 const { emoji } = require("../../data/emojis.json");
 
@@ -17,7 +17,6 @@ module.exports = {
 					.setDescription(
 						`**Создатель:** \`${bot.utils.escapeMarkdown(await bot.users.fetch(owners[0]).then((owner) => owner.tag))}\`
 **Создан:** ${bot.utils.discordTime(bot.user.createdTimestamp, true, false)[0]}
-**Обработано команд:** \`${bot.utils.formatNumber(botInfo.commands)}\`
 
 **Кол-во команд:** \`${bot.commands.filter((cmd) => !cmd.admin).size}\`
 **Пользователей:** \`${bot.utils.formatNumber(bot.users.cache.size)}\`

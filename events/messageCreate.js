@@ -1,7 +1,6 @@
-const config = require("../config.json");
-const { writeFileSync } = require("fs");
+const { owners } = require("../config.json");
 const { Permissions } = require("discord.js");
-const data = require("../data/data.json");
+const { permissions } = require("../data/data.json");
 
 module.exports = {
 	name: "messageCreate",
@@ -24,36 +23,10 @@ module.exports = {
 		const command = bot.commands.get(commandName) || bot.commands.get(bot.aliases.get(commandName));
 		//------------------------------------------------------------------------------------------------
 
-		//ТБР
-		//------------------------------------------------------------------------------------------------
-		if (message.guild.id === "681142809654591501") {
-			if (message.content === "112" || message.content.startsWith("112 "))
-				return message.channel.send(
-					`<@&775683300811341824>! Вас вызвал: ${message.author}${
-						args[0]
-							? `\nПричина вызова: **${args
-									.join(" ")
-									.replace("@everyone", "`<пинг всех>`")
-									.replace(/<@&\d{18}>/gi, "`<пинг роли>`")}**`
-							: ""
-					}`,
-				);
-
-			if (data.TBR.emojis[message.author.id]) {
-				if (data.TBR.emojis[message.author.id].end === null || Date.now() < data.TBR.emojis[message.author.id].end)
-					message.react(data.TBR.emojis[message.author.id].emoji).catch(() => null);
-				else {
-					delete data.TBR.emojis[message.author.id];
-					writeFileSync("./data/data.json", JSON.stringify(data, null, 2));
-				}
-			}
-		}
-		//------------------------------------------------------------------------------------------------
-
 		if (!commandName || !command || !message.content.startsWith(guild.prefix) || message.content === guild.prefix)
 			return;
 		if (bot.commands.has(command.name)) {
-			if (command.category === "botowner" && !config.owners.includes(message.author.id)) return;
+			if (command.category === "botowner" && !owners.includes(message.author.id)) return;
 			if (user.blacklisted) return message.react("❌");
 
 			if (command.usage && command.usage.filter((u) => !u.startsWith("[")).length > args.length)
@@ -69,7 +42,7 @@ module.exports = {
 			const cooldownAmount = (command.cooldown || 3) * 1000;
 			if (timestamps.has(message.author.id)) {
 				const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
-				if (Date.now() < expirationTime && !config.owners.includes(message.author.id)) {
+				if (Date.now() < expirationTime && !owners.includes(message.author.id)) {
 					return bot.utils.error(
 						`У вас задержка на команду \`${command.name}\`!\n\nОставшееся время: \`${bot.utils.time(
 							expirationTime - Date.now(),
@@ -92,7 +65,7 @@ module.exports = {
 						!message.channel.permissionsFor(message.author.id).has(Permissions.FLAGS[perm]) &&
 						!message.channel.permissionsFor(message.author.id).has(Permissions.FLAGS.ADMINISTRATOR)
 					)
-						return data.permissions[perm];
+						return permissions[perm];
 				});
 
 				if (neededPerms[0])
@@ -111,7 +84,7 @@ module.exports = {
 						!message.channel.permissionsFor(bot.user.id).has(Permissions.FLAGS[perm]) &&
 						!message.channel.permissionsFor(bot.user.id).has(Permissions.FLAGS.ADMINISTRATOR)
 					)
-						return data.permissions[perm];
+						return permissions[perm];
 				});
 				if (neededPerms[0])
 					return bot.utils.error(
@@ -123,9 +96,6 @@ module.exports = {
 					);
 			}
 			// !------ Проверка прав ------!
-
-			++config.botInfo.commands;
-			writeFileSync("config.json", JSON.stringify(config, null, 2));
 		}
 
 		try {
