@@ -25,8 +25,7 @@ module.exports = {
 		);
 		//------------------------------------------------------------------------------------------------
 
-		if (!commandName || !command || !message.content.startsWith(guild.prefix) || message.content === guild.prefix)
-			return;
+		if (!commandName || !command || !message.content.startsWith(guild.prefix) || message.content === guild.prefix) return;
 		if (bot.commands.has(command.name)) {
 			if (command.category === "botowner" && !isDeveloper(message.author.id)) return;
 			if (user.blacklisted) return message.react("❌");
@@ -110,5 +109,5 @@ module.exports = {
 };
 
 function isDeveloper(id) {
-	return owners.includes(id)
+	return owners.includes(id);
 }

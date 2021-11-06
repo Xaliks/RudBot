@@ -11,8 +11,7 @@ module.exports = {
 		const member = bot.utils.findMember(message, args.join(" "));
 		if (!member) return bot.utils.error("Пользователь не найден!", this, message, bot);
 		if (member.user.bot) return bot.utils.error("Это бот. Зачем?", this, message, bot);
-		if (member.id === message.author.id)
-			return bot.utils.error("Вы не можете выдать себе репутацию", this, message, bot);
+		if (member.id === message.author.id) return bot.utils.error("Вы не можете выдать себе репутацию", this, message, bot);
 
 		const user = await bot.database.member.findOneAndUpdateOrCreate(
 			{ id: member.id, guild_id: message.guild.id },

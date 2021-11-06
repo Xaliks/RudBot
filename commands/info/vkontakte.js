@@ -78,11 +78,9 @@ module.exports = {
 							.setURL(`https://vk.com/${user.domain}`)
 							.setThumbnail(user.photo_max_orig)
 							.setDescription(
-								`**ПОЛЬЗОВАТЕЛЬ ЗАКРЫЛ СВОЙ ПРОФИЛЬ**\n\n\nСтатус: ${
-									user.online === 1 ? emoji.online : emoji.offline
-								}**${bot.utils.escapeMarkdown(user.status) || "Отсутствует"}**\n\nПол: **${
-									vk.sex[user.sex]
-								}**\nГод рождения: **${user.bdate || "Неизвестно"}**\nГород: ${
+								`**ПОЛЬЗОВАТЕЛЬ ЗАКРЫЛ СВОЙ ПРОФИЛЬ**\n\n\nСтатус: ${user.online === 1 ? emoji.online : emoji.offline}**${
+									bot.utils.escapeMarkdown(user.status) || "Отсутствует"
+								}**\n\nПол: **${vk.sex[user.sex]}**\nГод рождения: **${user.bdate || "Неизвестно"}**\nГород: ${
 									user.city ? `**${user.city.title}** (${user.country.title})` : "**Неизвестно**"
 								}`,
 							)
@@ -179,9 +177,7 @@ module.exports = {
 							.setURL(`https://vk.com/${group.screen_name}`)
 							.setThumbnail(group.photo_max_orig)
 							.setDescription(
-								`**ГРУППА ${
-									group.deactivated ? (group.deactivated === "banned" ? "ЗАБАНЕНА" : "УДАЛЁНА") : "ЗАКРЫТА"
-								}**`,
+								`**ГРУППА ${group.deactivated ? (group.deactivated === "banned" ? "ЗАБАНЕНА" : "УДАЛЁНА") : "ЗАКРЫТА"}**`,
 							)
 							.setFooter(`ID: ${group.screen_name}`),
 					);
@@ -197,10 +193,7 @@ module.exports = {
 Статус: **${group.status || "Отсутствует"}**
 Город: ${group.city ? `**${group.city.title}** (${group.country.title})` : "**Неизвестно**"}
 Сайт: \`${group.site || "Отсутствует"}\`
-Ссылки: ${
-								(group.links || []).map((link) => `[\`${link.desc || link.name}\`](${link.url})`).join(", ") ||
-								"`Отсутствуют`"
-							}
+Ссылки: ${(group.links || []).map((link) => `[\`${link.desc || link.name}\`](${link.url})`).join(", ") || "`Отсутствуют`"}
 Контакты: ${
 								(group.contacts || [])
 									.map((contact) => {

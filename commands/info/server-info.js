@@ -21,9 +21,7 @@ module.exports = {
 Уровень верификации: **${serverinfo.verification[message.guild.verificationLevel]}**
 ${
 	message.guild.afkChannel
-		? `AFK канал: **${message.guild.afkChannel.name}** | Тайм-аут: **${bot.utils.time(
-				message.guild.afkTimeout * 100,
-		  )}**`
+		? `AFK канал: **${message.guild.afkChannel.name}** | Тайм-аут: **${bot.utils.time(message.guild.afkTimeout * 100)}**`
 		: ""
 }`,
 			)
@@ -70,9 +68,7 @@ ${emoji.voice} Кол-во гол. каналов: **${get("channel", ["GUILD_VO
 		if (message.guild.premiumSubscriptionCount > 0)
 			embed.addField(
 				`Буст`,
-				`${emoji.boost} Уровень буста: **${
-					message.guild.premiumTier != "NONE" ? message.guild.premiumTier.slice(5) : 0
-				}**
+				`${emoji.boost} Уровень буста: **${message.guild.premiumTier != "NONE" ? message.guild.premiumTier.slice(5) : 0}**
 ${emoji.boosted} Кол-во бустов: **${message.guild.premiumSubscriptionCount}**`,
 				false,
 			);

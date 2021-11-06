@@ -36,10 +36,7 @@ module.exports = {
 			}
 
 			bot.database.member
-				.updateMany(
-					{ guild_id: message.guild.id, id: new RegExp(message.author.id + "|" + user.marry) },
-					{ marry: null },
-				)
+				.updateMany({ guild_id: message.guild.id, id: new RegExp(message.author.id + "|" + user.marry) }, { marry: null })
 				.then(() => {
 					button.update({ content: `Вы развелись с <@${user.marry}>!`, components: [] });
 				});
