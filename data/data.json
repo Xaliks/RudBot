@@ -80,6 +80,12 @@
 			"london": ":flag_gb: Лондон",
 			"eu-west": ":flag_eu: Западная Европа",
 			"eu-central": ":flag_eu: Центральная Европа"
+		},
+		"premiumTiers": {
+			"NONE": "0",
+			"TIER_1": "1",
+			"TIER_2": "2",
+			"TIER_3": "3"
 		}
 	},
 	"userinfo": {

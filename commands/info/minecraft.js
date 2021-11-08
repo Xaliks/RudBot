@@ -3,7 +3,6 @@ const fetch = require("node-fetch");
 
 /**
  * TODO: Переписать здесь ВСЁ
- * TODO: Попробовать Mojang API
  */
 module.exports = {
 	name: "minecraft",

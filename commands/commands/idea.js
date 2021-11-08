@@ -1,9 +1,6 @@
 const { MessageEmbed } = require("discord.js");
 const { prefix } = require("../../config.json");
 
-/**
- * TODO: Сделать открытие треда (+ настройка для этого)
- */
 module.exports = {
 	name: "idea",
 	description: "Отправить идею **НА СЕРВЕР**",
