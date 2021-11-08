@@ -1,6 +1,5 @@
 const { VkToken } = require("../../config.json");
-const { vk } = require("../../data/data.json");
-const { emoji } = require("../../data/emojis.json");
+const { vk, emojis } = require("../../data/data.json");
 const { MessageEmbed } = require("discord.js");
 
 module.exports = {
@@ -78,9 +77,11 @@ module.exports = {
 							.setURL(`https://vk.com/${user.domain}`)
 							.setThumbnail(user.photo_max_orig)
 							.setDescription(
-								`**ПОЛЬЗОВАТЕЛЬ ЗАКРЫЛ СВОЙ ПРОФИЛЬ**\n\n\nСтатус: ${user.online === 1 ? emoji.online : emoji.offline}**${
-									bot.utils.escapeMarkdown(user.status) || "Отсутствует"
-								}**\n\nПол: **${vk.sex[user.sex]}**\nГод рождения: **${user.bdate || "Неизвестно"}**\nГород: ${
+								`**ПОЛЬЗОВАТЕЛЬ ЗАКРЫЛ СВОЙ ПРОФИЛЬ**\n\n\nСтатус: ${
+									user.online === 1 ? emojis.online : emojis.offline
+								}**${bot.utils.escapeMarkdown(user.status) || "Отсутствует"}**\n\nПол: **${
+									vk.sex[user.sex]
+								}**\nГод рождения: **${user.bdate || "Неизвестно"}**\nГород: ${
 									user.city ? `**${user.city.title}** (${user.country.title})` : "**Неизвестно**"
 								}`,
 							)
@@ -94,7 +95,7 @@ module.exports = {
 							.setThumbnail(user.photo_max_orig)
 							.setDescription(
 								`Подписчиков: \`${user.followers_count || "Неизвестно"}\`
-Статус: ${user.online === 1 ? emoji.online : emoji.offline}**${bot.utils.escapeMarkdown(user.status) || "Отсутствует"}**
+Статус: ${user.online === 1 ? emojis.online : emojis.offline}**${bot.utils.escapeMarkdown(user.status) || "Отсутствует"}**
 Последний заход: **${user.last_seen ? bot.utils.formatDate(user.last_seen.time * 1000, "%full") : "Неизвестно"}**
 
 Пол: **${vk.sex[user.sex]}**

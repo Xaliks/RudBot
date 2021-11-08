@@ -1,7 +1,5 @@
 const { MessageEmbed } = require("discord.js");
-const { emoji } = require("../../data/emojis.json");
-const { userinfo } = require("../../data/data.json");
-const emojis = require("../../utils/commands/msg/gamesEmoji");
+const { userinfo, emojis } = require("../../data/data.json");
 
 module.exports = {
 	name: "user-info",
@@ -47,7 +45,7 @@ module.exports = {
 			//-----------------------------------------------------------------------------
 			for (const cs in member.presence.clientStatus) {
 				clientStatus.push(
-					`${emoji[member.presence.clientStatus[cs]]} ${
+					`${emojis[member.presence.clientStatus[cs]]} ${
 						{
 							desktop: "Компьютер",
 							web: "Сайт",
@@ -64,11 +62,13 @@ module.exports = {
 				if (!act) return;
 				if (act.id === "custom") status = act.state;
 				else {
-					activity += emojis(act);
+					let other;
+					if (act.name === "Spotify") other = `(\`${act.state}\` - \`${act.details}\`)`;
+					activity += `${userinfo.ActivityType[act.type]} **${act.name}** ${other}\n`;
 				}
 			});
 			//-----------------------------------------------------------------------------
-		} else clientStatus.push(`${emoji.offline} Оффлайн`);
+		} else clientStatus.push(`${emojis.offline} Оффлайн`);
 		//----------------------------------------------------------------------------
 
 		if (member) {

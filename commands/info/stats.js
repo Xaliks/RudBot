@@ -1,7 +1,7 @@
 const { MessageEmbed, version } = require("discord.js");
 const { owners } = require("../../config.json");
 const os = require("os");
-const { emoji } = require("../../data/emojis.json");
+const { emojis } = require("../../data/data.json");
 
 module.exports = {
 	name: "stats",
@@ -26,13 +26,13 @@ module.exports = {
 							"GUILD_VOICE",
 						)}\`голос.)
 
-${emoji.CPU}**Кол-во ядер процессора:** \`${os.cpus().length}\`
-${emoji.RAM}**Использование ОЗУ:** \`${(process.memoryUsage().rss / Math.pow(1024, 2)).toFixed(0)}\`MB / \`${(
+${emojis.CPU}**Кол-во ядер процессора:** \`${os.cpus().length}\`
+${emojis.RAM}**Использование ОЗУ:** \`${(process.memoryUsage().rss / Math.pow(1024, 2)).toFixed(0)}\`MB / \`${(
 							os.totalmem() / Math.pow(1024, 3)
 						).toFixed(1)}\`GB
-${emoji.NodeJS}**Версия Node.js:** \`${process.version}\`
-${emoji.DiscordJS}**Версия Discord.js:** \`${version}\`
-${emoji.Linux}**Операционная система:** \`${os.type()} / ${os.arch()}\``,
+${emojis.NodeJS}**Версия Node.js:** \`${process.version}\`
+${emojis.DiscordJS}**Версия Discord.js:** \`${version}\`
+${emojis.Linux}**Операционная система:** \`${os.type()} / ${os.arch()}\``,
 					)
 					.addField(
 						"Пригласить меня",

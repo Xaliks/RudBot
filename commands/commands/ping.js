@@ -1,5 +1,5 @@
 ﻿const { MessageEmbed } = require("discord.js");
-const { emoji } = require("../../data/emojis.json");
+const { emojis } = require("../../data/data.json");
 
 module.exports = {
 	name: "ping",
@@ -14,8 +14,8 @@ module.exports = {
 					.setColor("303136")
 					.setTitle("Пинг")
 					.setDescription(
-						`Ответ на команды: ${emojis(Date.now() - message.createdTimestamp)}ms
-WS Пинг: ${emojis(bot.ws.ping)}ms
+						`Ответ на команды: ${emoji(Date.now() - message.createdTimestamp)}ms
+WS Пинг: ${emoji(bot.ws.ping)}ms
 
 [Пожертвовать](https://www.donationalerts.com/r/xaliksss) на [хостинг](https://firstvds.ru/?from=1084442)`,
 					),
@@ -24,10 +24,10 @@ WS Пинг: ${emojis(bot.ws.ping)}ms
 	},
 };
 
-function emojis(ping) {
-	let data = emoji.online;
-	if (ping >= 1000) data = emoji.dnd;
-	else if (ping >= 500) data = emoji.idle;
+function emoji(ping) {
+	let data = emojis.online;
+	if (ping >= 1000) data = emojis.dnd;
+	else if (ping >= 500) data = emojis.idle;
 
 	return data + ping;
 }

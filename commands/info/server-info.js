@@ -1,6 +1,5 @@
 const { MessageEmbed } = require("discord.js");
-const { serverinfo } = require("../../data/data.json");
-const { emoji } = require("../../data/emojis.json");
+const { serverinfo, emojis } = require("../../data/data.json");
 
 /**
  * TODO: Оптимизировать все что можно
@@ -33,11 +32,11 @@ ${
 				`:bust_in_silhouette: Пользователей: **${bot.utils.formatNumber(
 					message.guild.members.cache.filter((m) => !m.user.bot).size,
 				)}**
-${emoji.bot} Ботов: **${bot.utils.formatNumber(message.guild.members.cache.filter((m) => m.user.bot).size)}**
-${emoji.online} Онлайн: **${get("status", "online")}**
-${emoji.offline} Оффлайн: **${get("status", "offline")}**
-${emoji.idle} Не актив: **${get("status", "idle")}**
-${emoji.dnd} Не беспокоить: **${get("status", "dnd")}**`,
+${emojis.bot} Ботов: **${bot.utils.formatNumber(message.guild.members.cache.filter((m) => m.user.bot).size)}**
+${emojis.online} Онлайн: **${get("status", "online")}**
+${emojis.offline} Оффлайн: **${get("status", "offline")}**
+${emojis.idle} Не актив: **${get("status", "idle")}**
+${emojis.dnd} Не беспокоить: **${get("status", "dnd")}**`,
 				true,
 			)
 			//-----------------------------------------------------------------------------
@@ -50,7 +49,7 @@ ${emoji.dnd} Не беспокоить: **${get("status", "dnd")}**`,
 🎭 Кол-во ролей: **${message.guild.roles.cache.size}**
 :books: Кол-во категорий: **${get("channel", "GUILD_CATEGORY")}**
 :page_facing_up: Кол-во текст. каналов **${get("channel", ["GUILD_TEXT", "GUILD_STORE"])}**
-${emoji.voice} Кол-во гол. каналов: **${get("channel", ["GUILD_VOICE", "GUILD_STAGE_VOICE"])}**`,
+${emojis.voice} Кол-во гол. каналов: **${get("channel", ["GUILD_VOICE", "GUILD_STAGE_VOICE"])}**`,
 				true,
 			)
 			.addField(`⁣⁣⁣⁣`, `⁣`, false)
@@ -68,8 +67,10 @@ ${emoji.voice} Кол-во гол. каналов: **${get("channel", ["GUILD_VO
 		if (message.guild.premiumSubscriptionCount > 0)
 			embed.addField(
 				`Буст`,
-				`${emoji.boost} Уровень буста: **${message.guild.premiumTier != "NONE" ? message.guild.premiumTier.slice(5) : 0}**
-${emoji.boosted} Кол-во бустов: **${message.guild.premiumSubscriptionCount}**`,
+				`${emojis.boost} Уровень буста: **${
+					message.guild.premiumTier != "NONE" ? message.guild.premiumTier.slice(5) : 0
+				}**
+${emojis.boosted} Кол-во бустов: **${message.guild.premiumSubscriptionCount}**`,
 				false,
 			);
 		//-----------------------------------------------------------------------------

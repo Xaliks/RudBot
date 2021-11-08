@@ -1,4 +1,4 @@
-const { emoji } = require("../../data/emojis.json");
+const { emojis } = require("../../data/data.json");
 const { MessageEmbed } = require("discord.js");
 
 /**
@@ -8,5 +8,5 @@ const { MessageEmbed } = require("discord.js");
  */
 module.exports = (description, message) =>
 	message.reply({
-		embeds: [new MessageEmbed().setTitle(`${emoji.success} Успешно!`).setDescription(description).setColor("GREEN")],
+		embeds: [new MessageEmbed().setTitle(`${emojis.success} Успешно!`).setDescription(description).setColor("GREEN")],
 	});

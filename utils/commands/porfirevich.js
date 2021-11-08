@@ -4,7 +4,7 @@ module.exports = async (interaction, bot) => {
 
 	if (message.deleted) return;
 	if (user.id != authorId) return interaction.reply({ content: "Ты не можешь использовать это!", ephemeral: true });
-	
+
 	let [text, generate, gen] = bot.temp.get(`porfirevich-${authorId}-${message.id}`);
 
 	interaction.deferUpdate();
