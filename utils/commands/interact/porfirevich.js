@@ -1,10 +1,11 @@
 module.exports = async (interaction, bot) => {
 	const { message, user } = interaction;
 	const [_, authorId] = interaction.customId.split("-");
-	let [text, generate, gen] = bot.temp.get(`porfirevich-${authorId}-${message.id}`);
 
 	if (message.deleted) return;
 	if (user.id != authorId) return interaction.reply({ content: "Ты не можешь использовать это!", ephemeral: true });
+	
+	let [text, generate, gen] = bot.temp.get(`porfirevich-${authorId}-${message.id}`);
 
 	interaction.deferUpdate();
 	if (interaction.customId.startsWith("porfirevich_reload-")) {
