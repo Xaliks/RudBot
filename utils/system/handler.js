@@ -42,12 +42,12 @@ module.exports = (bot) => {
 
 	// Интеракции
 	//-----------------------------------------------------------------------------
-	readdirSync("./utils/commands/interact")
+	readdirSync("./utils/commands")
 		.filter((file) => file.endsWith(".js"))
 		.forEach((file) => {
-			bot.interactions[file.replace(".js", "")] = require(`../commands/interact/${file}`);
+			bot.interactions[file.replace(".js", "")] = require(`../commands//${file}`);
 
-			delete require.cache[require.resolve(`../commands/interact/${file}`)];
+			delete require.cache[require.resolve(`../commands/${file}`)];
 		});
 	//-----------------------------------------------------------------------------
 };
