@@ -74,7 +74,6 @@ module.exports = {
 						command,
 						message,
 						bot,
-						false,
 					);
 			}
 
@@ -92,7 +91,6 @@ module.exports = {
 						command,
 						message,
 						bot,
-						false,
 					);
 			}
 			// !------ Проверка прав ------!
