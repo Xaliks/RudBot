@@ -4,7 +4,7 @@ module.exports = {
 	name: "rep",
 	description: "Поднять репутацию пользователю",
 	category: "reputation",
-	cooldown: 300,
+	cooldown: 43200,
 	aliases: ["reputation", "+rep"],
 	usage: ["<@Пользователь>"],
 	async execute(message, args, bot) {
