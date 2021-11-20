@@ -45,7 +45,7 @@ module.exports = (bot) => {
 	readdirSync("./utils/commands")
 		.filter((file) => file.endsWith(".js"))
 		.forEach((file) => {
-			bot.interactions[file.replace(".js", "")] = require(`../commands//${file}`);
+			bot.interactions[file.replace(".js", "")] = require(`../commands/${file}`);
 
 			delete require.cache[require.resolve(`../commands/${file}`)];
 		});

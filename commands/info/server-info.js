@@ -11,23 +11,23 @@ module.exports = {
 	cooldown: 10,
 	category: "info",
 	async execute(message, args, bot) {
-		let bots = users = online = offline = idle = dnd = categories = text = voices = 0;
+		let bots = (users = online = offline = idle = dnd = categories = text = voices = 0);
 
 		message.guild.members.cache.each((mem) => {
-			if (mem.user.bot) ++bots
-			else ++users
-		})
+			if (mem.user.bot) ++bots;
+			else ++users;
+		});
 		message.guild.presences.cache.each((pres) => {
-			if (pres.status === "online") ++online
-			else if (pres.status === "offline") ++offline
-			else if (pres.status === "idle") ++idle
-			else ++dnd
-		})
+			if (pres.status === "online") ++online;
+			else if (pres.status === "offline") ++offline;
+			else if (pres.status === "idle") ++idle;
+			else ++dnd;
+		});
 		message.guild.channels.cache.each((channel) => {
-			if (channel.type === "GUILD_CATEGORY") ++categories
-			else if (["GUILD_TEXT", "GUILD_STORE"].includes(channel.type)) ++text
-			else ++voices
-		})
+			if (channel.type === "GUILD_CATEGORY") ++categories;
+			else if (["GUILD_TEXT", "GUILD_STORE"].includes(channel.type)) ++text;
+			else ++voices;
+		});
 
 		const embed = new MessageEmbed()
 			.setAuthor(message.guild.name)
