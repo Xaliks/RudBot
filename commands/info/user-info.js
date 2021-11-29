@@ -27,7 +27,7 @@ module.exports = {
 				.join(" ")}`;
 
 		const embed = new MessageEmbed()
-			.setAuthor(`${user.id} | ${user.tag}`)
+			.setAuthor({name: `${user.id} | ${user.tag}`})
 			.setThumbnail(
 				user.displayAvatarURL({
 					dynamic: true,

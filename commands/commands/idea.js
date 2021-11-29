@@ -29,11 +29,12 @@ module.exports = {
 					new MessageEmbed()
 						.setColor("RANDOM")
 						.setTitle("Идея")
-						.setAuthor(
-							message.author.tag,
-							message.author.displayAvatarURL({
+						.setAuthor({
+							name: message.author.tag,
+							iconURL: message.author.displayAvatarURL({
 								dynamic: true,
-							}),
+							})
+						}
 						)
 						.setDescription(args.join(" "))
 						.setFooter(`${guild.prefix}${this.name}`)

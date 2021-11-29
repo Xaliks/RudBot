@@ -18,7 +18,7 @@ module.exports = {
 		message.channel.send({
 			embeds: [
 				new MessageEmbed()
-					.setAuthor(role.name, role.iconURL({ format: "png" }))
+					.setAuthor({name:role.name, iconURL:role.iconURL({ format: "png" })})
 					.setColor(role.color)
 					.addField("ID", role.id, true)
 					.addField("Упоминание", `\`${role}\` / ${role}`, true)

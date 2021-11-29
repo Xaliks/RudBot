@@ -14,7 +14,7 @@ module.exports = {
 		message.channel.send({
 			embeds: [
 				new MessageEmbed()
-					.setAuthor(bot.utils.escapeMarkdown(user.tag))
+					.setAuthor({name: bot.utils.escapeMarkdown(user.tag)})
 					.setDescription(
 						formats.map((format) => `[${format.toUpperCase()}](${user.displayAvatarURL({
 							size: 2048,

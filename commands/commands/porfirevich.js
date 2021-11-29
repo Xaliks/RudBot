@@ -42,7 +42,7 @@ function send(message, text) {
 	return message.channel.send({
 		embeds: [
 			new MessageEmbed()
-				.setAuthor("Порфирьевич", "https://cdn.kaneki.cloud/xeellit/skynet.png", "https://porfirevich.ru")
+				.setAuthor({ name: "Порфирьевич", iconURL: "https://cdn.kaneki.cloud/xeellit/skynet.png", url: "https://porfirevich.ru" })
 				.setDescription(text)
 				.setFooter("Максимальное количество дополняемых слов: 30"),
 		],

@@ -26,7 +26,7 @@ module.exports = {
 		message.channel.send({
 			embeds: [
 				new MessageEmbed()
-					.setAuthor(bot.utils.escapeMarkdown(user.login), user.avatar_url, user.html_url)
+					.setAuthor({name:bot.utils.escapeMarkdown(user.login), iconURL: user.avatar_url, url:user.html_url})
 					.setTitle(`Профиль`)
 					.setDescription(
 						`**ID:** \`${user.id}\`
