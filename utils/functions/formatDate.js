@@ -43,7 +43,7 @@ module.exports = (date, format = "%fullDate / %fullTime (%dayOfWeek)") => {
 		.replace(/%day+/g, d[0])
 		.replace(/%month+/g, d[1])
 		.replace(/%year+/g, d[2])
-		.replace(/%hour+/g, s[0])
+		.replace(/%sec+/g, s[0])
 		.replace(/%min+/g, s[1])
-		.replace(/%sec+/g, s[2]);
+		.replace(/%hour+/g, s[2]);
 };

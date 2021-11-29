@@ -9,6 +9,7 @@ module.exports = {
 	aliases: ["идея"],
 	category: "commands",
 	async execute(message, args, bot) {
+		if (message.guild.id === "681142809654591501") return;
 		const guild = (await bot.database.guild.findOne({ id: message.guild.id })) || { idea_channel: null, prefix };
 		const image = message.attachments.map((a) => a)[0]?.attachment || "";
 
@@ -20,15 +21,10 @@ module.exports = {
 				bot,
 			);
 
-		if (message.member.roles.cache.has("851520479578816533"))
-			return bot.utils.error(`Клоун, тебе нельзя писать идеи!`, this, message, bot);
-
 		message.guild.channels.cache
 			.get(guild.idea_channel)
 			.send({
-				content: `${message.guild.id === "681142809654591501" ? "<@&748859760270639126>, " : ""}Идея от ${
-					message.author
-				}`,
+				content: `Идея от ${message.author}`,
 				embeds: [
 					new MessageEmbed()
 						.setColor("RANDOM")
