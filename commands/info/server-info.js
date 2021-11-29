@@ -30,7 +30,7 @@ module.exports = {
 		});
 
 		const embed = new MessageEmbed()
-			.setAuthor({name:message.guild.name})
+			.setAuthor({ name: message.guild.name })
 			.setTitle(`Информация о сервере`)
 			.setDescription(
 				`ID: **${message.guild.id}**

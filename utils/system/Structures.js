@@ -24,7 +24,7 @@ module.exports = () => {
 		constructor(bot, nodes) {
 			super(nodes, {
 				user: bot.user?.id || "675311676354199553",
-				shards: bot.options.shardCount || 1
+				shards: bot.options.shardCount || 1,
 			});
 
 			this.send = (packet) => {
@@ -33,11 +33,11 @@ module.exports = () => {
 					if (guild) return guild.shard.send(packet);
 				}
 			};
-	
+
 			bot.ws
 				.on("VOICE_SERVER_UPDATE", this.voiceServerUpdate.bind(this))
 				.on("VOICE_STATE_UPDATE", this.voiceStateUpdate.bind(this))
-				.on("GUILD_CREATE", async data => {
+				.on("GUILD_CREATE", async (data) => {
 					for (const state of data.voice_states) await this.voiceStateUpdate({ ...state, guild_id: data.id });
 				});
 		}

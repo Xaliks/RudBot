@@ -33,9 +33,8 @@ module.exports = {
 							name: message.author.tag,
 							iconURL: message.author.displayAvatarURL({
 								dynamic: true,
-							})
-						}
-						)
+							}),
+						})
 						.setDescription(args.join(" "))
 						.setFooter(`${guild.prefix}${this.name}`)
 						.setImage(image),

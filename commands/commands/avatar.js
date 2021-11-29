@@ -9,17 +9,22 @@ module.exports = {
 	async execute(message, args, bot) {
 		const user = await bot.users.fetch(args[0]).catch(() => bot.utils.findMember(message, args.join(" "), true).user);
 		const formats = ["webp", "png", "jpg"];
-		if (user.avatar.startsWith("a_")) formats.push("gif")
+		if (user.avatar.startsWith("a_")) formats.push("gif");
 
 		message.channel.send({
 			embeds: [
 				new MessageEmbed()
-					.setAuthor({name: bot.utils.escapeMarkdown(user.tag)})
+					.setAuthor({ name: bot.utils.escapeMarkdown(user.tag) })
 					.setDescription(
-						formats.map((format) => `[${format.toUpperCase()}](${user.displayAvatarURL({
-							size: 2048,
-							format,
-						})})`).join(" / ")
+						formats
+							.map(
+								(format) =>
+									`[${format.toUpperCase()}](${user.displayAvatarURL({
+										size: 2048,
+										format,
+									})})`,
+							)
+							.join(" / "),
 					)
 					.setImage(
 						user.displayAvatarURL({

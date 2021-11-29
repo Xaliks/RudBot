@@ -17,7 +17,10 @@ module.exports = {
 		message.channel.send({
 			embeds: [
 				new MessageEmbed()
-					.setAuthor({name:`Скин игрока ${bot.utils.escapeMarkdown(data.name)}`, iconURL: `https://crafatar.com/renders/head/${data.id}` })
+					.setAuthor({
+						name: `Скин игрока ${bot.utils.escapeMarkdown(data.name)}`,
+						iconURL: `https://crafatar.com/renders/head/${data.id}`,
+					})
 					.setDescription(`[Скачать скин](https://crafatar.com/skins/${data.id})`)
 					.setImage(`https://crafatar.com/renders/body/${data.id}`),
 			],

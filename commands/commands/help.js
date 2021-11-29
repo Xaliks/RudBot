@@ -49,7 +49,7 @@ module.exports = {
 		});
 
 		function Embeds(Title, category) {
-			return new MessageEmbed().setAuthor({name: bot.user.username}).setTitle(`Помощь **${Title}**`)
+			return new MessageEmbed().setAuthor({ name: bot.user.username }).setTitle(`Помощь **${Title}**`)
 				.setDescription(`**<> - Обязательное действие**
 **[] - Не обязательное действие**
 
