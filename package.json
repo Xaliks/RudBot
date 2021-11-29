@@ -10,6 +10,7 @@
 	"dependencies": {
 		"@iamtraction/google-translate": "^1.1.2",
 		"discord.js": "github:discordjs/discord.js",
+		"lavacord": "^1.1.9",
 		"mongoose": "^5.11.14"
 	}
 }
