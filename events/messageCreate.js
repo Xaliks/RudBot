@@ -5,9 +5,7 @@ const { permissions } = require("../data/data.json");
 module.exports = {
 	name: "messageCreate",
 	async execute(bot, message) {
-		if (!message.guild) return;
-		if (["739809196677267478", "782548346862043176"].includes(message.channel.id)) message.crosspost();
-		if (message.author.bot) return;
+		if (!message.guild || message.author.bot) return;
 		if (
 			!message.channel.permissionsFor(bot.user.id).has(Permissions.FLAGS.SEND_MESSAGES) &&
 			!message.channel.permissionsFor(bot.user.id).has(Permissions.FLAGS.ADMINISTRATOR)

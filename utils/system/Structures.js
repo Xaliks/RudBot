@@ -1,7 +1,7 @@
 "use strict";
 
 const Discord = require("discord.js");
-const Lavacord = require("lavacord");
+const Lavacord = require("./Lavacord/index.js");
 
 module.exports = () => {
 	Discord.MessageEmbed = class RudBotMessageEmbed extends Discord.MessageEmbed {

@@ -1,5 +1,5 @@
 const { Collection } = require("discord.js");
-const { LavacordManager } = require("lavacord");
+const { LavacordManager } = require("./utils/system/Lavacord");
 const { mongooseKey, lavacordNodes } = require("./config.json");
 const Database = require("./utils/system/Database");
 
