@@ -1,10 +1,10 @@
 module.exports = {
-    name: "trackStop",
-    async execute(bot, player) {
-        const { message } = player.queue[0];
+	name: "trackStop",
+	async execute(bot, player) {
+		const { message } = player.queue[0];
 
-        message.embeds[0].fields[0].value = "**Трек прослушан**";
+		message.embeds[0].fields = [{ name: "Длительность", value: "**Трек прослушан**" }];
 
-        await message.edit({ content: "\n", embeds: message.embeds });
-    }
-}
+		await message.edit({ content: "\n", embeds: message.embeds });
+	},
+};

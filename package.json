@@ -5,6 +5,8 @@
 	"main": "bot.js",
 	"author": "Xaliks",
 	"scripts": {
+		"install": "pm2 start bot.js --name RudBot",
+		"reload": "pm2 reload RudBot && pm2 reset RudBot",
 		"format": "prettier --write \"**/*.{js,json}\""
 	},
 	"dependencies": {

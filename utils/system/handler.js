@@ -34,21 +34,19 @@ module.exports = (bot) => {
 
 	// Функции
 	//-----------------------------------------------------------------------------
-	readdirSync("./utils/functions/")
-		.forEach((file) => {
-			bot.utils[file.replace(".js", "")] = require(`../functions/${file}`);
+	readdirSync("./utils/functions/").forEach((file) => {
+		bot.utils[file.replace(".js", "")] = require(`../functions/${file}`);
 
-			delete require.cache[require.resolve(`../functions/${file}`)];
-		});
+		delete require.cache[require.resolve(`../functions/${file}`)];
+	});
 	//-----------------------------------------------------------------------------
 
 	// Интеракции
 	//-----------------------------------------------------------------------------
-	readdirSync("./utils/commands")
-		.forEach((file) => {
-			bot.interactions[file.replace(".js", "")] = require(`../commands/${file}`);
+	readdirSync("./utils/commands").forEach((file) => {
+		bot.interactions[file.replace(".js", "")] = require(`../commands/${file}`);
 
-			delete require.cache[require.resolve(`../commands/${file}`)];
-		});
+		delete require.cache[require.resolve(`../commands/${file}`)];
+	});
 	//-----------------------------------------------------------------------------
 };

@@ -104,7 +104,7 @@ module.exports = class LavalinkNode {
 		if (msg.op && msg.op === "stats") this.stats = { ...msg };
 
 		delete this.stats.op;
-		
+
 		if (msg.guildId && this.manager.players.has(msg.guildId)) this.manager.players.get(msg.guildId).emit(msg.op, msg);
 		this.manager.emit("raw", msg, this);
 	}
@@ -112,8 +112,8 @@ module.exports = class LavalinkNode {
 	onError(event) {
 		const error = event && event.error ? event.error : event;
 		if (!error) return;
-		console.log(error)
-		console.log(this)
+		console.log(error);
+		console.log(this);
 		this.manager.emit("error", error, this);
 		this.reconnect();
 	}
@@ -143,4 +143,4 @@ module.exports = class LavalinkNode {
 		await Promise.all(this._queue.map(this._send));
 		this._queue = [];
 	}
-}
+};

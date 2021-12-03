@@ -32,13 +32,19 @@ module.exports = class Player extends EventEmitter {
 					break;
 			}
 		}).on("playerUpdate", (data) => {
-			if ((this.state.position || 0) != data.state.position) this.manager.emit("trackUpdate", { ...this, state: {
-				volume: this.state.volume, equalizer: this.state.equalizer, ...data.state
-			}})
+			if ((this.state.position || 0) != data.state.position)
+				this.manager.emit("trackUpdate", {
+					...this,
+					state: {
+						volume: this.state.volume,
+						equalizer: this.state.equalizer,
+						...data.state,
+					},
+				});
 			this.state = { volume: this.state.volume, equalizer: this.state.equalizer, ...data.state };
 		});
 	}
-	
+
 	async play(trackMessage, track, message, options = { addInQueue: true }) {
 		if (options.addInQueue === true) {
 			this.queue.push({ author: message.author, message: trackMessage, track });
@@ -47,7 +53,7 @@ module.exports = class Player extends EventEmitter {
 			if (this.queue[1]) {
 				this.manager.emit("addTrackInQueue", this, this.queue[this.queue.length - 2].message);
 				return this.queue;
-			};
+			}
 		}
 
 		const d = await this.send("play", { ...options, track });
@@ -139,4 +145,4 @@ module.exports = class Player extends EventEmitter {
 
 		return true;
 	}
-}
+};

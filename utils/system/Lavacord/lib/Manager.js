@@ -113,7 +113,7 @@ module.exports = class Manager extends EventEmitter {
 
 		await player.connect({ sessionId: state.session_id, event: server });
 		this.expecting.delete(guildID);
-		
+
 		return true;
 	}
 
@@ -129,4 +129,4 @@ module.exports = class Manager extends EventEmitter {
 		this.players.set(data.guild, player);
 		return player;
 	}
-}
+};
