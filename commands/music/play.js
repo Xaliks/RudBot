@@ -3,7 +3,7 @@ const fetch = require("node-fetch");
 
 module.exports = {
 	name: "play",
-	description: "Поиск пользователей на github",
+	description: "Воспроизведение трека в голосовом канале",
 	category: "music",
 	cooldown: 10,
 	usage: ["<Название песни/Ссылка>"],
