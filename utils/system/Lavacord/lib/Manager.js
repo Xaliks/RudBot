@@ -1,12 +1,11 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Manager = void 0;
 
 const { EventEmitter } = require("events");
-const { LavalinkNode } = require("./LavalinkNode");
-const { Rest } = require("./Rest");
-const { Player } = require("./Player");
-class Manager extends EventEmitter {
+const LavalinkNode = require("./LavalinkNode");
+const Rest = require("./Rest");
+const Player = require("./Player");
+
+module.exports = class Manager extends EventEmitter {
 	constructor(nodes, options) {
 		super();
 		this.nodes = new Map();
@@ -16,39 +15,46 @@ class Manager extends EventEmitter {
 		this.voiceStates = new Map();
 		this.shards = 1;
 		this.Player = Player;
-		this.Rest = Rest;
+		this.rest = Rest;
 		this.expecting = new Set();
+
 		if (options.user) this.user = options.user;
 		if (options.shards) this.shards = options.shards;
 		if (options.player) this.Player = options.player;
 		if (options.send) this.send = options.send;
 		for (const node of nodes) this.createNode(node);
 	}
+
 	connect() {
 		return Promise.all([...this.nodes.values()].map((node) => node.connect()));
 	}
+
 	disconnect() {
 		const promises = [];
 		for (const id of [...this.players.keys()]) promises.push(this.leave(id));
 		for (const node of [...this.nodes.values()]) promises.push(node.destroy());
 		return Promise.all(promises);
 	}
+
 	createNode(options) {
 		const node = new LavalinkNode(this, options);
 		this.nodes.set(options.id, node);
 		return node;
 	}
+
 	removeNode(id) {
 		const node = this.nodes.get(id);
 		if (!node) return false;
 		return node.destroy() && this.nodes.delete(id);
 	}
+
 	async join(data, joinOptions = {}) {
 		const player = this.players.get(data.guild);
 		if (player) return player;
 		await this.sendWS(data.guild, data.channel, joinOptions);
 		return this.spawnPlayer(data);
 	}
+
 	async leave(guild) {
 		await this.sendWS(guild, null);
 		const player = this.players.get(guild);
@@ -57,21 +63,13 @@ class Manager extends EventEmitter {
 		await player.destroy();
 		return this.players.delete(guild);
 	}
-	async switch(player, node) {
-		const { track, state, voiceUpdateState } = { ...player };
-		const position = state.position ? state.position + 2000 : 2000;
-		await player.destroy();
-		player.node = node;
-		await player.connect(voiceUpdateState);
-		await player.play(track, { startTime: position, volume: state.volume });
-		await player.equalizer(state.equalizer);
-		return player;
-	}
+
 	voiceServerUpdate(data) {
 		this.voiceServers.set(data.guild_id, data);
 		this.expecting.add(data.guild_id);
 		return this._attemptConnection(data.guild_id);
 	}
+
 	voiceStateUpdate(data) {
 		if (data.user_id !== this.user) return Promise.resolve(false);
 		if (data.channel_id) {
@@ -82,6 +80,7 @@ class Manager extends EventEmitter {
 		this.voiceStates.delete(data.guild_id);
 		return Promise.resolve(false);
 	}
+
 	sendWS(guild, channel, { selfmute = false, selfdeaf = false } = {}) {
 		return this.send({
 			op: 4,
@@ -93,6 +92,7 @@ class Manager extends EventEmitter {
 			},
 		});
 	}
+
 	get idealNodes() {
 		return [...this.nodes.values()]
 			.filter((node) => node.connected)
@@ -102,26 +102,31 @@ class Manager extends EventEmitter {
 				return aload - bload;
 			});
 	}
+
 	async _attemptConnection(guildID) {
 		const server = this.voiceServers.get(guildID);
 		const state = this.voiceStates.get(guildID);
 		if (!server || !state || !this.expecting.has(guildID)) return false;
+
 		const player = this.players.get(guildID);
 		if (!player) return false;
+
 		await player.connect({ sessionId: state.session_id, event: server });
 		this.expecting.delete(guildID);
+		
 		return true;
 	}
+
 	spawnPlayer(data) {
 		const exists = this.players.get(data.guild);
 		if (exists) return exists;
+
 		const node = this.nodes.get(data.node);
 		if (!node) throw new Error(`INVALID_HOST: No available node with ${data.node}`);
+
 		const player = new this.Player(node, data.guild);
 		this.queues.set(data.guild, new Array());
 		this.players.set(data.guild, player);
 		return player;
 	}
 }
-exports.Manager = Manager;
-//# sourceMappingURL=Manager.js.map

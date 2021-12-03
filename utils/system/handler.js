@@ -18,21 +18,23 @@ module.exports = (bot) => {
 
 	// Ивенты
 	//-----------------------------------------------------------------------------
-	readdirSync("./events/")
-		.filter((file) => file.endsWith(".js"))
-		.forEach((file) => {
-			const event = require(`../../events/${file}`);
+	readdirSync("./events/").forEach((dir) => {
+		readdirSync(`./events/${dir}`)
+			.filter((f) => f.endsWith(".js"))
+			.forEach((file) => {
+				const event = require(`../../events/${dir}/${file}`);
 
-			bot.on(event.name, event.execute.bind(null, bot));
+				if (dir === "bot") bot.on(event.name, event.execute.bind(null, bot));
+				else bot.music.on(event.name, event.execute.bind(null, bot));
 
-			delete require.cache[require.resolve(`../../events/${file}`)];
-		});
+				delete require.cache[require.resolve(`../../events/${dir}/${file}`)];
+			});
+	});
 	//-----------------------------------------------------------------------------
 
 	// Функции
 	//-----------------------------------------------------------------------------
 	readdirSync("./utils/functions/")
-		.filter((file) => file.endsWith(".js"))
 		.forEach((file) => {
 			bot.utils[file.replace(".js", "")] = require(`../functions/${file}`);
 
@@ -43,7 +45,6 @@ module.exports = (bot) => {
 	// Интеракции
 	//-----------------------------------------------------------------------------
 	readdirSync("./utils/commands")
-		.filter((file) => file.endsWith(".js"))
 		.forEach((file) => {
 			bot.interactions[file.replace(".js", "")] = require(`../commands/${file}`);
 

@@ -1,6 +1,6 @@
-const { owners } = require("../config.json");
+const { owners } = require("../../config.json");
 const { Permissions } = require("discord.js");
-const { permissions } = require("../data/data.json");
+const { permissions } = require("../../data/data.json");
 
 module.exports = {
 	name: "messageCreate",

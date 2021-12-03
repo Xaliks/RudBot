@@ -1,10 +1,8 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Player = void 0;
 
 const { EventEmitter } = require("events");
 
-class Player extends EventEmitter {
+module.exports = class Player extends EventEmitter {
 	constructor(node, id) {
 		super();
 		this.node = node;
@@ -19,20 +17,12 @@ class Player extends EventEmitter {
 		this.on("event", (data) => {
 			switch (data.type) {
 				case "TrackStartEvent":
-					if (this.listenerCount("start")) this.emit("start", data);
 					break;
 				case "TrackEndEvent":
-					if (data.reason !== "REPLACED") this.playing = false;
-					this.track = null;
-					this.timestamp = null;
-					if (this.listenerCount("end")) this.emit("end", data);
+					this.skip();
 					break;
 				case "TrackExceptionEvent":
 					if (this.listenerCount("error")) this.emit("error", data);
-					break;
-				case "TrackStuckEvent":
-					this.stop();
-					if (this.listenerCount("end")) this.emit("end", data);
 					break;
 				case "WebSocketClosedEvent":
 					if (this.listenerCount("error")) this.emit("error", data);
@@ -42,71 +32,111 @@ class Player extends EventEmitter {
 					break;
 			}
 		}).on("playerUpdate", (data) => {
+			if ((this.state.position || 0) != data.state.position) this.manager.emit("trackUpdate", { ...this, state: {
+				volume: this.state.volume, equalizer: this.state.equalizer, ...data.state
+			}})
 			this.state = { volume: this.state.volume, equalizer: this.state.equalizer, ...data.state };
 		});
 	}
-	async play(track, options = { addInQueue: true }) {
-		this.queue.push(track);
-		this.manager.queues.set(this.id, this.queue);
-		if (this.queue.length - 1 && options.addInQueue) return this.queue;
+	
+	async play(trackMessage, track, message, options = { addInQueue: true }) {
+		if (options.addInQueue === true) {
+			this.queue.push({ author: message.author, message: trackMessage, track });
+			this.manager.queues.set(this.id, this.queue);
+
+			if (this.queue[1]) {
+				this.manager.emit("addTrackInQueue", this, this.queue[this.queue.length - 2].message);
+				return this.queue;
+			};
+		}
 
 		const d = await this.send("play", { ...options, track });
 		this.track = track;
 		this.playing = true;
 		this.timestamp = Date.now();
+
 		return d;
 	}
-	async skip() {
-		if (this.queue.length === 1) return await this.stop();
-		this.manager.queues.set(this.id, this.queue.slice(1));
-		this.queue = this.queue.slice(1);
 
-		return this.play(this.queue[0], { addInQueue: false });
+	async skip() {
+		if (!this.queue[1]) return await this.stop(false);
+
+		this.play(this.queue[1].message, this.queue[1].track, null, { addInQueue: false });
+		this.manager.emit("trackStop", this);
+
+		this.queue.shift();
+		this.manager.queues.set(this.id, this.queue);
+
+		return true;
 	}
-	async stop() {
-		const d = await this.send("stop");
-		this.manager.queues.delete(this.id);
-		this.queue = [];
+
+	async stop(send = true) {
+		if (send) await this.send("stop");
+
+		this.manager.emit("trackStop", this);
+
+		this._deleteQueue();
+		this.track = null;
 		this.playing = false;
 		this.timestamp = null;
-		return d;
+
+		return true;
 	}
-	async pause(pause) {
+
+	async pause(pause = true) {
+		this.manager.emit("trackPause", this, pause);
+
 		const d = await this.send("pause", { pause });
 		this.paused = pause;
-		if (this.listenerCount("pause")) this.emit("pause", pause);
 		return d;
 	}
+
 	resume() {
 		return this.pause(false);
 	}
+
 	async volume(volume) {
+		this.manager.emit("trackVolume", this, this.state.volume, volume);
+
 		const d = await this.send("volume", { volume });
 		this.state.volume = volume;
-		if (this.listenerCount("volume")) this.emit("volume", volume);
 		return d;
 	}
+
 	async seek(position) {
+		this.manager.emit("trackSeek", this, this.state.position, position);
+
 		const d = await this.send("seek", { position });
-		if (this.listenerCount("seek")) this.emit("seek", position);
 		return d;
 	}
+
 	destroy() {
+		this._deleteQueue();
 		return this.send("destroy");
 	}
+
 	connect(data) {
 		this.voiceUpdateState = data;
 		return this.send("voiceUpdate", data);
 	}
+
 	switchChannel(channel, options = {}) {
 		return this.manager.sendWS(this.id, channel, options);
 	}
+
 	send(op, data) {
 		if (!this.node.connected) return Promise.reject(new Error("No available websocket connection for selected node."));
 		return this.node.send({ ...data, op, guildId: this.id });
 	}
+
 	get manager() {
 		return this.node.manager;
 	}
+
+	_deleteQueue() {
+		this.manager.queues.delete(this.id);
+		this.queue = [];
+
+		return true;
+	}
 }
-exports.Player = Player;

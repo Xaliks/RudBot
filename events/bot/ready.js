@@ -1,4 +1,4 @@
-const { events } = require("../config.json");
+const { events } = require("../../config.json");
 
 module.exports = {
 	name: "ready",

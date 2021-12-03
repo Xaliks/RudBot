@@ -23,8 +23,8 @@ module.exports = () => {
 	Lavacord.LavacordManager = class RudBotLavacordManager extends Lavacord.Manager {
 		constructor(bot, nodes) {
 			super(nodes, {
-				user: bot.user?.id || "675311676354199553",
-				shards: bot.options.shardCount || 1,
+				user: "675311676354199553",
+				shards: 1,
 			});
 
 			this.send = (packet) => {

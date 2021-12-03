@@ -1,4 +1,4 @@
-const { MessageEmbed, MessageButton } = require("discord.js");
+const { MessageEmbed, MessageButton, Permissions } = require("discord.js");
 const fetch = require("node-fetch");
 
 module.exports = {
@@ -17,10 +17,11 @@ module.exports = {
 			!message.member.voice.channel.permissionsFor(bot.user.id).has(Permissions.FLAGS.ADMINISTRATOR)
 		)
 			return bot.utils.error("У меня недостаточно прав (**Входить в канал**, **Говорить**)!", this, message, bot);
+		if (message.guild.me.voice.channelId && message.guild.me.voice.channelId != message.member.voice.channelId) return bot.utils.error(`Бота уже использует кто-то другой! Зайдите в канал <#${message.guild.me.voice.channelId}>!`, this, message, bot)
 
 		const query = args.join(" ");
-		const search = await bot.music.Rest.load(bot.music.idealNodes[0], `ytsearch:${query}`);
-		if (!search.tracks[0]) return bot.utils.error(`Ничего не найдено по запросу \`${search}\`!`, this, message, bot);
+		const search = await bot.music.rest.load(bot.music.idealNodes[0], `ytsearch:${query}`);
+		if (!search.tracks[0]) return bot.utils.error(`Ничего не найдено по запросу \`${query}\`!`, this, message, bot);
 
 		const tracks = search.tracks.filter((track) => !track.isStream).slice(0, 5);
 		const msg = await message.channel.send({
@@ -49,7 +50,7 @@ module.exports = {
 			if (button.user.id != message.author.id)
 				return button.reply({ content: "Ты не можешь это сделать!", ephemeral: true });
 			const track = tracks[button.customId];
-			if ((track.info.length / 1000 / 60 / 60) % 24 >= 1)
+			if (Math.floor((track.info.length / 1000 / 60 / 60)) >= 1)
 				return button.reply({ content: "Запрещено воспроизводить треки длительностью более 1 часа!", ephemeral: true });
 
 			const video = await getVideoInfo(track.info.uri);
@@ -59,7 +60,7 @@ module.exports = {
 				channel: message.member.voice.channel.id,
 				node: bot.music.idealNodes[0].id,
 			});
-			await player.play(track.track);
+			await player.play(msg, track.track, message);
 
 			button.update({
 				content: "\n",
@@ -70,7 +71,8 @@ module.exports = {
 						.setTitle(bot.utils.escapeMarkdown(video.title))
 						.setURL(track.info.uri)
 						.setThumbnail(video.thumbnail_url)
-						.setDescription(`Длительность: \`${msToTime(track.info.length)}\`\nГромкость: \`${player.state.volume}%\``),
+						.addField("Длительность", `\`00:00\` / \`${msToTime(track.info.length)}\``, true)
+						.setDescription(`Громкость: \`${player.state.volume}%\``),
 				],
 			});
 		});
@@ -80,20 +82,18 @@ module.exports = {
 function getVideoInfo(link) {
 	return fetch(`https://www.youtube.com/oembed?url=${link}&format=json`).then((res) => res.json());
 }
-async function getAuthorAvatar(link) {
-	const data = await fetch(link).then((resp) => resp.text());
-
-	return data.match(/"(https:\/\/yt3\.ggpht\.com\/ytc\/.*?)"/g)[0].replace(/"/g, "");
+function getAuthorAvatar(url) {
+	return fetch(url).then((resp) => resp.text()).then(data => data.match(/"(https:\/\/yt3\.ggpht\.com\/ytc\/.*?)"/g)[0].replace(/"/g, ""));
 }
 function msToTime(ms) {
 	const temp = [];
 	const seconds = Math.floor((ms / 1000) % 60);
 	const minutes = Math.floor((ms / 1000 / 60) % 60);
-	const hours = Math.floor((ms / 1000 / 60 / 60) % 24);
+	const hours = Math.floor(ms / 1000 / 60 / 60);
 
-	if (hours > 0) temp.push(hours);
-	if (minutes > 0) temp.push(minutes.toString().length === 1 ? "0" + minutes : minutes);
-	if (seconds > 0) temp.push(seconds.toString().length === 1 ? "0" + seconds : seconds);
+	if (hours > 0) temp.push(hours.toString().length === 1 ? "0" + hours : hours)
+	temp.push(minutes.toString().length === 1 ? "0" + minutes : minutes);
+	temp.push(seconds.toString().length === 1 ? "0" + seconds : seconds);
 
 	return temp.join(":");
 }
