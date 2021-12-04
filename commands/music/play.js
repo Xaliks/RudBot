@@ -72,7 +72,6 @@ module.exports = {
 				channel: message.member.voice.channel.id,
 				node: bot.music.idealNodes[0].id,
 			});
-			await player.play(msg, track.track, message);
 
 			button.update({
 				content: "\n",
@@ -83,10 +82,12 @@ module.exports = {
 						.setTitle(bot.utils.escapeMarkdown(video.title))
 						.setURL(track.info.uri)
 						.setThumbnail(video.thumbnail_url)
-						.addField("Длительность", `\`00:00\` / \`${msToTime(track.info.length)}\``, false)
-						.addField("Громкость", `**${player.state.volume}%**`, true)
-						.addField("Позиция в очереди", `**${player.queue.length}**`, true),
+						.addField("Длительность", `\`00:00\` ${bar(player.state.position, track.length, 30, ['[','─︎',']'], ['[','═︎',']'])} \`${msToTime(track.info.length)}\``, false)
+						.addField("Громкость", `**100%**`, true)
+						.addField("Позиция в очереди", `**1**`, true),
 				],
+			}).then(() => {
+				player.play(msg, track.track, message);
 			});
 		});
 	},
@@ -99,6 +100,24 @@ function getAuthorAvatar(url) {
 	return fetch(url)
 		.then((resp) => resp.text())
 		.then((data) => data.match(/https:\/\/yt3\.ggpht\.com\/.*?"/g)[0].replace('"', ""));
+}
+function bar(standartNum, reqNum, length = 10, standart = ['[', '-', ']'], bar = ['[', '+', ']']) {
+    let progressbar = [];
+    for (let i = 0; i < length; i++) {
+        progressbar[i] = standart[1];
+        if (i === 0)
+            progressbar[i] = standart[0];
+        if (i === length - 1)
+            progressbar[i] = standart[2];
+    }
+    for (let i = 0; i < Math.floor(Math.floor(standartNum / reqNum * 100) / (100 / length)); i++) {
+        progressbar[i] = bar[1];
+        if (i === 0)
+            progressbar[i] = bar[0];
+        if (i === length - 1)
+            progressbar[i] = bar[2];
+    }
+    return progressbar.join("")
 }
 function msToTime(ms) {
 	const temp = [];

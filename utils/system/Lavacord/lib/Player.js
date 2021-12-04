@@ -19,6 +19,7 @@ module.exports = class Player extends EventEmitter {
 				case "TrackStartEvent":
 					break;
 				case "TrackEndEvent":
+					if (data.reason === "STOPPED") break;
 					this.skip();
 					break;
 				case "TrackExceptionEvent":
@@ -32,7 +33,7 @@ module.exports = class Player extends EventEmitter {
 					break;
 			}
 		}).on("playerUpdate", (data) => {
-			if ((this.state.position || 0) != data.state.position)
+			if ((this.state.position || 0) != data.state.position && this.playing === true)
 				this.manager.emit("trackUpdate", {
 					...this,
 					state: {
@@ -65,7 +66,7 @@ module.exports = class Player extends EventEmitter {
 	}
 
 	async skip() {
-		if (!this.queue[1]) return await this.stop(false);
+		if (!this.queue[1]) return await this.stop();
 
 		this.play(this.queue[1].message, this.queue[1].track, null, { addInQueue: false });
 		this.manager.emit("trackStop", this);
@@ -76,8 +77,8 @@ module.exports = class Player extends EventEmitter {
 		return true;
 	}
 
-	async stop(send = true) {
-		if (send) await this.send("stop");
+	async stop() {
+		await this.send("stop", { skipped: true });
 
 		this.manager.emit("trackStop", this);
 
@@ -131,7 +132,7 @@ module.exports = class Player extends EventEmitter {
 	}
 
 	send(op, data) {
-		if (!this.node.connected) return Promise.reject(new Error("No available websocket connection for selected node."));
+		if (!this.node.connected) setTimeout(this.send(op, data), 1000);
 		return this.node.send({ ...data, op, guildId: this.id });
 	}
 

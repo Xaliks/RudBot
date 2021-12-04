@@ -33,40 +33,49 @@ module.exports = class Manager extends EventEmitter {
 		const promises = [];
 		for (const id of [...this.players.keys()]) promises.push(this.leave(id));
 		for (const node of [...this.nodes.values()]) promises.push(node.destroy());
+		
 		return Promise.all(promises);
 	}
 
 	createNode(options) {
 		const node = new LavalinkNode(this, options);
 		this.nodes.set(options.id, node);
+
 		return node;
 	}
 
 	removeNode(id) {
 		const node = this.nodes.get(id);
 		if (!node) return false;
+
 		return node.destroy() && this.nodes.delete(id);
 	}
 
 	async join(data, joinOptions = {}) {
 		const player = this.players.get(data.guild);
 		if (player) return player;
+
 		await this.sendWS(data.guild, data.channel, joinOptions);
+
 		return this.spawnPlayer(data);
 	}
 
 	async leave(guild) {
 		await this.sendWS(guild, null);
+
 		const player = this.players.get(guild);
 		if (!player) return false;
+
 		player.removeAllListeners();
 		await player.destroy();
+		
 		return this.players.delete(guild);
 	}
 
 	voiceServerUpdate(data) {
 		this.voiceServers.set(data.guild_id, data);
 		this.expecting.add(data.guild_id);
+
 		return this._attemptConnection(data.guild_id);
 	}
 
@@ -76,8 +85,10 @@ module.exports = class Manager extends EventEmitter {
 			this.voiceStates.set(data.guild_id, data);
 			return this._attemptConnection(data.guild_id);
 		}
+
 		this.voiceServers.delete(data.guild_id);
 		this.voiceStates.delete(data.guild_id);
+		
 		return Promise.resolve(false);
 	}
 

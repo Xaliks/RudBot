@@ -40,6 +40,38 @@ module.exports = () => {
 				.on("GUILD_CREATE", async (data) => {
 					for (const state of data.voice_states) await this.voiceStateUpdate({ ...state, guild_id: data.id });
 				});
+			
+			bot
+				.on("voiceStateUpdate", (oldState, newState) => {
+					const newMember = newState.member;
+								
+					if (!oldState.channel && newState.channel) {
+						bot.emit("voiceChannelJoin", newMember, newState.channel);
+					}
+			
+					if (oldState.channel && !newState.channel) {
+						bot.emit("voiceChannelLeave", newMember, oldState.channel);
+					}
+			
+					if (oldState.channel && newState.channel && oldState.channel.id !== newState.channel.id) {
+						bot.emit("voiceChannelLeave", newMember, oldState.channel);
+						bot.emit("voiceChannelJoin", newMember, newState.channel);
+					}
+				})
+				.on("voiceChannelLeave", async (member, channel) => {
+					if (channel.members.size === 1 && channel.members.has(bot.user.id)) {
+						channel.guild.me.voice.disconnect();
+
+						await this.sendWS(channel.guild.id, null);
+
+						const player = this.players.get(channel.guild.id);
+						if (!player) return false;
+
+						await player.destroy();
+		
+						return this.players.delete(channel.guild.id);
+					}
+				})
 		}
 	};
 };

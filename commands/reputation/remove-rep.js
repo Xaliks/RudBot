@@ -16,7 +16,7 @@ module.exports = {
 		if (user.bot) return bot.utils.error("Это бот. У ботов нет репутации!", this, message, bot);
 
 		const amount = parseInt(args[1]);
-		if (isNaN(amount)) return bot.utils.error(`\`${amount}\` не число!`, this, message, bot);
+		if (isNaN(amount)) return bot.utils.error(`\`${args[1]}\` не число!`, this, message, bot);
 
 		await bot.database.member.findOneAndUpdateOrCreate(
 			{ id: user.id, guild_id: message.guild.id },
