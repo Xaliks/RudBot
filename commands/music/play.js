@@ -84,7 +84,7 @@ module.exports = {
 						.setThumbnail(video.thumbnail_url)
 						.addField("Длительность", `\`00:00\` ${bar(player.state.position, track.length, 30, ['[','─︎',']'], ['[','═︎',']'])} \`${msToTime(track.info.length)}\``, false)
 						.addField("Громкость", `**100%**`, true)
-						.addField("Позиция в очереди", `**1**`, true),
+						.addField("Позиция в очереди", `**${player.queue.length || 1}**`, true),
 				],
 			}).then(() => {
 				player.play(msg, track.track, message);
