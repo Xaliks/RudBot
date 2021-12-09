@@ -21,8 +21,6 @@ const staff_roles = {
 	staff_aqua: "808338239583944704",
 };
 
-// message.channel.send({ content: `123`, components: [{ type: 1, components: [new Discord.MessageSelectMenu().setMinValues(0).setMaxValues(Object.keys(roles).length).setCustomId("reaction_roles").addOptions([{ label: "Новости", value: "news", emoji: "📰" }, { label: "Идеи", value: "ideas", emoji: "💡" }, { label: "Голосования", value: "poll", emoji: "📊" }, { label: "Оповещения", value: "youtube", emoji: "<:a_heart:787524329797582898>" }, { label: "Ивенты", value: "events", emoji: "🆚"}, { label: "Жёлтый", value: "yellow", emoji: "🟡" }, { label: "Зелёный", value: "green", emoji: "🟢" }, { label: "Чёрный", value: "black", emoji: "<a:blackHeart:756142632287076433>" }, { label: "Лаймовый", value: "lime", emoji: "🥒" }, { label: "Серый", value: "gray", emoji: "⚫" }, { label: "Белый", value: "white", emoji: "⚪" }, { label: "Розовый", value: "pink", emoji: "🔴"}])]}] })
-
 module.exports = async (interaction) => {
 	const added = [];
 	const { member, values } = interaction;
