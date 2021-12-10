@@ -4,9 +4,6 @@ module.exports = {
 		if (interaction.message.author.id != bot.user.id) return;
 		const id = interaction.customId;
 
-		if (id === "reaction_roles" && interaction.guildId === "681142809654591501")
-			return bot.interactions.reaction_roles(interaction);
-
 		if (id.startsWith("porfirevich_")) return bot.interactions.porfirevich(interaction, bot);
 		if (id.startsWith("tictactoe_")) return bot.interactions.tictactoe(interaction, bot);
 	},
