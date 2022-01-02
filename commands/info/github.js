@@ -1,5 +1,6 @@
 const { MessageEmbed } = require("discord.js");
 const fetch = require("node-fetch");
+const types = {User: "Пользователь", Organization: "Организация"}
 
 module.exports = {
 	name: "github",
@@ -14,39 +15,33 @@ module.exports = {
 
 		if (user.message === "Not Found") bot.utils.error("Пользователь не найден!", this, message, bot);
 
-		const twitter = user.twitter_username
-			? `[@${user.twitter_username}](https://twitter.com/${user.twitter_username})`
-			: "`Отсутствует`";
-		const website = user.blog ? user.blog : "`Отсутствует`";
-		const location = user.location ? user.location : "Отсутствует";
-		const bio = user.bio ? user.bio : "Отсутствует";
-		const gmail = user.email ? user.email : "Отсутствует";
-		const company = user.company ? user.company : "Отсутствует";
+		const data = [];
+		if (user.company) data.push(`Компания: **${bot.utils.escapeMarkdown(user.company)}**`)
+		if (user.blog) data.push(`Блог: **${bot.utils.escapeMarkdown(user.blog)}**`)
+		if (user.location) data.push(`Локация: **${bot.utils.escapeMarkdown(user.location)}**`)
+		if (user.email) data.push(`Почта: **${user.email}**`)
+		if (user.twitter_username) data.push(`Twitter: **[@${user.twitter_username}](https://twitter.com/${user.twitter_username})**`)
+
+		const embed = new MessageEmbed()
+		.setAuthor({ name: user.login, url: user.html_url })
+		.setThumbnail(user.avatar_url)
+		.setTitle(types[user.type] || user.type)
+		.setDescription(data.join("\n"))
+		.addField("Статистика", `Подписчиков: \`${bot.utils.formatNumber(user.followers)}\`
+Подписок: \`${bot.utils.formatNumber(user.following)}\`
+
+Публичных репозиториев: \`${bot.utils.formatNumber(user.public_repos)}\`
+Публичных Gist'ов: \`${bot.utils.formatNumber(user.public_gists)}\``, false)
+		.setFooter(`ID: ${user.id}`)
+
+ 		if (user.bio) embed.addField("Биография", bot.utils.escapeMarkdown(user.bio), false)
+
+		embed
+			.addField("Дата создания", bot.utils.discordTime(new Date(user.created_at).getTime()), true)
+			.addField("Аккаунт обновлен", bot.utils.discordTime(new Date(user.updated_at).getTime()), true)
 
 		message.channel.send({
-			embeds: [
-				new MessageEmbed()
-					.setAuthor({ name: bot.utils.escapeMarkdown(user.login), iconURL: user.avatar_url, url: user.html_url })
-					.setTitle(`Профиль`)
-					.setDescription(
-						`**ID:** \`${user.id}\`
-**[Аватар](${user.avatar_url})**
-**Тип:** \`${user.type}\`
-**Компания:** \`${company}\`
-**Локация:** \`${location}\`
-**Почта:** \`${gmail}\`
-**Сайт:** ${website}
-**Твиттер:** ${twitter}
-
-**Биография:** \`${bio}\``,
-					)
-					.addField("Подписчиков:", `**${bot.utils.formatNumber(user.followers)}**`, true)
-					.addField("Подписок: ", `**${bot.utils.formatNumber(user.following)}**`, true)
-					.addField("\u200b", "\u200b", false)
-					.addField("Дата создания", bot.utils.discordTime(data.created_at), true)
-					.addField("Аккаунт обновлен ", bot.utils.discordTime(data.updated_at), true)
-					.setThumbnail(user.avatar_url),
-			],
-		});
+			embeds: [embed]
+		})
 	},
 };
