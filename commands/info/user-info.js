@@ -62,7 +62,7 @@ module.exports = {
 				if (!act) return;
 				if (act.id === "custom") status = act.state;
 				else {
-					let other;
+					let other = "";
 					if (act.name === "Spotify") other = `(\`${act.state}\` - \`${act.details}\`)`;
 					activity += `${userinfo.ActivityType[act.type]} **${act.name}** ${other}\n`;
 				}
@@ -87,7 +87,7 @@ module.exports = {
 				.toJSON()
 				.slice(0, -1);
 
-			if (roles) embed.addField(`**Роли (${bot.utils.formatNumber(roles.length)}):**`, roles.join(", "), false);
+			if (roles[0]) embed.addField(`**Роли (${bot.utils.formatNumber(roles.length)}):**`, roles.join(", "), false);
 			//-----------------------------------------------------------------------------
 		}
 
