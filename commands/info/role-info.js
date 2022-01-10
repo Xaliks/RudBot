@@ -28,7 +28,6 @@ module.exports = {
 					.addField("Отображаемая роль?", role.hoist ? "Да" : "Нет", true)
 					.addField("Упоминается?", role.mentionable ? "Да" : "Нет", true)
 					.addField("Создана", bot.utils.discordTime(role.createdTimestamp), true)
-					.setFooter(message.author.username),
 			],
 		});
 	},

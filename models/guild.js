@@ -4,17 +4,25 @@ const { prefix } = require("../config.json");
 module.exports = model(
 	"Guild",
 	new Schema({
-		id: {
-			type: String,
-			required: true,
-		},
+		id: String,
 		prefix: {
 			type: String,
 			default: prefix,
 		},
-		idea_channel: {
-			type: String,
-			default: null,
+		ideas: {
+			id: String,
+			role: String,
+			ideas: [
+				{
+					id: String,
+					votes: [
+						{
+							id: String,
+							vote: Number,
+						},
+					],
+				},
+			],
 		},
 	}),
 );

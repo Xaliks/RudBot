@@ -39,8 +39,6 @@ module.exports = {
 AFK канал: **${message.guild.afkChannel || "Не установлен"}**`,
 			)
 
-			//Участники
-			//-----------------------------------------------------------------------------
 			.addField(
 				`Участников (${bot.utils.formatNumber(message.guild.memberCount)})`,
 				`:bust_in_silhouette: Пользователей: **${bot.utils.formatNumber(users)}**
@@ -51,10 +49,7 @@ ${emojis.idle} Не актив: **${bot.utils.formatNumber(idle)}**
 ${emojis.dnd} Не беспокоить: **${bot.utils.formatNumber(dnd)}**`,
 				true,
 			)
-			//-----------------------------------------------------------------------------
 
-			//Количество
-			//-----------------------------------------------------------------------------
 			.addField(
 				"Количество",
 				`:grinning: Кол-во эмодзи: **${message.guild.emojis.cache.size}**
@@ -65,17 +60,13 @@ ${emojis.voice} Кол-во голос. каналов: **${voices}**`,
 				true,
 			)
 			.addField(`⁣⁣⁣⁣`, `⁣`, false)
-			//-----------------------------------------------------------------------------
-
-			.setFooter("Дизайн JeggyBot")
+			.setFooter({ text: "Дизайн JeggyBot" })
 			.setThumbnail(
 				message.guild.iconURL({
 					dynamic: true,
 				}),
 			);
 
-		//Если есть бусты
-		//-----------------------------------------------------------------------------
 		if (message.guild.premiumSubscriptionCount > 0)
 			embed.addField(
 				`Буст`,
@@ -83,13 +74,10 @@ ${emojis.voice} Кол-во голос. каналов: **${voices}**`,
 ${emojis.boosted} Кол-во бустов: **${message.guild.premiumSubscriptionCount}**`,
 				false,
 			);
-		//-----------------------------------------------------------------------------
 
-		//Даты
-		//-----------------------------------------------------------------------------
-		embed.addField(`Дата создания`, bot.utils.discordTime(message.guild.createdTimestamp), true);
-		embed.addField(`Вы присоединились`, bot.utils.discordTime(message.member.joinedTimestamp), true);
-		//-----------------------------------------------------------------------------
+		embed
+			.addField(`Дата создания`, bot.utils.discordTime(message.guild.createdTimestamp), true)
+			.addField(`Вы присоединились`, bot.utils.discordTime(message.member.joinedTimestamp), true);
 
 		message.channel.send({ embeds: [embed] });
 	},

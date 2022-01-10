@@ -40,19 +40,19 @@ module.exports = () => {
 				.on("GUILD_CREATE", async (data) => {
 					for (const state of data.voice_states) await this.voiceStateUpdate({ ...state, guild_id: data.id });
 				});
-			
+
 			bot
 				.on("voiceStateUpdate", (oldState, newState) => {
 					const newMember = newState.member;
-								
+
 					if (!oldState.channel && newState.channel) {
 						bot.emit("voiceChannelJoin", newMember, newState.channel);
 					}
-			
+
 					if (oldState.channel && !newState.channel) {
 						bot.emit("voiceChannelLeave", newMember, oldState.channel);
 					}
-			
+
 					if (oldState.channel && newState.channel && oldState.channel.id !== newState.channel.id) {
 						bot.emit("voiceChannelLeave", newMember, oldState.channel);
 						bot.emit("voiceChannelJoin", newMember, newState.channel);
@@ -68,10 +68,10 @@ module.exports = () => {
 						if (!player) return false;
 
 						await player.destroy();
-		
+
 						return this.players.delete(channel.guild.id);
 					}
-				})
+				});
 		}
 	};
 };

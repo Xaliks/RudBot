@@ -2,7 +2,6 @@ module.exports = (interaction, bot) => {
 	const { message, user } = interaction;
 	const [_, authorId, userId] = interaction.customId.split("-");
 
-	if (message.deleted) return;
 	if (user.id != authorId && user.id != userId)
 		return interaction.reply({ content: "Ты сейчас не играешь!", ephemeral: true });
 	if (_ === "tictactoe_x") {

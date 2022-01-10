@@ -34,7 +34,7 @@ module.exports = {
 					size: 2048,
 				}),
 			)
-			.setFooter("Дизайн JeggyBot");
+			.setFooter({ text: "Дизайн JeggyBot" });
 		//Статус
 		//-----------------------------------------------------------------------------
 		const clientStatus = [];

@@ -33,7 +33,7 @@ module.exports = class Manager extends EventEmitter {
 		const promises = [];
 		for (const id of [...this.players.keys()]) promises.push(this.leave(id));
 		for (const node of [...this.nodes.values()]) promises.push(node.destroy());
-		
+
 		return Promise.all(promises);
 	}
 
@@ -68,7 +68,7 @@ module.exports = class Manager extends EventEmitter {
 
 		player.removeAllListeners();
 		await player.destroy();
-		
+
 		return this.players.delete(guild);
 	}
 
@@ -88,7 +88,7 @@ module.exports = class Manager extends EventEmitter {
 
 		this.voiceServers.delete(data.guild_id);
 		this.voiceStates.delete(data.guild_id);
-		
+
 		return Promise.resolve(false);
 	}
 

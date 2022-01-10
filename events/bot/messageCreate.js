@@ -14,8 +14,7 @@ module.exports = {
 
 		//Команды
 		//------------------------------------------------------------------------------------------------
-		const guild = (await bot.database.guild.findOne({ id: message.guild.id })) || { prefix: "r!" };
-		const user = (await bot.database.user.findOne({ id: message.author.id })) || { blacklisted: false };
+		const guild = await bot.cache.create({ id: message.guild.id }, "guild");
 		const args = message.content.slice(guild.prefix.length).trim().split(/ +/g);
 		const commandName = args.shift().toLowerCase();
 		const command = bot.commands.find(
@@ -26,7 +25,6 @@ module.exports = {
 		if (!commandName || !command || !message.content.startsWith(guild.prefix) || message.content === guild.prefix) return;
 		if (bot.commands.has(command.name)) {
 			if (command.category === "botowner" && !isDeveloper(message.author.id)) return;
-			if (user.blacklisted) return message.react("❌");
 
 			if (command.usage && command.usage.filter((u) => !u.startsWith("[")).length > args.length)
 				return bot.utils.error(

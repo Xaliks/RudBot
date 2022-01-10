@@ -12,7 +12,10 @@ module.exports = {
 		if (channel.type != "GUILD_TEXT" && channel.type != "GUILD_NEWS")
 			return bot.utils.error("Это не текстовой канал!", this, message, bot);
 
-		await bot.database.guild.findOneAndUpdateOrCreate({ id: message.guild.id }, { idea_channel: channel.id });
+		const ideas = { id: channel.id, ideas: [] };
+
+		await bot.cache.delete({ id: message.guild.id }, "idea_channel", "guild");
+		await bot.cache.update({ id: message.guild.id }, { ideas }, "guild");
 		bot.utils.success(`Канал установлен! (${channel})`, message);
 	},
 };

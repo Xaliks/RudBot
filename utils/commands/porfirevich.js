@@ -2,7 +2,6 @@ module.exports = async (interaction, bot) => {
 	const { message, user } = interaction;
 	const [_, authorId] = interaction.customId.split("-");
 
-	if (message.deleted) return;
 	if (user.id != authorId) return interaction.reply({ content: "Ты не можешь использовать это!", ephemeral: true });
 
 	let [text, generate, gen] = bot.temp.get(`porfirevich-${authorId}-${message.id}`);

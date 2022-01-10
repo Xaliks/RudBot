@@ -10,7 +10,7 @@ module.exports = {
 	async execute(message, args, bot) {
 		const [type, ...query] = args;
 		const data = await fetch(
-			`http://api.xaliks.xyz/info/spotify?type=${type}&query=${encodeURIComponent(query.join(" "))}`,
+			`https://api.xaliks.xyz/info/spotify?type=${type}&query=${encodeURIComponent(query.join(" "))}`,
 		).then((resp) => resp.json());
 
 		switch (type.toLowerCase()) {

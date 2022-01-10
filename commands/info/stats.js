@@ -50,7 +50,7 @@ ${emojis.NodeJS}**Версия Node.js:** \`${process.version}\`
 ${emojis.DiscordJS}**Версия Discord.js:** \`${version}\`
 ${emojis.Linux}**Операционная система:** \`${os.type()} / ${os.arch()}\``,
 					)
-					.setFooter(`Аптайм: ${bot.utils.time(bot.uptime)}\nПоследняя перезагрузка была:`)
+					.setFooter({ text: `Аптайм: ${bot.utils.time(bot.uptime)}\nПоследняя перезагрузка была:` })
 					.setTimestamp(Date.now() - bot.uptime)
 					.setThumbnail(bot.user.displayAvatarURL()),
 				musicEmbed,

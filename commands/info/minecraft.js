@@ -19,7 +19,6 @@ module.exports = {
 		message.channel.send({
 			embeds: [
 				new MessageEmbed()
-					.setFooter(message.author.username)
 					.setTitle(`Информация о minecraft сервере`)
 					.setDescription(
 						`Онлайн? **${data.online ? "Да" : "Нет"}**

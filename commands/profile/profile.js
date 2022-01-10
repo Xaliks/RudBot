@@ -16,18 +16,11 @@ module.exports = {
 		const member = await bot.utils.findMember(message, args.join(" "), true);
 		if (member.user.bot) return bot.utils.error("Это бот!", this, message, bot);
 
-		const user = (await bot.database.member.findOne({ id: member.id, guild_id: message.guild.id })) || {
-			reputation: 0,
-			gender: null,
-			age: null,
-			marry: null,
-		};
+		const user = await bot.cache.create({ id: member.id, guild_id: message.guild.id }, "member");
 		const marry = user.marry ? await message.guild.members.fetch(user.marry).catch(() => null) : "Никого нет";
 		if (!marry) {
-			await bot.database.member.updateMany(
-				{ guild_id: message.guild.id, id: { $regex: new RegExp(message.author.id + "|" + user.marry) } },
-				{ $set: { marry: null } },
-			);
+			await bot.cache.delete({ id: member.id, guild_id: message.guild.id }, "marry");
+			await bot.cache.delete({ id: user.marry, guild_id: message.guild.id }, "marry");
 		}
 
 		const embed = new MessageEmbed()
