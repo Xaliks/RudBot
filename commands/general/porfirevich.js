@@ -48,7 +48,7 @@ function send(message, text) {
 					url: "https://porfirevich.ru",
 				})
 				.setDescription(text)
-				.setFooter({ text: "Максимальное количество дополняемых слов: 30"}),
+				.setFooter({ text: "Максимальное количество дополняемых слов: 30" }),
 		],
 		components: [
 			{

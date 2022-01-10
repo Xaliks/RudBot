@@ -2,7 +2,7 @@ module.exports = async (interaction, bot) => {
 	const { message, user } = interaction;
 	let [_, vote] = interaction.customId.split("-");
 	vote = Number(vote);
-	
+
 	const guild = await bot.cache.create({ id: message.guild.id }, "guild");
 	const idea = guild.ideas.ideas.find((idea) => idea.id === message.id);
 	const userVote = idea.votes.find((v) => v.id === user.id);

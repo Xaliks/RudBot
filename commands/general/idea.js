@@ -34,7 +34,7 @@ module.exports = {
 							}),
 						})
 						.setDescription(args.join(" "))
-						.setFooter({ text: `${guild.prefix}${this.name}`})
+						.setFooter({ text: `${guild.prefix}${this.name}` })
 						.setImage(message.attachments.map((a) => a)[0]?.attachment || ""),
 				],
 				components: [

@@ -68,7 +68,6 @@ module.exports = {
 				embeds: [new MessageEmbed().setTitle("Крестики-Нолики").setDescription(`Ходит: ${message.author}`)],
 				components: components(buttons),
 			});
-
 		});
 	},
 };

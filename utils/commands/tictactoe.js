@@ -10,7 +10,15 @@ module.exports = (interaction, bot) => {
 	}
 
 	const embed = message.embeds[0];
-	let [components, buttons, table, last] = bot.temp.get(`tictactoe-${authorId}-${message.id}`);
+
+	const temp = bot.temp.get(`tictactoe-${authorId}-${message.id}`);
+	if (!temp)
+		return interaction.reply({
+			content: "Бот перезагрузился и не смог сохранить данные об игре! Создайте новую игру!",
+			ephemeral: true,
+		});
+	let [components, buttons, table, last] = temp;
+
 	if (last === user.id)
 		return interaction.reply({ content: `Сейчас ходит <@${last === authorId ? userId : authorId}>!`, ephemeral: true });
 

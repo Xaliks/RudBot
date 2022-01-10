@@ -4,7 +4,13 @@ module.exports = async (interaction, bot) => {
 
 	if (user.id != authorId) return interaction.reply({ content: "Ты не можешь использовать это!", ephemeral: true });
 
-	let [text, generate, gen] = bot.temp.get(`porfirevich-${authorId}-${message.id}`);
+	const temp = bot.temp.get(`porfirevich-${authorId}-${message.id}`);
+	if (!temp)
+		return interaction.reply({
+			content: "Бот перезагрузился и не смог сохранить данные об игре! Создайте новую игру!",
+			ephemeral: true,
+		});
+	let [text, generate, gen] = temp;
 
 	interaction.deferUpdate();
 	if (interaction.customId.startsWith("porfirevich_reload-")) {

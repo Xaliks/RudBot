@@ -17,11 +17,7 @@ module.exports = {
 		})
 			.then((result) => {
 				message.channel.send({
-					embeds: [
-						new MessageEmbed()
-							.setDescription(result.text)
-							.setTitle("Google Переводчик"),
-					],
+					embeds: [new MessageEmbed().setDescription(result.text).setTitle("Google Переводчик")],
 				});
 			})
 			.catch((e) => {

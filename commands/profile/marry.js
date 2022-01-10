@@ -57,8 +57,7 @@ module.exports = {
 		let success = false;
 
 		collector.on("collect", async (button) => {
-			if (button.user.id != member.id)
-				return button.reply({ content: "Ты не можешь это сделать!", ephemeral: true });
+			if (button.user.id != member.id) return button.reply({ content: "Ты не можешь это сделать!", ephemeral: true });
 			success = true;
 			if (msg.deleted) return;
 			if (button.customId === "no") {

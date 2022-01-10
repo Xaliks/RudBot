@@ -68,7 +68,7 @@ module.exports = {
 									vk.sex[user.sex]
 								}**`,
 							)
-							.setFooter({ text: `ID: ${user.domain}`}),
+							.setFooter({ text: `ID: ${user.domain}` }),
 					);
 				else if (user.is_closed)
 					embeds.push(
@@ -85,7 +85,7 @@ module.exports = {
 									user.city ? `**${user.city.title}** (${user.country.title})` : "**Неизвестно**"
 								}`,
 							)
-							.setFooter({ text: `ID: ${user.domain}`}),
+							.setFooter({ text: `ID: ${user.domain}` }),
 					);
 				else
 					embeds.push(
@@ -118,7 +118,7 @@ module.exports = {
 Отношение к алкоголю: **${vk.smoking[user.personal.alcohol] || "Не указано"}**`
 									: "Ничего неизвестно",
 							)
-							.setFooter({ text: `ID: ${user.domain}`}),
+							.setFooter({ text: `ID: ${user.domain}` }),
 					);
 			});
 
@@ -180,7 +180,7 @@ module.exports = {
 							.setDescription(
 								`**ГРУППА ${group.deactivated ? (group.deactivated === "banned" ? "ЗАБАНЕНА" : "УДАЛЁНА") : "ЗАКРЫТА"}**`,
 							)
-							.setFooter({ text: `ID: ${group.screen_name}`}),
+							.setFooter({ text: `ID: ${group.screen_name}` }),
 					);
 				embeds.push(
 					new MessageEmbed()
@@ -212,7 +212,7 @@ module.exports = {
 							bot.utils.escapeMarkdown(group.description || "Отсутствует").substr(0, 1024),
 							false,
 						)
-						.setFooter({ text: `ID: ${group.screen_name}`})
+						.setFooter({ text: `ID: ${group.screen_name}` })
 						.setImage((group.cover?.images || [])[0]?.url || null),
 				);
 			});

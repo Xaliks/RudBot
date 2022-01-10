@@ -27,7 +27,7 @@ module.exports = {
 					.addField("Позиция:", `${bot.utils.formatNumber(message.guild.roles.cache.size - role.position)}`, true)
 					.addField("Отображаемая роль?", role.hoist ? "Да" : "Нет", true)
 					.addField("Упоминается?", role.mentionable ? "Да" : "Нет", true)
-					.addField("Создана", bot.utils.discordTime(role.createdTimestamp), true)
+					.addField("Создана", bot.utils.discordTime(role.createdTimestamp), true),
 			],
 		});
 	},

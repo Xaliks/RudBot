@@ -37,7 +37,7 @@ module.exports = {
 Публичных Gist'ов: \`${bot.utils.formatNumber(user.public_gists)}\``,
 				false,
 			)
-			.setFooter({ text: `ID: ${user.id}`});
+			.setFooter({ text: `ID: ${user.id}` });
 
 		if (user.bio) embed.addField("Биография", bot.utils.escapeMarkdown(user.bio), false);
 
