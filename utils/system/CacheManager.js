@@ -56,7 +56,7 @@ module.exports = class CacheManager extends Map {
 
 		const types = {
 			member: { reputation: 0 },
-			guild: { prefix },
+			guild: { prefix, ideas: { ideas: [] } },
 		};
 
 		if (!type) {
