@@ -59,11 +59,6 @@ module.exports = class CacheManager extends Map {
 			guild: { prefix, ideas: { ideas: [] } },
 		};
 
-		if (!type) {
-			if ("memberCount" in target) type = "guild";
-			if ("joinedTimestamp" in target) type = "member";
-		}
-
 		const db = await this.bot.database[type].findOne(target);
 
 		this.set(id, { ...db }._doc || types[type]);

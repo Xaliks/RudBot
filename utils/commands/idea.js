@@ -3,13 +3,14 @@ module.exports = async (interaction, bot) => {
 	let [_, vote] = interaction.customId.split("-");
 	vote = Number(vote);
 
+	const guild = await bot.cache.create({ id: message.guild.id }, "guild");
+
 	if (!guild.ideas.ideas)
 		return interaction.reply({
 			content: "В базе данных бота отсутствуют идеи! Попробуйте написать ещё 1 идею",
 			ephemeral: true,
 		});
 
-	const guild = await bot.cache.create({ id: message.guild.id }, "guild");
 	const idea = guild.ideas.ideas.find((idea) => idea.id === message.id);
 	const userVote = idea.votes.find((v) => v.id === user.id);
 
