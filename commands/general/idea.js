@@ -11,8 +11,8 @@ module.exports = {
 
 		if (!guild.ideas || !message.guild.channels.cache.get(guild.ideas.id))
 			return bot.utils.error(
-				`Канал для идей не установлен, либо удалён! \`${guild.prefix}set-idea ${bot.commands
-					.get("set-idea")
+				`Канал для идей не установлен, либо удалён! \`${guild.prefix}edit-ideas ${bot.commands
+					.get("edit-ideas")
 					.usage.join(" ")}\``,
 				this,
 				message,
