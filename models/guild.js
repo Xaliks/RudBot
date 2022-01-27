@@ -15,12 +15,7 @@ module.exports = model(
 			ideas: [
 				{
 					id: String,
-					votes: [
-						{
-							id: String,
-							vote: Number,
-						},
-					],
+					votes: undefined | Array,
 				},
 			],
 		},

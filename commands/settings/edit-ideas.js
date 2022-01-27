@@ -21,7 +21,7 @@ module.exports = {
 			if (!channel) return bot.utils.error("Канал не найден!", this, message, bot);
 			if (channel.type != "GUILD_TEXT") return bot.utils.error("Это не текстовой канал!", this, message, bot);
 
-			await bot.cache.update({ id: message.guild.id }, { "ideas.id": channel.id }, "guild");
+			await bot.cache.update({ id: message.guild.id }, { ideas: { id: channel.id } }, "guild");
 
 			bot.utils.success(`Канал установлен! (${channel})`, message);
 		}
@@ -32,7 +32,7 @@ module.exports = {
 			const role = findRole(message, options.join(" "));
 			if (!role) return bot.utils.error("Роль не найдена!", this, message, bot);
 
-			await bot.cache.update({ id: message.guild.id }, { "ideas.role": role.id }, "guild");
+			await bot.cache.update({ id: message.guild.id }, { ideas: { role: role.id } }, "guild");
 
 			bot.utils.success(`Пингуемая роль установлена! (${role})`, message);
 		}
