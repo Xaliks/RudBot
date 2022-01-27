@@ -19,10 +19,16 @@ module.exports = {
 				bot,
 			);
 
+		let role = guild.ideas.role;
+		if (role && !message.guild.roles.cache.has(role)) {
+			role = null;
+			delete guild.ideas.role;
+		}
+
 		message.guild.channels.cache
 			.get(guild.ideas.id)
 			.send({
-				content: `Идея от ${message.author}`,
+				content: `${role ? `[ <@&${role}> ]` : ""} Идея от ${message.author}`,
 				embeds: [
 					new MessageEmbed()
 						.setColor("RANDOM")
