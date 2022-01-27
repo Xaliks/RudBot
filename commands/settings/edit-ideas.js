@@ -12,7 +12,7 @@ module.exports = {
 
 		await bot.cache.delete({ id: message.guild.id }, "idea_channel", "guild");
 
-		if (!["channel", "role"].includes(type)) return bot.utils.error(`Правильное использование команды: \`${guild.prefix}${this.name} ${this.usage.join(" ")}\``)
+		if (!["channel", "role"].includes(type)) return bot.utils.error(`Правильное использование команды: \`${guild.prefix}${this.name} ${this.usage.join(" ")}\``, this, message, bot)
 
 		if (type.toLowerCase() === "channel") {
 			if (!options?.[0]) return bot.utils.error("Канал не указан!", this, message, bot);
