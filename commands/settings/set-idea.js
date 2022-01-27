@@ -12,7 +12,7 @@ module.exports = {
 		if (channel.type != "GUILD_TEXT" && channel.type != "GUILD_NEWS")
 			return bot.utils.error("Это не текстовой канал!", this, message, bot);
 
-		const ideas = { id: channel.id, ideas: [] };
+		const ideas = { id: channel.id };
 
 		await bot.cache.delete({ id: message.guild.id }, "idea_channel", "guild");
 		await bot.cache.update({ id: message.guild.id }, { ideas }, "guild");

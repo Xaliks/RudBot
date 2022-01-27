@@ -50,8 +50,10 @@ module.exports = {
 			.then(async (msg) => {
 				msg.channel.threads.create({ name: "Обсуждение идеи", startMessage: msg.id });
 
-				guild.ideas.ideas.push({ id: msg.id, votes: [] });
+				if (!guild.ideas.ideas) guild.ideas.ideas = new Array();
+				guild.ideas.ideas.push({ id: msg.id });
 
+				await bot.cache.delete({ id: message.guild.id }, "idea_channel", "guild");
 				await bot.cache.update({ id: message.guild.id }, guild, "guild");
 			});
 

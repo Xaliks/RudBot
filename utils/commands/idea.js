@@ -3,6 +3,12 @@ module.exports = async (interaction, bot) => {
 	let [_, vote] = interaction.customId.split("-");
 	vote = Number(vote);
 
+	if (!guild.ideas.ideas)
+		return interaction.reply({
+			content: "В базе данных бота отсутствуют идеи! Попробуйте написать ещё 1 идею",
+			ephemeral: true,
+		});
+
 	const guild = await bot.cache.create({ id: message.guild.id }, "guild");
 	const idea = guild.ideas.ideas.find((idea) => idea.id === message.id);
 	const userVote = idea.votes.find((v) => v.id === user.id);
@@ -13,10 +19,10 @@ module.exports = async (interaction, bot) => {
 			ephemeral: true,
 		});
 
-	message.components[0].components[vote - 1].label = Number(message.components[0].components[vote - 1].label) + 1;
+	++message.components[0].components[vote - 1].label;
+
 	if (userVote) {
-		message.components[0].components[vote === 2 ? 0 : 1].label =
-			Number(message.components[0].components[vote === 2 ? 0 : 1].label) - 1;
+		--message.components[0].components[vote === 2 ? 0 : 1].label;
 		guild.ideas.ideas.find((idea) => idea.id === message.id).votes.find((vote) => vote.id === user.id).vote = vote;
 	} else guild.ideas.ideas.find((idea) => idea.id === message.id).votes.push({ id: user.id, vote });
 

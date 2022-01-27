@@ -54,18 +54,12 @@ module.exports = {
 		const collector = msg.createMessageComponentCollector({
 			time: 10000,
 		});
-		let success = false;
 
 		collector.on("collect", async (button) => {
 			if (button.user.id != member.id) return button.reply({ content: "Ты не можешь это сделать!", ephemeral: true });
-			success = true;
-			if (msg.deleted) return;
 			if (button.customId === "no") {
-				collector.stop();
-				return button.update({
-					content: `${member} не захотел(-а) вступить в брак с ${message.author}`,
-					components: [],
-				});
+				collector.resetTimer(null);
+				return button.update({ content: "Действие отменено!", components: [] });
 			}
 
 			await bot.cache.update({ id: message.author.id, guild_id: message.guild.id }, { marry: member.id }, "member");
@@ -74,9 +68,7 @@ module.exports = {
 			button.update({ content: `${member} и ${message.author} теперь пара!`, components: [] });
 		});
 
-		collector.on("end", () => {
-			if (success || msg.deleted) return;
-
+		collector.on("end", (success) => {
 			msg.edit({ content: "Время вышло!", components: [] });
 		});
 	},

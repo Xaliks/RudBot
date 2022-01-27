@@ -10,7 +10,7 @@ module.exports = {
 		if (!authorCache.marry) return bot.utils.error("У вас нет пары!", this, message, bot);
 
 		const msg = await message.reply({
-			content: "Вы действительно хотите это сделать?",
+			content: `Вы действительно хотите развестись с <@${authorCache.marry}>?`,
 			components: [
 				{
 					type: 1,
@@ -22,28 +22,24 @@ module.exports = {
 			],
 		});
 		const collector = msg.createMessageComponentCollector({
-			time: 10000,
+			time: 15000,
 		});
-		let success = false;
 
 		collector.on("collect", async (button) => {
-			if (button.user.id != authorCache.marry)
+			if (button.user.id != message.author.id)
 				return button.reply({ content: "Ты не можешь это сделать!", ephemeral: true });
-			success = true;
-			if (msg.deleted) return;
 			if (button.customId === "no") {
-				collector.stop();
+				collector.resetTimer(null);
 				return button.update({ content: "Действие отменено!", components: [] });
 			}
 
 			button.update({ content: `Вы развелись с <@${authorCache.marry}>!`, components: [] });
+
 			await bot.cache.delete({ id: authorCache.marry, guild_id: message.guild.id }, "marry", "member");
 			await bot.cache.delete({ id: message.author.id, guild_id: message.guild.id }, "marry", "member");
 		});
 
 		collector.on("end", () => {
-			if (success || msg.deleted) return;
-
 			msg.edit({ content: "Время вышло!", components: [] });
 		});
 	},
