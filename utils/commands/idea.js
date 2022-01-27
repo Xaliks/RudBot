@@ -34,5 +34,5 @@ module.exports = async (interaction, bot) => {
 
 	await bot.cache.update({ id: message.guild.id }, guild, "guild");
 
-	interaction.update({ components: message.components, content: message.content, embeds: message.embeds });
+	interaction.update({ components: message.components });
 };
