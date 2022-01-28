@@ -5,22 +5,21 @@ const { EventEmitter } = require("events");
 module.exports = class Player extends EventEmitter {
 	constructor(node, id) {
 		super();
+
 		this.node = node;
 		this.id = id;
 		this.state = { volume: 100 };
+		this.queue = [];
 		this.playing = false;
-		this.timestamp = null;
-		this.paused = false;
-		this.track = null;
-		this.queue = node.manager.queues.get(id) || [];
 		this.voiceUpdateState = null;
-		this.on("event", (data) => {
+
+		this
+		.on("event", async (data) => {
 			switch (data.type) {
 				case "TrackStartEvent":
 					break;
 				case "TrackEndEvent":
-					if (data.reason === "STOPPED") break;
-					this.skip();
+					if (data.reason != "STOPPED" && data.reason != "REPLACED") await this.skip();
 					break;
 				case "TrackExceptionEvent":
 					if (this.listenerCount("error")) this.emit("error", data);
@@ -32,98 +31,66 @@ module.exports = class Player extends EventEmitter {
 					if (this.listenerCount("warn")) this.emit("warn", `Unexpected event type: ${data.type}`);
 					break;
 			}
-		}).on("playerUpdate", (data) => {
-			if ((this.state.position || 0) != data.state.position && this.playing === true)
-				this.manager.emit("trackUpdate", {
-					...this,
-					state: {
-						volume: this.state.volume,
-						equalizer: this.state.equalizer,
-						...data.state,
-					},
-				});
-			this.state = { volume: this.state.volume, equalizer: this.state.equalizer, ...data.state };
+		})
+		.on("playerUpdate", (data) => {
+			this.manager.emit("trackUpdate", { ...this, state: { ...this.state, ...data.state }});
 		});
 	}
 
-	async play(trackMessage, track, message, options = { addInQueue: true }) {
-		if (options.addInQueue === true) {
-			this.queue.push({ author: message.author, message: trackMessage, track });
-			this.manager.queues.set(this.id, this.queue);
+	async play(track, author, message) {
+		this.queue.push({ track, author, message });
 
-			if (this.queue[1]) {
-				this.manager.emit("addTrackInQueue", this, this.queue[this.queue.length - 2].message);
-				return this.queue;
-			}
-		}
+		if (this.queue.length > 1) return;
 
-		const d = await this.send("play", { ...options, track });
-		this.track = track;
 		this.playing = true;
-		this.timestamp = Date.now();
 
-		return d;
+		return await this.send("play", { track });
 	}
 
 	async skip() {
 		if (!this.queue[1]) return await this.stop();
 
-		this.play(this.queue[1].message, this.queue[1].track, null, { addInQueue: false });
-		this.manager.emit("trackStop", this);
+		this.manager.emit("trackEnd", this);
 
 		this.queue.shift();
-		this.manager.queues.set(this.id, this.queue);
+		this.playing = true;
 
-		return true;
+		return await this.send("play", { track: this.queue[0].track });
 	}
 
 	async stop() {
-		await this.send("stop", { skipped: true });
+		this.manager.emit("trackEnd", this);
 
-		this.manager.emit("trackStop", this);
-
-		this._deleteQueue();
-		this.track = null;
-		this.playing = false;
-		this.timestamp = null;
-
-		return true;
+		return this.manager.leave(this.id);
 	}
 
 	async pause(pause = true) {
-		this.manager.emit("trackPause", this, pause);
+		this.playing = !pause;
 
-		const d = await this.send("pause", { pause });
-		this.paused = pause;
-		return d;
-	}
-
-	resume() {
-		return this.pause(false);
+		return await this.send("pause", { pause });
 	}
 
 	async volume(volume) {
-		this.manager.emit("trackVolume", this, this.state.volume, volume);
-
-		const d = await this.send("volume", { volume });
 		this.state.volume = volume;
-		return d;
+
+		return await this.send("volume", { volume });
 	}
 
 	async seek(position) {
-		this.manager.emit("trackSeek", this, this.state.position, position);
+		this.state.position = position;
 
-		const d = await this.send("seek", { position });
-		return d;
+		return await this.send("seek", { position });
 	}
 
 	destroy() {
-		this._deleteQueue();
+		this.manager.players.delete(this.id);
+
 		return this.send("destroy");
 	}
 
 	connect(data) {
 		this.voiceUpdateState = data;
+
 		return this.send("voiceUpdate", data);
 	}
 
@@ -132,18 +99,12 @@ module.exports = class Player extends EventEmitter {
 	}
 
 	send(op, data) {
-		if (!this.node.connected) setTimeout(this.send(op, data), 1000);
+		if (!this.node.connected) return setTimeout(() => this.send(op, data), 1000);
+		
 		return this.node.send({ ...data, op, guildId: this.id });
 	}
 
 	get manager() {
 		return this.node.manager;
-	}
-
-	_deleteQueue() {
-		this.manager.queues.delete(this.id);
-		this.queue = [];
-
-		return true;
 	}
 };

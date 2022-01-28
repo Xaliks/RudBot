@@ -7,15 +7,15 @@ module.exports = {
 	cooldown: 15,
 	aliases: ["q"],
 	async execute(message, args, bot) {
-		const queue = bot.music.queues.get(message.guild.id);
-		if (!queue) return bot.utils.error("Очередь сервера пуста!", this, message, bot);
+		const player = bot.music.players.get(message.guild.id);
+		if (player.queue.length === 0) return bot.utils.error("Очередь сервера пуста!", this, message, bot);
 
 		const description = (
 			await Promise.all(
-				queue.map(async (q, i) => {
-					const track = await bot.music.rest.decode(bot.music.idealNodes[0], q.track);
+				player.queue.map(async (q, i) => {
+					const track = await bot.music.rest.decode(q.track);
 
-					return `${i + 1}. ***_${queue[i].author.tag}_*  -  [${track.title}](${track.uri})** \`[${msToTime(
+					return `${i + 1}. _\`${player.queue[i].author.tag}\`_  -  **[${track.title}](${track.uri})** \`[${msToTime(
 						track.length,
 					)}]\``;
 				}),

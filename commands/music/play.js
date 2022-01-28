@@ -1,4 +1,4 @@
-const { MessageEmbed, MessageButton, Permissions } = require("discord.js");
+const { MessageEmbed, Permissions } = require("discord.js");
 const fetch = require("node-fetch");
 
 module.exports = {
@@ -25,107 +25,62 @@ module.exports = {
 				bot,
 			);
 
-		const query = args.join(" ");
-		const search = await bot.music.rest.load(bot.music.idealNodes[0], `ytsearch:${query}`);
-		if (!search.tracks[0]) return bot.utils.error(`Ничего не найдено по запросу \`${query}\`!`, this, message, bot);
+		const search = await bot.music.rest.load(`ytsearch:${args.join(" ")}`);
+		const track = search.tracks?.filter((track) => !track.isStream && track.info.length < 3600000)?.[0];
+		if (!track) return bot.utils.error(`Ничего не найдено в **[YouTube](https://youtube.com)** по запросу \`${args.join(" ")}\`!`, this, message, bot);
 
-		const tracks = search.tracks.filter((track) => !track.isStream).slice(0, 5);
-		const msg = await message.channel.send({
-			embeds: [
-				new MessageEmbed().setTitle("Найденные треки").setDescription(
-					tracks
-						.map((track, i) => {
-							return `${i + 1}. **[${bot.utils.escapeMarkdown(track.info.title)}](${track.info.uri})** \`${msToTime(
-								track.info.length,
-							)}\``;
-						})
-						.join("\n"),
-				),
-			],
-			components: [
-				{
-					type: 1,
-					components: [
-						new MessageButton().setLabel("1").setStyle(2).setCustomId("0"),
-						new MessageButton().setLabel("2").setStyle(2).setCustomId("1"),
-						new MessageButton().setLabel("3").setStyle(2).setCustomId("2"),
-						new MessageButton().setLabel("4").setStyle(2).setCustomId("3"),
-						new MessageButton().setLabel("5").setStyle(2).setCustomId("4"),
-					],
-				},
-			],
+		const player = await bot.music.join({
+			guild: message.guild.id,
+			channel: message.member.voice.channel.id
+		});
+		const video = await getVideoInfo(track.info.uri);
+
+		if (player.queue.length > 0) {
+			const msg = await message.channel.send({ embeds: [new MessageEmbed()
+				.setAuthor({ name: track.info.author, iconURL: await getAuthorAvatar(video.author_url), url: video.author_url })
+				.setTitle(bot.utils.escapeMarkdown(video.title))
+				.setURL(track.info.uri)
+				.setThumbnail(video.thumbnail_url)
+				.setDescription("**Трек добавлен в очередь**")
+				.addField(
+					"Длительность",
+					`\`${msToTime(track.info.length)}\``,
+					true,
+				)
+				.addField("Заказал", `${message.author} - \`${message.author.tag}\``, true)
+				.addField("Позиция в очереди", `**${player.queue.length + 1}**`, true)
+			] });
+
+			return await player.play(track.track, message.author, msg);
+		}
+
+		const msg = await message.channel.send({ embeds: [new MessageEmbed()
+			.setAuthor({ name: track.info.author, iconURL: await getAuthorAvatar(video.author_url), url: video.author_url })
+			.setTitle(bot.utils.escapeMarkdown(video.title))
+			.setURL(track.info.uri)
+			.setThumbnail(video.thumbnail_url)
+			.addField(
+				"Длительность",
+				`\`00:00\` / \`${msToTime(track.info.length)}\``,
+				true,
+			)
+			.addField("Громкость", `**${player.state.volume}%**`, true)
+			.addField("Заказал", `${message.author} - \`${message.author.tag}\``, true)
+			.addField("Позиция в очереди", "**1**", true)
+		]
 		});
 
-		const collector = msg.createMessageComponentCollector();
-		collector.on("collect", async (button) => {
-			if (msg.deleted) return;
-			if (button.user.id != message.author.id)
-				return button.reply({ content: "Ты не можешь это сделать!", ephemeral: true });
-			const track = tracks[button.customId];
-			if (Math.floor(track.info.length / 1000 / 60 / 60) >= 1)
-				return button.reply({ content: "Запрещено воспроизводить треки длительностью более 1 часа!", ephemeral: true });
-
-			const video = await getVideoInfo(track.info.uri);
-			const author_avatar = await getAuthorAvatar(video.author_url);
-			const player = await bot.music.join({
-				guild: message.guild.id,
-				channel: message.member.voice.channel.id,
-				node: bot.music.idealNodes[0].id,
-			});
-
-			button
-				.update({
-					content: "\n",
-					components: [],
-					embeds: [
-						new MessageEmbed()
-							.setAuthor({ name: track.info.author, iconURL: author_avatar, url: video.author_url })
-							.setTitle(bot.utils.escapeMarkdown(video.title))
-							.setURL(track.info.uri)
-							.setThumbnail(video.thumbnail_url)
-							.addField(
-								"Длительность",
-								`\`00:00\` ${bar(
-									player.state.position,
-									track.length,
-									30,
-									["[", "─︎", "]"],
-									["[", "═︎", "]"],
-								)} \`${msToTime(track.info.length)}\``,
-								false,
-							)
-							.addField("Громкость", `**100%**`, true)
-							.addField("Позиция в очереди", `**${player.queue.length || 1}**`, true),
-					],
-				})
-				.then(() => {
-					player.play(msg, track.track, message);
-				});
-		});
+		await player.play(track.track, message.author, msg);
 	},
 };
 
-function getVideoInfo(link) {
-	return fetch(`https://www.youtube.com/oembed?url=${link}&format=json`).then((res) => res.json());
+async function getVideoInfo(link) {
+	return await fetch(`https://www.youtube.com/oembed?url=${link}&format=json`).then((res) => res.json());
 }
-function getAuthorAvatar(url) {
-	return fetch(url)
+async function getAuthorAvatar(url) {
+	return await fetch(url)
 		.then((resp) => resp.text())
 		.then((data) => data.match(/https:\/\/yt3\.ggpht\.com\/.*?"/g)[0].replace('"', ""));
-}
-function bar(standartNum, reqNum, length = 10, standart = ["[", "-", "]"], bar = ["[", "+", "]"]) {
-	let progressbar = [];
-	for (let i = 0; i < length; i++) {
-		progressbar[i] = standart[1];
-		if (i === 0) progressbar[i] = standart[0];
-		if (i === length - 1) progressbar[i] = standart[2];
-	}
-	for (let i = 0; i < Math.floor(Math.floor((standartNum / reqNum) * 100) / (100 / length)); i++) {
-		progressbar[i] = bar[1];
-		if (i === 0) progressbar[i] = bar[0];
-		if (i === length - 1) progressbar[i] = bar[2];
-	}
-	return progressbar.join("");
 }
 function msToTime(ms) {
 	const temp = [];

@@ -6,22 +6,15 @@ const Rest = require("./Rest");
 const Player = require("./Player");
 
 module.exports = class Manager extends EventEmitter {
-	constructor(nodes, options) {
+	constructor(nodes, user) {
 		super();
 		this.nodes = new Map();
-		this.queues = new Map();
 		this.players = new Map();
 		this.voiceServers = new Map();
 		this.voiceStates = new Map();
-		this.shards = 1;
-		this.Player = Player;
-		this.rest = Rest;
 		this.expecting = new Set();
+		this.user = user;
 
-		if (options.user) this.user = options.user;
-		if (options.shards) this.shards = options.shards;
-		if (options.player) this.Player = options.player;
-		if (options.send) this.send = options.send;
 		for (const node of nodes) this.createNode(node);
 	}
 
@@ -52,9 +45,6 @@ module.exports = class Manager extends EventEmitter {
 	}
 
 	async join(data, joinOptions = {}) {
-		const player = this.players.get(data.guild);
-		if (player) return player;
-
 		await this.sendWS(data.guild, data.channel, joinOptions);
 
 		return this.spawnPlayer(data);
@@ -67,9 +57,8 @@ module.exports = class Manager extends EventEmitter {
 		if (!player) return false;
 
 		player.removeAllListeners();
-		await player.destroy();
 
-		return this.players.delete(guild);
+		return await player.destroy();
 	}
 
 	voiceServerUpdate(data) {
@@ -132,12 +121,16 @@ module.exports = class Manager extends EventEmitter {
 		const exists = this.players.get(data.guild);
 		if (exists) return exists;
 
-		const node = this.nodes.get(data.node);
+		const node = this.idealNodes[0];
 		if (!node) throw new Error(`INVALID_HOST: No available node with ${data.node}`);
 
-		const player = new this.Player(node, data.guild);
-		this.queues.set(data.guild, new Array());
+		const player = new Player(node, data.guild);
 		this.players.set(data.guild, player);
+
 		return player;
+	}
+
+	get rest() {
+		return new Rest(this);
 	}
 };

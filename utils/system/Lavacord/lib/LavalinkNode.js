@@ -5,10 +5,10 @@ const WebSocket = require("ws");
 module.exports = class LavalinkNode {
 	constructor(manager, options) {
 		this.manager = manager;
-		this.host = options.host || "localhost";
+		this.host = options.host;
 		this.port = options.port || 2333;
 		this.reconnectInterval = options.reconnectInterval || 15000;
-		this.password = options.password || "youshallnotpass";
+		this.password = options.password;
 		this.ws = null;
 		this.stats = {
 			players: 0,
@@ -36,12 +36,15 @@ module.exports = class LavalinkNode {
 	async connect() {
 		this.ws = await new Promise((resolve, reject) => {
 			if (this.connected) this.ws.close();
+
 			const headers = {
 				Authorization: this.password,
-				"Num-Shards": String(this.manager.shards || 1),
+				"Num-Shards": "1",
 				"User-Id": this.manager.user,
 			};
+
 			if (this.resumeKey) headers["Resume-Key"] = this.resumeKey;
+
 			const ws = new WebSocket(`ws://${this.host}:${this.port}/`, { headers });
 			const onEvent = (event) => {
 				ws.removeAllListeners();
@@ -49,15 +52,21 @@ module.exports = class LavalinkNode {
 			};
 			const onOpen = () => {
 				this.onOpen();
+
 				ws.removeAllListeners();
 				resolve(ws);
 			};
-			ws.once("open", onOpen).once("error", onEvent).once("close", onEvent);
+
+			ws
+				.once("open", onOpen)
+				.once("error", onEvent)
+				.once("close", onEvent);
 		});
 		this.ws
 			.on("message", this.onMessage.bind(this))
 			.on("error", this.onError.bind(this))
 			.on("close", this.onClose.bind(this));
+
 		return this.ws;
 	}
 
@@ -65,8 +74,10 @@ module.exports = class LavalinkNode {
 		return new Promise((resolve, reject) => {
 			const parsed = JSON.stringify(msg);
 			const queueData = { data: parsed, resolve, reject };
+
 			if (this.connected) return this._send(queueData);
-			else this._queue.push(queueData);
+			
+			return this._queue.push(queueData);
 		});
 	}
 
@@ -76,23 +87,28 @@ module.exports = class LavalinkNode {
 
 	destroy() {
 		if (!this.connected) return false;
+
 		this.ws.close(1000, "destroy");
 		this.ws = null;
+
 		return true;
 	}
 
 	get connected() {
 		if (!this.ws) return false;
+
 		return this.ws.readyState === WebSocket.OPEN;
 	}
 
 	onOpen() {
 		if (this._reconnect) clearTimeout(this._reconnect);
+
 		this._queueFlush()
 			.then(() => {
 				if (this.resumeKey) return this.configureResuming(this.resumeKey);
 			})
 			.catch((error) => this.manager.emit("error", error, this));
+
 		this.manager.emit("ready", this);
 	}
 
@@ -112,14 +128,14 @@ module.exports = class LavalinkNode {
 	onError(event) {
 		const error = event && event.error ? event.error : event;
 		if (!error) return;
-		console.log(error);
-		console.log(this);
+
 		this.manager.emit("error", error, this);
 		this.reconnect();
 	}
 
 	onClose(event) {
 		this.manager.emit("disconnect", event, this);
+
 		if (event.code !== 1000 || event.reason !== "destroy") return this.reconnect();
 	}
 

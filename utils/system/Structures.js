@@ -8,30 +8,16 @@ module.exports = () => {
 		constructor(data = {}, skipValidation = false) {
 			super(data, skipValidation);
 
-			/**
-			 * The color of this embed
-			 * @type {?number}
-			 */
 			this.color = Discord.Util.resolveColor("color" in data ? data.color : "303136");
-			/**
-			 * The timestamp of this embed
-			 * @type {?number}
-			 */
 			this.timestamp = new Date("timestamp" in data ? data.timestamp : Date.now()).getTime();
 		}
 	};
 	Lavacord.LavacordManager = class RudBotLavacordManager extends Lavacord.Manager {
 		constructor(bot, nodes) {
-			super(nodes, {
-				user: "675311676354199553",
-				shards: 1,
-			});
+			super(nodes, "675311676354199553");
 
 			this.send = (packet) => {
-				if (bot.guilds.cache) {
-					const guild = bot.guilds.cache.get(packet.d.guild_id);
-					if (guild) return guild.shard.send(packet);
-				}
+				bot.guilds.cache.get(packet.d.guild_id).shard.send(packet);
 			};
 
 			bot.ws
