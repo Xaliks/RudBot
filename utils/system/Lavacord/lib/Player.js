@@ -10,6 +10,7 @@ module.exports = class Player extends EventEmitter {
 		this.id = id;
 		this.state = { volume: 100 };
 		this.queue = [];
+		this.message = null;
 		this.playing = false;
 		this.voiceUpdateState = null;
 
@@ -31,13 +32,15 @@ module.exports = class Player extends EventEmitter {
 					break;
 			}
 		}).on("playerUpdate", (data) => {
-			this.manager.emit("trackUpdate", { ...this, state: { ...this.state, ...data.state } });
+			this.state = { ...this.state, ...data.state };
+			this.manager.emit("trackUpdate", this);
 		});
 	}
 
-	async play(track, author, message) {
-		this.queue.push({ track, author, message });
+	async play(track, author, msg) {
+		this.queue.push({ track, author });
 
+		if (msg && this.message === null) this.message = msg;
 		if (this.queue.length > 1) return;
 
 		this.playing = true;

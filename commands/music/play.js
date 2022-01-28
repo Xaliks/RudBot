@@ -29,7 +29,8 @@ module.exports = {
 		const track = search.tracks?.filter((track) => !track.isStream && track.info.length < 3600000)?.[0];
 		if (!track)
 			return bot.utils.error(
-				`Ничего не найдено в **[YouTube](https://youtube.com)** по запросу \`${args.join(" ")}\`!`,
+				`Ничего не найдено в **[YouTube](https://youtube.com)** по запросу \`${args.join(" ")}\`!\n
+Длительность видео должно быть меньше часа!`,
 				this,
 				message,
 				bot,
@@ -42,7 +43,7 @@ module.exports = {
 		const video = await getVideoInfo(track.info.uri);
 
 		if (player.queue.length > 0) {
-			const msg = await message.channel.send({
+			message.channel.send({
 				embeds: [
 					new MessageEmbed()
 						.setAuthor({
@@ -54,13 +55,13 @@ module.exports = {
 						.setURL(track.info.uri)
 						.setThumbnail(video.thumbnail_url)
 						.setDescription("**Трек добавлен в очередь**")
+						.setFooter({ text: `Громкость: ${player.state.volume}%\nПозиция в очереди: ${player.queue.length + 1}` })
 						.addField("Длительность", `\`${msToTime(track.info.length)}\``, true)
-						.addField("Заказал", `${message.author} - \`${message.author.tag}\``, true)
-						.addField("Позиция в очереди", `**${player.queue.length + 1}**`, true),
+						.addField("Заказал", `${message.author} - \`${message.author.tag}\``, true),
 				],
 			});
 
-			return await player.play(track.track, message.author, msg);
+			return await player.play(track.track, message.author);
 		}
 
 		const msg = await message.channel.send({
@@ -70,10 +71,9 @@ module.exports = {
 					.setTitle(bot.utils.escapeMarkdown(video.title))
 					.setURL(track.info.uri)
 					.setThumbnail(video.thumbnail_url)
+					.setFooter({ text: `Громкость: ${player.state.volume}%\nПозиция в очереди: 1` })
 					.addField("Длительность", `\`00:00\` / \`${msToTime(track.info.length)}\``, true)
-					.addField("Громкость", `**${player.state.volume}%**`, true)
-					.addField("Заказал", `${message.author} - \`${message.author.tag}\``, true)
-					.addField("Позиция в очереди", "**1**", true),
+					.addField("Заказал", `${message.author} - \`${message.author.tag}\``, true),
 			],
 		});
 

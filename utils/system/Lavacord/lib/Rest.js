@@ -2,6 +2,7 @@
 
 const fetch = require("node-fetch");
 const { URLSearchParams } = require("url");
+const headers = (node) => new Object({ Authorization: node.password, "Content-Type": "application/json" });
 
 module.exports = class Rest {
 	constructor(manager) {
@@ -15,7 +16,7 @@ module.exports = class Rest {
 		params.append("identifier", identifer);
 
 		return await fetch(`http://${node.host}:${node.port}/loadtracks?${params}`, {
-			headers: { Authorization: node.password },
+			headers: headers(node),
 		}).then((resp) => resp.json());
 	}
 
@@ -26,14 +27,14 @@ module.exports = class Rest {
 			return await fetch(`http://${node.host}:${node.port}/decodetracks`, {
 				method: "POST",
 				body: JSON.stringify(tracks),
-				headers: { Authorization: node.password },
+				headers: headers(node),
 			}).then((resp) => resp.json());
 		} else {
 			const params = new URLSearchParams();
 			params.append("track", tracks);
 
 			return await fetch(`http://${node.host}:${node.port}/decodetrack?${params}`, {
-				headers: { Authorization: node.password },
+				headers: headers(node),
 			}).then((resp) => resp.json());
 		}
 	}
@@ -42,7 +43,7 @@ module.exports = class Rest {
 		const node = this.manager.idealNodes[0];
 
 		return await fetch(`http://${node.host}:${node.port}/routeplanner/status`, {
-			headers: { Authorization: node.password },
+			headers,
 		}).then((resp) => resp.json());
 	}
 
@@ -53,12 +54,12 @@ module.exports = class Rest {
 			return await fetch(`http://${node.host}:${node.port}/routeplanner/free/address`, {
 				method: "POST",
 				body: JSON.stringify({ address }),
-				headers: { Authorization: node.password },
+				headers: headers(node),
 			}).then((resp) => resp.json());
 		}
 		return await fetch(`http://${node.host}:${node.port}/routeplanner/free/all`, {
 			method: "POST",
-			headers: { Authorization: node.password },
+			headers: headers(node),
 		}).then((resp) => resp.json());
 	}
 };

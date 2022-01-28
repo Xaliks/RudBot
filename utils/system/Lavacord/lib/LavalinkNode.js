@@ -6,8 +6,8 @@ module.exports = class LavalinkNode {
 	constructor(manager, options) {
 		this.manager = manager;
 		this.host = options.host;
-		this.port = options.port || 2333;
-		this.reconnectInterval = options.reconnectInterval || 15000;
+		this.port = options.port || 80;
+		this.reconnectInterval = options.reconnectInterval || 5000;
 		this.password = options.password;
 		this.ws = null;
 		this.stats = {
@@ -27,10 +27,7 @@ module.exports = class LavalinkNode {
 			},
 		};
 		this.resumeTimeout = options.resumeTimeout || 120;
-		this._queue = [];
 		this.id = options.id;
-
-		if (options.resumeKey) this.resumeKey = options.resumeKey;
 	}
 
 	async connect() {
@@ -42,8 +39,6 @@ module.exports = class LavalinkNode {
 				"Num-Shards": "1",
 				"User-Id": this.manager.user,
 			};
-
-			if (this.resumeKey) headers["Resume-Key"] = this.resumeKey;
 
 			const ws = new WebSocket(`ws://${this.host}:${this.port}/`, { headers });
 			const onEvent = (event) => {
@@ -73,13 +68,7 @@ module.exports = class LavalinkNode {
 			const queueData = { data: parsed, resolve, reject };
 
 			if (this.connected) return this._send(queueData);
-
-			return this._queue.push(queueData);
 		});
-	}
-
-	configureResuming(key, timeout = this.resumeTimeout) {
-		return this.send({ op: "configureResuming", key, timeout });
 	}
 
 	destroy() {
@@ -99,12 +88,6 @@ module.exports = class LavalinkNode {
 
 	onOpen() {
 		if (this._reconnect) clearTimeout(this._reconnect);
-
-		this._queueFlush()
-			.then(() => {
-				if (this.resumeKey) return this.configureResuming(this.resumeKey);
-			})
-			.catch((error) => this.manager.emit("error", error, this));
 
 		this.manager.emit("ready", this);
 	}
@@ -150,10 +133,5 @@ module.exports = class LavalinkNode {
 			if (error) reject(error);
 			else resolve(true);
 		});
-	}
-
-	async _queueFlush() {
-		await Promise.all(this._queue.map(this._send));
-		this._queue = [];
 	}
 };

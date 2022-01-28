@@ -4,7 +4,7 @@ const { MessageEmbed } = require("discord.js");
 module.exports = {
 	name: "trackUpdate",
 	async execute(bot, player) {
-		if ((player.queue[0]?.message.embeds[0].description || "").includes("Трек прослушан")) return;
+		if (!player.queue[0] || (player.message.embeds[0].description || "").includes("Трек прослушан")) return;
 
 		const track = await bot.music.rest.decode(player.queue[0].track);
 		const video = await getVideoInfo(track.uri);
@@ -14,10 +14,9 @@ module.exports = {
 			.setTitle((player.playing ? " " : "⏸️") + bot.utils.escapeMarkdown(video.title))
 			.setURL(track.uri)
 			.setThumbnail(video.thumbnail_url)
+			.setFooter({ text: `Громкость ${player.state.volume}%\nПозиция в очереди: 1` })
 			.addField("Длительность", `\`${msToTime(player.state.position)}\` / \`${msToTime(track.length)}\``, true)
-			.addField("Громкость", `**${player.state.volume}%**`, true)
-			.addField("Заказал", `${player.queue[0].author} - \`${player.queue[0].author.tag}\``)
-			.addField("Позиция в очереди", `**1**`, true);
+			.addField("Заказал", `${player.queue[0].author} - \`${player.queue[0].author.tag}\``);
 
 		embed.description = null;
 
@@ -25,15 +24,13 @@ module.exports = {
 			const nextTrack = await bot.music.rest.decode(player.queue[1].track);
 
 			embed.setDescription(
-				`[Следующий трек](https://discord.com/channels/${player.queue[1].message.guild.id}/${
-					player.queue[1].message.channel.id
-				}/${player.queue[1].message.id}): _\`${bot.utils.escapeMarkdown(
-					player.queue[1].author.tag,
-				)}\`_ - **[${bot.utils.escapeMarkdown(nextTrack.title)}](${nextTrack.uri})** \`[${msToTime(track.length)}]\``,
+				`Следующий трек: _\`${bot.utils.escapeMarkdown(player.queue[1].author.tag)}\`_ - **[${bot.utils.escapeMarkdown(
+					nextTrack.title,
+				)}](${nextTrack.uri})** \`[${msToTime(track.length)}]\``,
 			);
 		}
 
-		await player.queue[0].message.edit({ embeds: [embed] });
+		await player.message.edit({ embeds: [embed] });
 	},
 };
 

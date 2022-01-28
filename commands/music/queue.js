@@ -8,26 +8,24 @@ module.exports = {
 	aliases: ["q"],
 	async execute(message, args, bot) {
 		const player = bot.music.players.get(message.guild.id);
-		if (player?.queue.length === 0) return bot.utils.error("Очередь сервера пуста!", this, message, bot);
+		if (!player || player.queue.length === 0) return bot.utils.error("Очередь сервера пуста!", this, message, bot);
 
-		const description = (
-			await Promise.all(
-				player.queue.map(async (q, i) => {
-					const track = await bot.music.rest.decode(q.track);
-
-					return `${i + 1}. _\`${player.queue[i].author.tag}\`_  -  **[${track.title}](${track.uri})** \`[${msToTime(
-						track.length,
-					)}]\``;
-				}),
-			)
-		).join("\n");
+		const tracks = await bot.music.rest.decode(player.queue.map((t) => t.track));
 
 		return message.channel.send({
 			embeds: [
 				new MessageEmbed()
 					.setTitle("Очередь сервера")
 					.setThumbnail(message.guild.iconURL({ dynamic: true }))
-					.setDescription(description),
+					.setDescription(
+						tracks
+							.map((track, i) => {
+								return `${i + 1}. _\`${player.queue[i].author.tag}\`_ -  **[${track.info.title}](${
+									track.info.uri
+								})** \`[${msToTime(track.info.length)}]\``;
+							})
+							.join("\n"),
+					),
 			],
 		});
 	},
