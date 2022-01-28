@@ -12,11 +12,12 @@ module.exports = async (interaction, bot) => {
 		});
 
 	const idea = guild.ideas.ideas.find((idea) => idea.id === message.id);
-	if (!idea) return interaction.reply({
-		content: "К сожалению, в базе бота отсутствует данная идея :(",
-		ephemeral: true,
-	});
-	
+	if (!idea)
+		return interaction.reply({
+			content: "К сожалению, в базе бота отсутствует данная идея :(",
+			ephemeral: true,
+		});
+
 	const userVote = idea.votes.find((v) => v.id === user.id);
 
 	if (userVote?.vote === vote)

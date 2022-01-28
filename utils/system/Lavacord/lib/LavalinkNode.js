@@ -57,10 +57,7 @@ module.exports = class LavalinkNode {
 				resolve(ws);
 			};
 
-			ws
-				.once("open", onOpen)
-				.once("error", onEvent)
-				.once("close", onEvent);
+			ws.once("open", onOpen).once("error", onEvent).once("close", onEvent);
 		});
 		this.ws
 			.on("message", this.onMessage.bind(this))
@@ -76,7 +73,7 @@ module.exports = class LavalinkNode {
 			const queueData = { data: parsed, resolve, reject };
 
 			if (this.connected) return this._send(queueData);
-			
+
 			return this._queue.push(queueData);
 		});
 	}

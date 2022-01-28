@@ -33,16 +33,24 @@ module.exports = {
 **Создан:** ${bot.utils.discordTime(bot.user.createdTimestamp, true, false)[0]}
 **[Пригласить меня](https://discord.com/api/oauth2/authorize?client_id=${bot.user.id}&permissions=8&scope=bot)**`,
 					)
-					.addField("Статистика", `**Кол-во команд:** \`${bot.commands.filter((cmd) => !cmd.admin).size}\`
+					.addField(
+						"Статистика",
+						`**Кол-во команд:** \`${bot.commands.filter((cmd) => !cmd.admin).size}\`
 **Пользователей:** \`${bot.utils.formatNumber(bot.users.cache.size)}\`
 **Серверов:** \`${bot.utils.formatNumber(bot.guilds.cache.size)}\`
-**Каналов:** \`${bot.utils.formatNumber(bot.channels.cache.size)}\``, true)
-					.addField("Система", `**ОЗУ:** \`${(process.memoryUsage().rss / Math.pow(1024, 2)).toFixed(0)}\`MB / \`${(
-		os.totalmem() / Math.pow(1024, 3)
-	).toFixed(1)}\`GB
+**Каналов:** \`${bot.utils.formatNumber(bot.channels.cache.size)}\``,
+						true,
+					)
+					.addField(
+						"Система",
+						`**ОЗУ:** \`${(process.memoryUsage().rss / Math.pow(1024, 2)).toFixed(0)}\`MB / \`${(
+							os.totalmem() / Math.pow(1024, 3)
+						).toFixed(1)}\`GB
 **Node.js** \`${process.version}\`
 **Discord.js** \`${version}\`
-**OC** \`${os.type()} / ${os.arch()}\``, true)
+**OC** \`${os.type()} / ${os.arch()}\``,
+						true,
+					)
 					.setFooter({ text: `Аптайм: ${bot.utils.time(bot.uptime)}\nПоследняя перезагрузка была:` })
 					.setTimestamp(Date.now() - bot.uptime)
 					.setThumbnail(bot.user.displayAvatarURL()),

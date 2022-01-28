@@ -13,8 +13,7 @@ module.exports = class Player extends EventEmitter {
 		this.playing = false;
 		this.voiceUpdateState = null;
 
-		this
-		.on("event", async (data) => {
+		this.on("event", async (data) => {
 			switch (data.type) {
 				case "TrackStartEvent":
 					break;
@@ -31,9 +30,8 @@ module.exports = class Player extends EventEmitter {
 					if (this.listenerCount("warn")) this.emit("warn", `Unexpected event type: ${data.type}`);
 					break;
 			}
-		})
-		.on("playerUpdate", (data) => {
-			this.manager.emit("trackUpdate", { ...this, state: { ...this.state, ...data.state }});
+		}).on("playerUpdate", (data) => {
+			this.manager.emit("trackUpdate", { ...this, state: { ...this.state, ...data.state } });
 		});
 	}
 
@@ -100,7 +98,7 @@ module.exports = class Player extends EventEmitter {
 
 	send(op, data) {
 		if (!this.node.connected) return setTimeout(() => this.send(op, data), 1000);
-		
+
 		return this.node.send({ ...data, op, guildId: this.id });
 	}
 

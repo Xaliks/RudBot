@@ -27,47 +27,54 @@ module.exports = {
 
 		const search = await bot.music.rest.load(`ytsearch:${args.join(" ")}`);
 		const track = search.tracks?.filter((track) => !track.isStream && track.info.length < 3600000)?.[0];
-		if (!track) return bot.utils.error(`Ничего не найдено в **[YouTube](https://youtube.com)** по запросу \`${args.join(" ")}\`!`, this, message, bot);
+		if (!track)
+			return bot.utils.error(
+				`Ничего не найдено в **[YouTube](https://youtube.com)** по запросу \`${args.join(" ")}\`!`,
+				this,
+				message,
+				bot,
+			);
 
 		const player = await bot.music.join({
 			guild: message.guild.id,
-			channel: message.member.voice.channel.id
+			channel: message.member.voice.channel.id,
 		});
 		const video = await getVideoInfo(track.info.uri);
 
 		if (player.queue.length > 0) {
-			const msg = await message.channel.send({ embeds: [new MessageEmbed()
-				.setAuthor({ name: track.info.author, iconURL: await getAuthorAvatar(video.author_url), url: video.author_url })
-				.setTitle(bot.utils.escapeMarkdown(video.title))
-				.setURL(track.info.uri)
-				.setThumbnail(video.thumbnail_url)
-				.setDescription("**Трек добавлен в очередь**")
-				.addField(
-					"Длительность",
-					`\`${msToTime(track.info.length)}\``,
-					true,
-				)
-				.addField("Заказал", `${message.author} - \`${message.author.tag}\``, true)
-				.addField("Позиция в очереди", `**${player.queue.length + 1}**`, true)
-			] });
+			const msg = await message.channel.send({
+				embeds: [
+					new MessageEmbed()
+						.setAuthor({
+							name: track.info.author,
+							iconURL: await getAuthorAvatar(video.author_url),
+							url: video.author_url,
+						})
+						.setTitle(bot.utils.escapeMarkdown(video.title))
+						.setURL(track.info.uri)
+						.setThumbnail(video.thumbnail_url)
+						.setDescription("**Трек добавлен в очередь**")
+						.addField("Длительность", `\`${msToTime(track.info.length)}\``, true)
+						.addField("Заказал", `${message.author} - \`${message.author.tag}\``, true)
+						.addField("Позиция в очереди", `**${player.queue.length + 1}**`, true),
+				],
+			});
 
 			return await player.play(track.track, message.author, msg);
 		}
 
-		const msg = await message.channel.send({ embeds: [new MessageEmbed()
-			.setAuthor({ name: track.info.author, iconURL: await getAuthorAvatar(video.author_url), url: video.author_url })
-			.setTitle(bot.utils.escapeMarkdown(video.title))
-			.setURL(track.info.uri)
-			.setThumbnail(video.thumbnail_url)
-			.addField(
-				"Длительность",
-				`\`00:00\` / \`${msToTime(track.info.length)}\``,
-				true,
-			)
-			.addField("Громкость", `**${player.state.volume}%**`, true)
-			.addField("Заказал", `${message.author} - \`${message.author.tag}\``, true)
-			.addField("Позиция в очереди", "**1**", true)
-		]
+		const msg = await message.channel.send({
+			embeds: [
+				new MessageEmbed()
+					.setAuthor({ name: track.info.author, iconURL: await getAuthorAvatar(video.author_url), url: video.author_url })
+					.setTitle(bot.utils.escapeMarkdown(video.title))
+					.setURL(track.info.uri)
+					.setThumbnail(video.thumbnail_url)
+					.addField("Длительность", `\`00:00\` / \`${msToTime(track.info.length)}\``, true)
+					.addField("Громкость", `**${player.state.volume}%**`, true)
+					.addField("Заказал", `${message.author} - \`${message.author.tag}\``, true)
+					.addField("Позиция в очереди", "**1**", true),
+			],
 		});
 
 		await player.play(track.track, message.author, msg);

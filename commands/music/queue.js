@@ -8,7 +8,7 @@ module.exports = {
 	aliases: ["q"],
 	async execute(message, args, bot) {
 		const player = bot.music.players.get(message.guild.id);
-		if (player.queue.length === 0) return bot.utils.error("Очередь сервера пуста!", this, message, bot);
+		if (player?.queue.length === 0) return bot.utils.error("Очередь сервера пуста!", this, message, bot);
 
 		const description = (
 			await Promise.all(
