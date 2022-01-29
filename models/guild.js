@@ -12,12 +12,7 @@ module.exports = model(
 		ideas: {
 			id: String,
 			role: String,
-			ideas: [
-				{
-					id: String,
-					votes: undefined | Array,
-				},
-			],
+			messages: Object,
 		},
 	}),
 );

@@ -1,4 +1,5 @@
 const { MessageEmbed, MessageButton } = require("discord.js");
+const util = require("util");
 
 module.exports = {
 	name: "idea",
@@ -47,8 +48,8 @@ module.exports = {
 					{
 						type: 1,
 						components: [
-							new MessageButton().setStyle(2).setEmoji("914129843254362173").setLabel("0").setCustomId("idea-1"),
-							new MessageButton().setStyle(2).setEmoji("914129843271127070").setLabel("0").setCustomId("idea-2"),
+							new MessageButton().setStyle(2).setEmoji("914129843254362173").setLabel("0").setCustomId("idea-0"),
+							new MessageButton().setStyle(2).setEmoji("914129843271127070").setLabel("0").setCustomId("idea-1"),
 						],
 					},
 				],
@@ -56,10 +57,12 @@ module.exports = {
 			.then(async (msg) => {
 				msg.channel.threads.create({ name: "Обсуждение идеи", startMessage: msg.id });
 
-				if (!guild.ideas.ideas) guild.ideas.ideas = new Array();
-				guild.ideas.ideas.push({ id: msg.id });
+				if (!guild.ideas.messages) guild.ideas.messages = new Object();
+				guild.ideas.messages[msg.id] = { [bot.user.id]: 2 };
 
-				await bot.cache.delete({ id: message.guild.id }, "idea_channel", "guild");
+				delete guild.idea_channel;
+				delete guild.ideas.ideas;
+
 				await bot.cache.update({ id: message.guild.id }, guild, "guild");
 			});
 
