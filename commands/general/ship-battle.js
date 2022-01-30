@@ -46,7 +46,7 @@ module.exports = {
 
 			bot.temp.set(
 				`shipbattle-${message.author.id}-${user.id}`,
-				[msgAuthor, msgUser, generateMap, getOptions, [], []].concat(players),
+				[msgAuthor, msgUser, generateMap, [], []].concat(players),
 			);
 
 			await msg.edit({ content: "Смотрите в ЛС! Игра началась!", components: [] });
@@ -58,7 +58,18 @@ module.exports = {
 					.setMaxValues(1)
 					.setMinValues(1)
 					.setPlaceholder("Буква")
-					.addOptions(getOptions()[0])
+					.addOptions([
+						{ label: "А", value: "0", emoji: "🇦" },
+						{ label: "Б", value: "1", emoji: "937307412430463026" },
+						{ label: "В", value: "2", emoji: "🇧" },
+						{ label: "Г", value: "3", emoji: "937307412422078474" },
+						{ label: "Д", value: "4", emoji: "937307412451430430" },
+						{ label: "Е", value: "5", emoji: "🇪" },
+						{ label: "Ж", value: "6", emoji: "937307412451446804" },
+						{ label: "З", value: "7", emoji: "937307412497580043" },
+						{ label: "И", value: "8", emoji: "937307412476620850" },
+						{ label: "К", value: "9", emoji: "🇰" },
+					])
 					.setDisabled(false);
 
 				if (n === 1) {
@@ -87,7 +98,18 @@ module.exports = {
 										.setMaxValues(1)
 										.setMinValues(1)
 										.setPlaceholder("Цифра")
-										.addOptions(getOptions()[1])
+										.addOptions([
+											{ label: "1", value: "0", emoji: "1️⃣" },
+											{ label: "2", value: "1", emoji: "2️⃣" },
+											{ label: "3", value: "2", emoji: "3️⃣" },
+											{ label: "4", value: "3", emoji: "4️⃣" },
+											{ label: "5", value: "4", emoji: "5️⃣" },
+											{ label: "6", value: "5", emoji: "6️⃣" },
+											{ label: "7", value: "6", emoji: "7️⃣" },
+											{ label: "8", value: "7", emoji: "8️⃣" },
+											{ label: "9", value: "8", emoji: "9️⃣" },
+											{ label: "10", value: "9", emoji: "🔟" },
+										])
 										.setDisabled(true),
 								],
 							},
@@ -195,19 +217,19 @@ function create() {
 }
 
 function generateMap(ships, hits, show) {
-	let text = `⬜ | 1️⃣2️⃣3️⃣4️⃣5️⃣6️⃣7️⃣8️⃣9️⃣🔟
+	let text = `⬜ | 🇦<:B:937307412430463026>🇧<:G:937307412422078474><:D:937307412451430430>🇪<:J:937307412451446804><:Z:937307412497580043><:I:937307412476620850>🇰
 ==========================`;
 	const y = {
-		0: "🇦",
-		10: "<:B_:930137869425704990>",
-		20: "🇧",
-		30: "<:D_:930137869249572964>",
-		40: "<:E_:930137869157289994>",
-		50: "<:F_:930137869136322660>",
-		60: "<:G_:930137868817551402>",
-		70: "<:H_:930137869186646116>",
-		80: "<:I_:930137869178249216>",
-		90: "🇰",
+		0: "1️⃣",
+		10: "2️⃣",
+		20: "3️⃣",
+		30: "4️⃣",
+		40: "5️⃣",
+		50: "6️⃣",
+		60: "7️⃣",
+		70: "8️⃣",
+		80: "9️⃣",
+		90: "🔟",
 	};
 
 	ships.forEach((s, i) => {
@@ -227,33 +249,4 @@ function generateMap(ships, hits, show) {
 	}
 
 	return text;
-}
-
-function getOptions() {
-	return [
-		[
-			{ label: "А", value: "0", emoji: "930137868708507669" },
-			{ label: "Б", value: "1", emoji: "930137869425704990" },
-			{ label: "В", value: "2", emoji: "930137868721078284" },
-			{ label: "Г", value: "3", emoji: "930137869249572964" },
-			{ label: "Д", value: "4", emoji: "930137869157289994" },
-			{ label: "Е", value: "5", emoji: "930137869136322660" },
-			{ label: "Ж", value: "6", emoji: "930137868817551402" },
-			{ label: "З", value: "7", emoji: "930137869186646116" },
-			{ label: "И", value: "8", emoji: "930137869178249216" },
-			{ label: "К", value: "9", emoji: "930137869195046972" },
-		],
-		[
-			{ label: "1", value: "0", emoji: "930139670153682975" },
-			{ label: "2", value: "1", emoji: "930139670313066527" },
-			{ label: "3", value: "2", emoji: "930139670241755146" },
-			{ label: "4", value: "3", emoji: "930139669914611733" },
-			{ label: "5", value: "4", emoji: "930139670300487740" },
-			{ label: "6", value: "5", emoji: "930139670304665751" },
-			{ label: "7", value: "6", emoji: "930139670308851753" },
-			{ label: "8", value: "7", emoji: "930139670233382962" },
-			{ label: "9", value: "8", emoji: "930139670292086794" },
-			{ label: "10", value: "9", emoji: "930139670178852935" },
-		],
-	];
 }

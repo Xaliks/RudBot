@@ -1,5 +1,3 @@
-const { Util } = require("discord.js");
-
 module.exports = async (interaction, bot) => {
 	const { values } = interaction;
 	const [_, type, authorId, userId] = interaction.customId.split("-");
@@ -10,17 +8,14 @@ module.exports = async (interaction, bot) => {
 			content: "Что-то прозошло! Возможно, у противника закрыт ЛС, либо бот перезагрузился",
 			ephemeral: true,
 		});
-	let [
-		PlayerMessage,
-		Player2Message,
-		generateMap,
-		getOptions,
-		playerHits,
-		player2Hits,
-		playerShips,
-		player2Ships,
-		coords = null,
-	] = temp;
+
+	let [PlayerMessage, Player2Message, generateMap, playerHits, player2Hits, playerShips, player2Ships, coords = null] =
+		temp;
+
+	// Буквы
+	const options1 = PlayerMessage.components[0].components[0].options;
+	// Цифры
+	const options2 = PlayerMessage.components[1].components[0].options;
 
 	interaction.deferUpdate();
 
@@ -31,7 +26,7 @@ module.exports = async (interaction, bot) => {
 		PlayerMessage.components[1].components[0].setDisabled(false);
 
 		// запись
-		temp[8] = values[0];
+		temp[7] = values[0];
 		bot.temp.set(`shipbattle-${authorId}-${userId}`, temp);
 
 		// редактирование меню
@@ -41,7 +36,7 @@ module.exports = async (interaction, bot) => {
 	// выбор цифры
 	else {
 		// определение координат
-		const stringCoords = temp[8] + values[0];
+		const stringCoords = values[0] + temp[7];
 		coords = Number(stringCoords);
 		// запись в массив с попаданиями
 		player2Hits.push(coords);
@@ -90,7 +85,7 @@ module.exports = async (interaction, bot) => {
 			PlayerMessage.components[0].components[0].setDisabled(false);
 
 			// запись
-			temp[5] = player2Hits;
+			temp[4] = player2Hits;
 		}
 		// проверка на промах
 		else {
@@ -113,14 +108,14 @@ module.exports = async (interaction, bot) => {
 			// запись
 			temp[0] = Player2Message;
 			temp[1] = PlayerMessage;
-			temp[4] = player2Hits;
-			temp[5] = playerHits;
-			temp[6] = player2Ships;
-			temp[7] = playerShips;
+			temp[3] = player2Hits;
+			temp[4] = playerHits;
+			temp[5] = player2Ships;
+			temp[6] = playerShips;
 		}
 
 		// запись
-		temp[8] = null;
+		temp[7] = null;
 		bot.temp.set(`shipbattle-${authorId}-${userId}`, temp);
 
 		// редактирование сообщений
@@ -129,15 +124,17 @@ module.exports = async (interaction, bot) => {
 		PlayerMessage.edit({ content: "\n", components: PlayerMessage.components, embeds: PlayerMessage.embeds });
 
 		function coordsToEmojis() {
-			const yE = Util.resolvePartialEmoji(getOptions()[0].find((opt) => opt.value === stringCoords[0]).emoji);
-			const xE = Util.resolvePartialEmoji(getOptions()[1].find((opt) => opt.value === stringCoords[1]).emoji);
+			const yE = options1.find((opt) => opt.value === stringCoords[1]).emoji;
+			const xE = options2.find((opt) => opt.value === stringCoords[0]).emoji;
 
-			return `<:${yE.name}:${yE.id}>` + `<:${xE.name}:${xE.id}>`;
+			if (yE.id) return `<:${yE.name}:${yE.id}>` + xE.name;
+
+			return yE.name + xE.name;
 		}
 	}
 
 	function generateOptionsByY(hits, y) {
-		let options = getOptions()[1];
+		let options = options2;
 
 		for (let x = 0; x < 10; ++x) {
 			if (hits.includes(Number(String(y) + x))) {
@@ -145,14 +142,11 @@ module.exports = async (interaction, bot) => {
 			}
 		}
 
-		return options.map((opt) => {
-			opt.emoji = Util.resolvePartialEmoji(opt.emoji);
-			return opt;
-		});
+		return options;
 	}
 
 	function generateOptions(hits) {
-		let options = getOptions()[0];
+		let options = options1;
 
 		for (let y = 0; y < 10; ++y) {
 			let i = 0;
@@ -164,10 +158,7 @@ module.exports = async (interaction, bot) => {
 			if (i === 10) options = options.filter((o) => o.value != y);
 		}
 
-		return options.map((opt) => {
-			opt.emoji = Util.resolvePartialEmoji(opt.emoji);
-			return opt;
-		});
+		return options;
 	}
 
 	function isEnd(ships, hits) {
