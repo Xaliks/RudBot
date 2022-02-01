@@ -1,5 +1,4 @@
-﻿require("./utils/system/Structures")();
-const { Client, Intents } = require("discord.js");
+﻿const { Client, Intents } = require("discord.js");
 const { token } = require("./config.json");
 
 const bot = new Client({

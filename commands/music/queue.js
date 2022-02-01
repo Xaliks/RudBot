@@ -12,7 +12,7 @@ module.exports = {
 
 		const tracks = await bot.music.rest.decode(player.queue.map((t) => t.track));
 
-		return message.channel.send({
+		return message.reply({
 			embeds: [
 				new MessageEmbed()
 					.setTitle("Очередь сервера")

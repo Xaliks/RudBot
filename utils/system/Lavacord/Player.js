@@ -32,8 +32,10 @@ module.exports = class Player extends EventEmitter {
 					break;
 			}
 		}).on("playerUpdate", (data) => {
-			this.state = { ...this.state, ...data.state };
-			this.manager.emit("trackUpdate", this);
+			if (this.queue[0] && JSON.stringify(this.state) != JSON.stringify(data.state)) {
+				this.state = { ...this.state, ...data.state };
+				this.manager.emit("trackUpdate", this);
+			}
 		});
 	}
 

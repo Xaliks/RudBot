@@ -43,7 +43,7 @@ module.exports = {
 		const video = await getVideoInfo(track.info.uri);
 
 		if (player.queue.length > 0) {
-			message.channel.send({
+			message.reply({
 				embeds: [
 					new MessageEmbed()
 						.setAuthor({
@@ -54,26 +54,23 @@ module.exports = {
 						.setTitle(bot.utils.escapeMarkdown(video.title))
 						.setURL(track.info.uri)
 						.setThumbnail(video.thumbnail_url)
-						.setDescription("**Трек добавлен в очередь**")
-						.setFooter({ text: `Громкость: ${player.state.volume}%\nПозиция в очереди: ${player.queue.length + 1}` })
-						.addField("Длительность", `\`${msToTime(track.info.length)}\``, true)
-						.addField("Заказал", `${message.author} - \`${message.author.tag}\``, true),
+						.setDescription(`[\`${msToTime(track.info.length)}\`] **Трек добавлен в очередь**`)
+						.setFooter({ text: `Позиция в очереди: ${player.queue.length + 1}` }),
 				],
 			});
 
 			return await player.play(track.track, message.author);
 		}
 
-		const msg = await message.channel.send({
+		const msg = await message.reply({
 			embeds: [
 				new MessageEmbed()
 					.setAuthor({ name: track.info.author, iconURL: await getAuthorAvatar(video.author_url), url: video.author_url })
 					.setTitle(bot.utils.escapeMarkdown(video.title))
 					.setURL(track.info.uri)
 					.setThumbnail(video.thumbnail_url)
-					.setFooter({ text: `Громкость: ${player.state.volume}%\nПозиция в очереди: 1` })
-					.addField("Длительность", `\`00:00\` / \`${msToTime(track.info.length)}\``, true)
-					.addField("Заказал", `${message.author} - \`${message.author.tag}\``, true),
+					.setFooter({ text: `Громкость: ${player.state.volume}%` })
+					.addField("Длительность", `\`00:00\` / \`${msToTime(track.info.length)}\``, true),
 			],
 		});
 

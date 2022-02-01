@@ -20,7 +20,7 @@ module.exports = {
 			.setTitle(bot.utils.escapeMarkdown(video.title))
 			.setURL(track.uri)
 			.setThumbnail(video.thumbnail_url)
-			.setFooter({ text: `Громкость: ${player.state.volume}%\nПозиция в очереди: 1` })
+			.setFooter({ text: `Громкость: ${player.state.volume}%` })
 			.addField("Длительность", `\`${msToTime(player.state.position)}\` / \`${msToTime(track.length)}\``, true)
 			.addField("Заказал", `${player.queue[0].author} - \`${player.queue[0].author.tag}\``, true);
 
@@ -34,11 +34,11 @@ module.exports = {
 			);
 		}
 
-		const msg = await message.channel.send({
+		const msg = await message.reply({
 			embeds: [embed],
 		});
 
-		player.message = msg;
+		if (message.guild.me.voice.channelId === message.member.voice?.channelId) player.message = msg;
 	},
 };
 

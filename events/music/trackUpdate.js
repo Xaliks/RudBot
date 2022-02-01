@@ -4,8 +4,6 @@ const { MessageEmbed } = require("discord.js");
 module.exports = {
 	name: "trackUpdate",
 	async execute(bot, player) {
-		if (!player.queue[0] || (player.message.embeds[0].description || "").includes("Трек прослушан")) return;
-
 		const track = await bot.music.rest.decode(player.queue[0].track);
 		const video = await getVideoInfo(track.uri);
 
@@ -14,11 +12,9 @@ module.exports = {
 			.setTitle((player.playing ? " " : "⏸️") + bot.utils.escapeMarkdown(video.title))
 			.setURL(track.uri)
 			.setThumbnail(video.thumbnail_url)
-			.setFooter({ text: `Громкость ${player.state.volume}%\nПозиция в очереди: 1` })
+			.setFooter({ text: `Громкость ${player.state.volume}%` })
 			.addField("Длительность", `\`${msToTime(player.state.position)}\` / \`${msToTime(track.length)}\``, true)
 			.addField("Заказал", `${player.queue[0].author} - \`${player.queue[0].author.tag}\``);
-
-		embed.description = null;
 
 		if (player.queue[1]) {
 			const nextTrack = await bot.music.rest.decode(player.queue[1].track);
@@ -30,7 +26,10 @@ module.exports = {
 			);
 		}
 
-		await player.message.edit({ embeds: [embed] });
+		if ((player.message.embeds[0].description || "").includes("Трек прослушан"))
+			return (player.message = await player.message.channel.send({ embeds: [embed] }));
+
+		player.message = await player.message.edit({ embeds: [embed] });
 	},
 };
 
