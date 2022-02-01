@@ -58,7 +58,7 @@ module.exports = class Manager extends EventEmitter {
 
 		player.removeAllListeners();
 
-		return await player.destroy();
+		return player.destroy();
 	}
 
 	voiceServerUpdate(data) {
@@ -111,7 +111,7 @@ module.exports = class Manager extends EventEmitter {
 		const player = this.players.get(guildID);
 		if (!player) return false;
 
-		await player.connect({ sessionId: state.session_id, event: server });
+		player._connect({ sessionId: state.session_id, event: server });
 		this.expecting.delete(guildID);
 
 		return true;

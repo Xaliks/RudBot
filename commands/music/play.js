@@ -3,7 +3,7 @@ const fetch = require("node-fetch");
 
 module.exports = {
 	name: "play",
-	description: "Воспроизведение трека в голосовом канале",
+	description: "Воспроизведение композиции в голосовом канале",
 	category: "music",
 	cooldown: 10,
 	usage: ["<Название песни/Ссылка>"],
@@ -54,7 +54,7 @@ module.exports = {
 						.setTitle(bot.utils.escapeMarkdown(video.title))
 						.setURL(track.info.uri)
 						.setThumbnail(video.thumbnail_url)
-						.setDescription(`[\`${msToTime(track.info.length)}\`] **Трек добавлен в очередь**`)
+						.setDescription(`[\`${msToTime(track.info.length)}\`] - **Трек добавлен в очередь**`)
 						.setFooter({ text: `Позиция в очереди: ${player.queue.length + 1}` }),
 				],
 			});

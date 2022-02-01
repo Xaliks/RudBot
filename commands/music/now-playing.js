@@ -6,7 +6,7 @@ module.exports = {
 	description: "Что сейчас воспроизводится?",
 	category: "music",
 	cooldown: 10,
-	aliases: ["np", "nowplay", "nodeplaying"],
+	aliases: ["np", "nowplay", "nowplaying"],
 	async execute(message, args, bot) {
 		const player = bot.music.players.get(message.guild.id);
 		if (!player || player.queue.length === 0)
@@ -15,9 +15,14 @@ module.exports = {
 		const track = await bot.music.rest.decode(player.queue[0].track);
 		const video = await getVideoInfo(track.uri);
 
+		let trackTitle = "";
+		if (!player.playing) trackTitle += "⏸️ ";
+		if (player.looping) trackTitle += "🔁 ";
+		trackTitle += bot.utils.escapeMarkdown(track.title);
+
 		const embed = new MessageEmbed()
 			.setAuthor({ name: track.author, iconURL: await getAuthorAvatar(video.author_url), url: video.author_url })
-			.setTitle(bot.utils.escapeMarkdown(video.title))
+			.setTitle(trackTitle)
 			.setURL(track.uri)
 			.setThumbnail(video.thumbnail_url)
 			.setFooter({ text: `Громкость: ${player.state.volume}%` })
@@ -28,9 +33,9 @@ module.exports = {
 			const nextTrack = await bot.music.rest.decode(player.queue[1].track);
 
 			embed.setDescription(
-				`Следующий трек: _\`${bot.utils.escapeMarkdown(player.queue[1].author.tag)}\`_ - **[${bot.utils.escapeMarkdown(
-					nextTrack.title,
-				)}](${nextTrack.uri})** \`[${msToTime(track.length)}]\``,
+				`Следующий трек: _\`${player.queue[1].author.tag}\`_ - **[${bot.utils.escapeMarkdown(nextTrack.title)}](${
+					nextTrack.uri
+				})** [\`${msToTime(track.length)}\`]`,
 			);
 		}
 

@@ -12,6 +12,7 @@ module.exports = class Player extends EventEmitter {
 		this.queue = [];
 		this.message = null;
 		this.playing = false;
+		this.looping = false;
 		this.voiceUpdateState = null;
 
 		this.on("event", async (data) => {
@@ -32,14 +33,14 @@ module.exports = class Player extends EventEmitter {
 					break;
 			}
 		}).on("playerUpdate", (data) => {
-			if (this.queue[0] && JSON.stringify(this.state) != JSON.stringify(data.state)) {
+			if (this.queue[0] && JSON.stringify(this.state) != JSON.stringify(data.state) && this.playing) {
 				this.state = { ...this.state, ...data.state };
 				this.manager.emit("trackUpdate", this);
 			}
 		});
 	}
 
-	async play(track, author, msg) {
+	play(track, author, msg) {
 		this.queue.push({ track, author });
 
 		if (msg && this.message === null) this.message = msg;
@@ -47,64 +48,72 @@ module.exports = class Player extends EventEmitter {
 
 		this.playing = true;
 
-		return await this.send("play", { track });
+		return this._send("play", { track });
 	}
 
-	async skip() {
-		if (!this.queue[1]) return await this.stop();
+	skip() {
+		if (!this.looping) {
+			if (!this.queue[1]) return this.stop();
 
-		this.manager.emit("trackEnd", this);
+			this.manager.emit("trackEnd", this);
 
-		this.queue.shift();
-		this.playing = true;
+			this.queue.shift();
+			this.playing = true;
+		}
 
-		return await this.send("play", { track: this.queue[0].track });
+		return this._send("play", { track: this.queue[0].track });
 	}
 
-	async stop() {
+	stop() {
 		this.manager.emit("trackEnd", this);
 
 		return this.manager.leave(this.id);
 	}
 
-	async pause(pause = true) {
-		this.playing = !pause;
-
-		return await this.send("pause", { pause });
-	}
-
-	async volume(volume) {
+	volume(volume) {
 		this.state.volume = volume;
 
-		return await this.send("volume", { volume });
+		return this._send("volume", { volume });
 	}
 
-	async seek(position) {
+	seek(position) {
 		this.state.position = position;
 
-		return await this.send("seek", { position });
+		return this._send("seek", { position });
+	}
+
+	pause(pause = !this.playing) {
+		this.playing = pause;
+
+		return this._send("pause", { pause: !pause });
+	}
+
+	loop(loop = !this.looping) {
+		this.looping = loop;
+
+		return loop;
 	}
 
 	destroy() {
 		this.manager.players.delete(this.id);
 
-		return this.send("destroy");
-	}
-
-	connect(data) {
-		this.voiceUpdateState = data;
-
-		return this.send("voiceUpdate", data);
+		return this._send("destroy");
 	}
 
 	switchChannel(channel, options = {}) {
 		return this.manager.sendWS(this.id, channel, options);
 	}
 
-	send(op, data) {
-		if (!this.node.connected) return setTimeout(() => this.send(op, data), 1000);
+	_send(op, data) {
+		if (!this.node.connected) return setTimeout(() => this._send(op, data), 1000);
 
 		return this.node.send({ ...data, op, guildId: this.id });
+	}
+
+	_connect(data) {
+		this.voiceUpdateState = data;
+
+		return this._send("voiceUpdate", data);
 	}
 
 	get manager() {

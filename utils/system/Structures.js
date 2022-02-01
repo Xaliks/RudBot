@@ -50,7 +50,7 @@ module.exports.MusicManager = class MusicManager extends require("./Lavacord/Man
 					await this.sendWS(channel.guild.id, null);
 
 					const player = this.players.get(channel.guild.id);
-					if (!player) return false;
+					if (!player) return;
 
 					await player.destroy();
 

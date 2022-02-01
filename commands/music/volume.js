@@ -4,9 +4,9 @@ module.exports = {
 	name: "volume",
 	description: "Изменить громкость трека",
 	category: "music",
-	cooldown: 20,
+	cooldown: 15,
 	usage: ["<Громкость>"],
-	aliases: ["v"],
+	aliases: ["v", "vol"],
 	async execute(message, args, bot) {
 		const player = bot.music.players.get(message.guild.id);
 		if (!player || player.queue.length === 0)
@@ -27,7 +27,7 @@ module.exports = {
 		await player.volume(volume);
 
 		return message.reply({
-			embeds: [new MessageEmbed().setDescription(`Громкость трека изменена на **${volume}%**`)],
+			embeds: [new MessageEmbed().setDescription(`Громкость трека изменена на **${volume}%** 🎵`)],
 		});
 	},
 };

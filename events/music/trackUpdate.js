@@ -7,9 +7,14 @@ module.exports = {
 		const track = await bot.music.rest.decode(player.queue[0].track);
 		const video = await getVideoInfo(track.uri);
 
+		let trackTitle = "";
+		if (!player.playing) trackTitle += "⏸️ ";
+		if (player.looping) trackTitle += "🔁 ";
+		trackTitle += bot.utils.escapeMarkdown(video.title);
+
 		const embed = new MessageEmbed()
 			.setAuthor({ name: track.author, iconURL: await getAuthorAvatar(video.author_url), url: video.author_url })
-			.setTitle((player.playing ? " " : "⏸️") + bot.utils.escapeMarkdown(video.title))
+			.setTitle(trackTitle)
 			.setURL(track.uri)
 			.setThumbnail(video.thumbnail_url)
 			.setFooter({ text: `Громкость ${player.state.volume}%` })
@@ -20,13 +25,13 @@ module.exports = {
 			const nextTrack = await bot.music.rest.decode(player.queue[1].track);
 
 			embed.setDescription(
-				`Следующий трек: _\`${bot.utils.escapeMarkdown(player.queue[1].author.tag)}\`_ - **[${bot.utils.escapeMarkdown(
-					nextTrack.title,
-				)}](${nextTrack.uri})** \`[${msToTime(track.length)}]\``,
+				`Следующий трек: _\`${player.queue[1].author.tag}\`_ - **[${bot.utils.escapeMarkdown(nextTrack.title)}](${
+					nextTrack.uri
+				})** [\`${msToTime(track.length)}\`]`,
 			);
 		}
 
-		if ((player.message.embeds[0].description || "").includes("Трек прослушан"))
+		if (player.playing && (player.message.embeds[0].description || "").includes("Трек прослушан"))
 			return (player.message = await player.message.channel.send({ embeds: [embed] }));
 
 		player.message = await player.message.edit({ embeds: [embed] });
