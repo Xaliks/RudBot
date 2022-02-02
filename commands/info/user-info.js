@@ -9,98 +9,69 @@ module.exports = {
 	usage: ["[@Пользователь/ID]"],
 	category: "info",
 	async execute(message, args, bot) {
-		let user;
+		let user = await bot.users.fetch(args[0], { force: true }).catch(() => message.author);
 		let member = bot.utils.findMember(message, args.join(" "));
-		if (args[0] && /\d{17,18}/.test(args[0])) user = await bot.users.fetch(args[0], { force: true }).catch(() => null);
-		if (member) user = await bot.users.fetch(member.user.id, { force: true });
-		if (!user) {
-			user = await bot.users.fetch(message.author.id, { force: true });
-			member = message.member;
-		}
+		if (!member && user.id === message.author.id) member = message.member;
+		if (member) user = member.user;
 
-		let description = `Аватар: **[Ссылка](${user.displayAvatarURL({ dynamic: true, size: 2048 })})**`;
-		if (user.banner) description += ` | Баннер: **[Ссылка](${user.bannerURL({ dynamic: true, size: 2048 })})**`;
-		if (!user.bot && user.flags && user.flags.bitfield != 0)
+		let description = `**[Аватар](${user.displayAvatarURL()})**`;
+		if (user.banner) description += ` | **[Баннер](${user.bannerURL()})**`;
+		if (member?.avatar) description += ` | **[Серверный аватар](${member.avatarURL()})**`;
+
+		if (user.flags?.bitfield != 0)
 			description += `\nЗначки: ${user.flags
 				.toArray()
 				.map((flag) => userinfo.badges[flag])
 				.join(" ")}`;
 
 		const embed = new MessageEmbed()
-			.setAuthor({ name: `${user.id} | ${user.tag}` })
-			.setThumbnail(
-				user.displayAvatarURL({
-					dynamic: true,
-					size: 2048,
-				}),
-			)
-			.setFooter({ text: "Дизайн JeggyBot" });
-		//Статус
-		//-----------------------------------------------------------------------------
-		const clientStatus = [];
-		let status;
-		let activity = "";
-		if (member && member.presence && member.presence.status != "offline") {
-			// Система
-			//-----------------------------------------------------------------------------
+			.setAuthor({ name: `${user.id} | ${user.tag}`, iconURL: user.displayAvatarURL() })
+			.setThumbnail(user.displayAvatarURL());
+
+		if (Object.keys(member?.presence.clientStatus || {}).length) {
+			description += "\nСтатус: ";
+
 			for (const cs in member.presence.clientStatus) {
-				clientStatus.push(
-					`${emojis[member.presence.clientStatus[cs]]} ${
-						{
-							desktop: "Компьютер",
-							web: "Сайт",
-							mobile: "Телефон",
-						}[cs]
-					}`,
-				);
+				description +=
+					emojis[member.presence.clientStatus[cs]] +
+					{ desktop: "Компьютер", web: "Веб-сайт", mobile: "Мобильное приложение" }[cs];
 			}
-			//-----------------------------------------------------------------------------
 
-			// Статус
-			//-----------------------------------------------------------------------------
-			member.presence.activities.forEach((act) => {
-				if (!act) return;
-				if (act.id === "custom") status = act.state;
-				else {
-					let other = "";
-					if (act.name === "Spotify") other = `(\`${act.state}\` - \`${act.details}\`)`;
-					activity += `${userinfo.ActivityType[act.type]} **${act.name}** ${other}\n`;
-				}
-			});
-			//-----------------------------------------------------------------------------
-		} else clientStatus.push(`${emojis.offline} Оффлайн`);
-		//----------------------------------------------------------------------------
+			let activities = "";
+			let customStatus;
+			for (const activity of member.presence.activities) {
+				if (activity.id != "custom") activities += `${userinfo.ActivityType[activity.type]} **${activity.name}**\n`;
+				else customStatus = activity.state;
+			}
 
-		if (member) {
-			if (user.id === message.author.id) member = message.member;
-			description += `\nПрисоединился: \`${
-				message.guild.members.cache
-					.map((member) => member.joinedTimestamp)
-					.sort((a, b) => a - b)
-					.indexOf(member.joinedTimestamp) + 1
-			}\`/\`${message.guild.members.cache.size}\``;
+			if (activities) embed.addField("Активность", activities.trim());
+			if (customStatus) embed.addField("Пользовательский статус", bot.utils.escapeMarkdown(customStatus));
+		} else description += `\nСтатус: ${emojis.offline} Оффлайн`;
 
-			//Роли
-			//-----------------------------------------------------------------------------
-			const roles = member.roles.cache
-				.sort((a, b) => b.rawPosition - a.rawPosition)
-				.toJSON()
-				.slice(0, -1);
+		if (member?.roles.cache.size > 1)
+			embed.addField(
+				`Роли [\`${bot.utils.formatNumber(member.roles.cache.size - 1)}\`]`,
+				member.roles.cache
+					.sort((a, b) => b.rawPosition - a.rawPosition)
+					.toJSON()
+					.slice(0, -1)
+					.join(" "),
+				false,
+			);
 
-			if (roles[0]) embed.addField(`**Роли (${bot.utils.formatNumber(roles.length)}):**`, roles.join(", "), false);
-			//-----------------------------------------------------------------------------
-		}
-
-		if (activity != "") embed.addField("Активность:", activity, true);
-		if (clientStatus[0]) embed.addField("Статус:", clientStatus.join("\n"), true);
-		if (status) embed.addField("Пользовательский статус:", status, true);
-		if (embed.fields.findIndex((field) => field.name.startsWith("**Роли (") || field.name === "\u200b") != -1)
-			embed.fields.splice(embed.fields.length - 1, 0, embed.fields.splice(0, 1)[0]);
-		else embed.addField("\u200b", "\u200b", false);
-
-		if (member) embed.addField("Зашел на сервер:", bot.utils.discordTime(member.joinedTimestamp), true);
-		embed.addField("Аккаунт создан:", bot.utils.discordTime(user.createdTimestamp), true);
-		embed.setDescription(description);
+		if (member)
+			embed.addField(
+				`Присоединился к серверу\n[\`${
+					message.guild.members.cache
+						.map((member) => member.joinedTimestamp)
+						.sort((a, b) => a - b)
+						.indexOf(member.joinedTimestamp) + 1
+				}\` / \`${message.guild.members.cache.size}\`]`,
+				bot.utils.discordTime(member.joinedTimestamp),
+				true,
+			);
+		embed.addField("Аккаунт создан", bot.utils.discordTime(user.createdTimestamp), true);
+		embed.setDescription(description.trim());
 
 		message.channel.send({ embeds: [embed] });
 	},
