@@ -14,9 +14,9 @@ module.exports = {
 		if (!member && user.id === message.author.id) member = message.member;
 		if (member) user = member.user;
 
-		let description = `**[Аватар](${user.displayAvatarURL({ dynamic: true })})**`;
-		if (user.banner) description += ` | **[Баннер](${user.bannerURL({ dynamic: true })})**`;
-		if (member?.avatar) description += ` | **[Серверный аватар](${member.avatarURL({ dynamic: true })})**`;
+		let description = `**[Аватар](${user.displayAvatarURL({ dynamic: true, size: 2048 })})**`;
+		if (user.banner) description += ` | **[Баннер](${user.bannerURL({ dynamic: true, size: 2048 })})**`;
+		if (member?.avatar) description += ` | **[Серверный аватар](${member.avatarURL({ dynamic: true, size: 2048 })})**`;
 
 		if (user.flags?.bitfield != 0)
 			description += `\nЗначки: ${user.flags
@@ -25,8 +25,8 @@ module.exports = {
 				.join(" ")}`;
 
 		const embed = new MessageEmbed()
-			.setAuthor({ name: `${user.id} | ${user.tag}`, iconURL: user.displayAvatarURL({ dynamic: true }) })
-			.setThumbnail(user.displayAvatarURL({ dynamic: true }));
+			.setAuthor({ name: `${user.id} | ${user.tag}`, iconURL: user.displayAvatarURL({ dynamic: true, size: 2048 }) })
+			.setThumbnail(user.displayAvatarURL({ dynamic: true, size: 2048 }));
 
 		if (Object.keys(member?.presence.clientStatus || {}).length) {
 			description += "\nСтатус: ";
