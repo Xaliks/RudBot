@@ -14,9 +14,9 @@ module.exports = {
 		if (!member && user.id === message.author.id) member = message.member;
 		if (member) user = member.user;
 
-		let description = `**[Аватар](${user.displayAvatarURL()})**`;
-		if (user.banner) description += ` | **[Баннер](${user.bannerURL()})**`;
-		if (member?.avatar) description += ` | **[Серверный аватар](${member.avatarURL()})**`;
+		let description = `**[Аватар](${user.displayAvatarURL({ dynamic: true })})**`;
+		if (user.banner) description += ` | **[Баннер](${user.bannerURL({ dynamic: true })})**`;
+		if (member?.avatar) description += ` | **[Серверный аватар](${member.avatarURL({ dynamic: true })})**`;
 
 		if (user.flags?.bitfield != 0)
 			description += `\nЗначки: ${user.flags
@@ -25,8 +25,8 @@ module.exports = {
 				.join(" ")}`;
 
 		const embed = new MessageEmbed()
-			.setAuthor({ name: `${user.id} | ${user.tag}`, iconURL: user.displayAvatarURL() })
-			.setThumbnail(user.displayAvatarURL());
+			.setAuthor({ name: `${user.id} | ${user.tag}`, iconURL: user.displayAvatarURL({ dynamic: true }) })
+			.setThumbnail(user.displayAvatarURL({ dynamic: true }));
 
 		if (Object.keys(member?.presence.clientStatus || {}).length) {
 			description += "\nСтатус: ";
@@ -46,7 +46,7 @@ module.exports = {
 
 			if (activities) embed.addField("Активность", activities.trim());
 			if (customStatus) embed.addField("Пользовательский статус", bot.utils.escapeMarkdown(customStatus));
-		} else description += `\nСтатус: ${emojis.offline} Оффлайн`;
+		} else description += `\nСтатус: ${emojis.offline}Оффлайн`;
 
 		if (member?.roles.cache.size > 1) {
 			const roles = member.roles.cache
@@ -54,15 +54,11 @@ module.exports = {
 				.toJSON()
 				.slice(0, -1);
 
-			if (roles[0].color) embed.setColor(roles[0].color)
-			embed.addField(
-				`Роли [\`${bot.utils.formatNumber(member.roles.cache.size - 1)}\`]`,
-				roles.join(" "),
-				false,
-			);
+			if (roles[0].color) embed.setColor(roles[0].color);
+			embed.addField(`Роли [\`${bot.utils.formatNumber(member.roles.cache.size - 1)}\`]`, roles.join(" "), false);
 		}
 
-		if (member) 
+		if (member)
 			embed.addField(
 				`Присоединился к серверу\n[\`${
 					message.guild.members.cache
