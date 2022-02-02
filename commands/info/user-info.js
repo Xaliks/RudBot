@@ -48,18 +48,21 @@ module.exports = {
 			if (customStatus) embed.addField("Пользовательский статус", bot.utils.escapeMarkdown(customStatus));
 		} else description += `\nСтатус: ${emojis.offline} Оффлайн`;
 
-		if (member?.roles.cache.size > 1)
+		if (member?.roles.cache.size > 1) {
+			const roles = member.roles.cache
+				.sort((a, b) => b.rawPosition - a.rawPosition)
+				.toJSON()
+				.slice(0, -1);
+
+			if (roles[0].color) embed.setColor(roles[0].color)
 			embed.addField(
 				`Роли [\`${bot.utils.formatNumber(member.roles.cache.size - 1)}\`]`,
-				member.roles.cache
-					.sort((a, b) => b.rawPosition - a.rawPosition)
-					.toJSON()
-					.slice(0, -1)
-					.join(" "),
+				roles.join(" "),
 				false,
 			);
+		}
 
-		if (member)
+		if (member) 
 			embed.addField(
 				`Присоединился к серверу\n[\`${
 					message.guild.members.cache
@@ -70,6 +73,7 @@ module.exports = {
 				bot.utils.discordTime(member.joinedTimestamp),
 				true,
 			);
+
 		embed.addField("Аккаунт создан", bot.utils.discordTime(user.createdTimestamp), true);
 		embed.setDescription(description.trim());
 
