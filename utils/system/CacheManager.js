@@ -28,7 +28,7 @@ module.exports = class CacheManager extends Map {
 
 		this.set(this._format(target), new Object({ ...data, ...newData }));
 
-		await this.bot.database[type].updateOne(target, newData);
+		await this.bot.database[type].updateOneOrCreate(target, newData);
 		return this.get(this._format(target));
 	}
 

@@ -28,19 +28,12 @@ module.exports = {
 		collector.on("collect", async (button) => {
 			if (button.user.id != message.author.id)
 				return button.reply({ content: "Ты не можешь это сделать!", ephemeral: true });
-			if (button.customId === "no") {
-				collector.resetTimer(null);
-				return button.update({ content: "Действие отменено!", components: [] });
-			}
+			if (button.customId === "no") return button.update({ content: "Действие отменено!", components: [] });
 
 			button.update({ content: `Вы развелись с <@${authorCache.marry}>!`, components: [] });
 
 			await bot.cache.delete({ id: authorCache.marry, guild_id: message.guild.id }, "marry", "member");
 			await bot.cache.delete({ id: message.author.id, guild_id: message.guild.id }, "marry", "member");
-		});
-
-		collector.on("end", () => {
-			msg.edit({ content: "Время вышло!", components: [] });
 		});
 	},
 };

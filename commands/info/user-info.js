@@ -18,57 +18,61 @@ module.exports = {
 		if (user.banner) description += ` | **[Баннер](${user.bannerURL({ dynamic: true, size: 2048 })})**`;
 		if (member?.avatar) description += ` | **[Серверный аватар](${member.avatarURL({ dynamic: true, size: 2048 })})**`;
 
-		if (user.flags?.bitfield != 0)
+		if (user.flags?.bitfield || 0)
 			description += `\nЗначки: ${user.flags
 				.toArray()
 				.map((flag) => userinfo.badges[flag])
 				.join(" ")}`;
 
 		const embed = new MessageEmbed()
-			.setAuthor({ name: `${user.id} | ${user.tag}`, iconURL: user.displayAvatarURL({ dynamic: true, size: 2048 }) })
-			.setThumbnail(user.displayAvatarURL({ dynamic: true, size: 2048 }));
+			.setAuthor({ name: user.tag, iconURL: user.displayAvatarURL({ dynamic: true, size: 2048 }) })
+			.setThumbnail(user.displayAvatarURL({ dynamic: true, size: 2048 }))
+			.setFooter({ text: `ID: ${user.id}` });
 
-		if (Object.keys(member?.presence.clientStatus || {}).length) {
-			description += "\nСтатус: ";
+		if (member) {
+			if (Object.keys(member?.presence?.clientStatus || {}).length) {
+				description += "\nСтатус: ";
 
-			for (const cs in member.presence.clientStatus) {
-				description +=
-					emojis[member.presence.clientStatus[cs]] +
-					{ desktop: "Компьютер", web: "Веб-сайт", mobile: "Мобильное приложение" }[cs];
+				for (const cs in member.presence.clientStatus) {
+					description +=
+						emojis[member.presence.clientStatus[cs]] +
+						{ desktop: "Компьютер", web: "Веб-сайт", mobile: "Мобильное приложение" }[cs];
+				}
+
+				let activities = "";
+				let customStatus;
+				for (const activity of member.presence.activities) {
+					if (activity.id != "custom") activities += `${userinfo.ActivityType[activity.type]} **${activity.name}**\n`;
+					else customStatus = activity.state;
+				}
+
+				if (activities) embed.addField("Активность", activities.trim());
+				if (customStatus) embed.addField("Пользовательский статус", bot.utils.escapeMarkdown(customStatus));
+			} else description += `\nСтатус: ${emojis.offline}Оффлайн`;
+
+			if (member.roles.cache.size > 1) {
+				const roles = member.roles.cache
+					.sort((a, b) => b.rawPosition - a.rawPosition)
+					.toJSON()
+					.slice(0, -1);
+
+				if (roles[0].color) embed.setColor(roles[0].color);
+				embed.addField(`Роли [\`${bot.utils.formatNumber(member.roles.cache.size - 1)}\`]`, roles.join(" "), false);
 			}
 
-			let activities = "";
-			let customStatus;
-			for (const activity of member.presence.activities) {
-				if (activity.id != "custom") activities += `${userinfo.ActivityType[activity.type]} **${activity.name}**\n`;
-				else customStatus = activity.state;
-			}
+			message.guild.members._fetchMany({ withPresences: true });
 
-			if (activities) embed.addField("Активность", activities.trim());
-			if (customStatus) embed.addField("Пользовательский статус", bot.utils.escapeMarkdown(customStatus));
-		} else description += `\nСтатус: ${emojis.offline}Оффлайн`;
-
-		if (member?.roles.cache.size > 1) {
-			const roles = member.roles.cache
-				.sort((a, b) => b.rawPosition - a.rawPosition)
-				.toJSON()
-				.slice(0, -1);
-
-			if (roles[0].color) embed.setColor(roles[0].color);
-			embed.addField(`Роли [\`${bot.utils.formatNumber(member.roles.cache.size - 1)}\`]`, roles.join(" "), false);
-		}
-
-		if (member)
 			embed.addField(
 				`Присоединился к серверу\n[\`${
 					message.guild.members.cache
 						.map((member) => member.joinedTimestamp)
 						.sort((a, b) => a - b)
 						.indexOf(member.joinedTimestamp) + 1
-				}\` / \`${message.guild.members.cache.size}\`]`,
+				}\` / \`${message.guild.memberCount}\`]`,
 				bot.utils.discordTime(member.joinedTimestamp),
 				true,
 			);
+		}
 
 		embed.addField("Аккаунт создан", bot.utils.discordTime(user.createdTimestamp), true);
 		embed.setDescription(description.trim());

@@ -7,18 +7,10 @@ const db = (name) => {
 		return (await model.findOne(find)) || (await model.create(new Object({ ...find, ...create })));
 	};
 
-	model.findOneAndUpdateOrCreate = async function (find, update) {
-		let result = await model.findOneAndUpdate(find, update).catch(() => null);
-		if (!result) {
-			if (Object.keys(update).find((key) => key.startsWith("$")))
-				Object.entries(update[Object.keys(update).find((key) => key.startsWith("$"))]).map(([key, element]) => {
-					update[key] = element;
-				});
+	model.updateOneOrCreate = async function (find, update) {
+		const updated = await model.updateOne(find, update).catch(() => null);
 
-			result = await model.create(new Object({ ...find, ...update }));
-		}
-
-		return result;
+		if (!updated) await model.create(new Object({ ...find, ...update }));
 	};
 
 	return model;

@@ -1,9 +1,13 @@
-const { MessageEmbed } = require("discord.js");
-const { serverinfo, emojis } = require("../../data/data.json");
+const { MessageEmbed, Constants } = require("discord.js");
+const { emojis } = require("../../data/data.json");
+const verificationLevels = [
+	"Отсутствует (0)",
+	"Низкий (1)",
+	"Средний (2)",
+	"Высокий (╯°□°）╯︵  ┻━┻ (3)",
+	"Очень высокий ┻━┻ミヽ(ಠ益ಠ)ノ彡┻━┻ (4)",
+];
 
-/**
- * TODO: Оптимизировать все что можно
- */
 module.exports = {
 	name: "server-info",
 	description: "Инфо о сервере",
@@ -11,69 +15,68 @@ module.exports = {
 	cooldown: 10,
 	category: "info",
 	async execute(message, args, bot) {
-		let bots = (users = online = offline = idle = dnd = categories = text = voices = 0);
+		await message.guild.bans.fetch();
 
-		message.guild.members.cache.each((mem) => {
-			if (mem.user.bot) ++bots;
-			else ++users;
-		});
-		message.guild.presences.cache.each((pres) => {
-			if (pres.status === "online") ++online;
-			else if (pres.status === "offline") ++offline;
-			else if (pres.status === "idle") ++idle;
-			else ++dnd;
-		});
-		message.guild.channels.cache.each((channel) => {
-			if (channel.type === "GUILD_CATEGORY") ++categories;
-			else if (["GUILD_TEXT", "GUILD_STORE"].includes(channel.type)) ++text;
-			else ++voices;
-		});
+		const owner = await bot.users.fetch(message.guild.ownerId).catch(() => null);
+		const botCount = message.guild.members.cache.filter((member) => member.user.bot).size;
+
+		const channels = message.guild.channels.cache.filter(
+			(channel) => !["GUILD_NEWS_THREAD", "GUILD_PUBLIC_THREAD", "GUILD_PRIVATE_THREAD"].includes(channel.type),
+		);
+		const categoryChannelCount = channels.filter((channel) => channel.type === "GUILD_CATEGORY").size;
+		const voiceChannelCount = channels.filter((channel) => channel.type === "GUILD_VOICE").size;
+
+		const onlineCount = message.guild.presences.cache.filter((pres) => pres.status === "online").size;
+		const dndCount = message.guild.presences.cache.filter((pres) => pres.status === "dnd").size;
+		const idleCount = message.guild.presences.cache.filter((pres) => pres.status === "idle").size;
 
 		const embed = new MessageEmbed()
-			.setAuthor({ name: message.guild.name })
-			.setTitle(`Информация о сервере`)
+			.setAuthor({ name: message.guild.name, iconURL: message.guild.iconURL({ dynamic: true, size: 2048 }) })
 			.setDescription(
-				`ID: **${message.guild.id}**
-Владелец: <@${message.guild.ownerId}>
-Уровень верификации: **${serverinfo.verification[message.guild.verificationLevel]}**
-AFK канал: **${message.guild.afkChannel || "Не установлен"}**`,
+				`Владелец: **\`${owner ? owner.tag : "АККАУНТ УДАЛЁН"}\`**
+Уровень верификации: **\`${verificationLevels[Constants.VerificationLevels[message.guild.verificationLevel]]}\`**`,
 			)
-
 			.addField(
-				`Участников (${bot.utils.formatNumber(message.guild.memberCount)})`,
-				`:bust_in_silhouette: Пользователей: **${bot.utils.formatNumber(users)}**
-${emojis.bot} Ботов: **${bot.utils.formatNumber(bots)}**
-${emojis.online} Онлайн: **${bot.utils.formatNumber(online)}**
-${emojis.offline} Оффлайн: **${bot.utils.formatNumber(offline)}**
-${emojis.idle} Не актив: **${bot.utils.formatNumber(idle)}**
-${emojis.dnd} Не беспокоить: **${bot.utils.formatNumber(dnd)}**`,
+				`Участники [\`${bot.utils.formatNumber(message.guild.memberCount)}\`]`,
+				`> Людей: **\`${bot.utils.formatNumber(message.guild.memberCount - botCount)}\`**
+> Ботов: **\`${bot.utils.formatNumber(botCount)}\`**
+
+
+> ${emojis.online}Онлайн: **\`${bot.utils.formatNumber(onlineCount)}\`**
+> ${emojis.dnd}Не беспокоить: **\`${bot.utils.formatNumber(dndCount)}\`**
+> ${emojis.idle}Нет на месте: **\`${bot.utils.formatNumber(idleCount)}\`**
+> ${emojis.offline}Оффлайн: **\`${bot.utils.formatNumber(
+					message.guild.memberCount - onlineCount - dndCount - idleCount,
+				)}\`**`,
 				true,
 			)
-
 			.addField(
-				"Количество",
-				`:grinning: Кол-во эмодзи: **${message.guild.emojis.cache.size}**
-🎭 Кол-во ролей: **${message.guild.roles.cache.size}**
-:books: Кол-во категорий: **${categories}**
-:page_facing_up: Кол-во текст. каналов **${text}**
-${emojis.voice} Кол-во голос. каналов: **${voices}**`,
+				`Каналы [\`${channels.size}\`]`,
+				`> Категорий: **\`${categoryChannelCount}\`**
+> Текстовых каналов: **\`${channels.size - categoryChannelCount - voiceChannelCount}\`**
+> Голосовых каналов: **\`${voiceChannelCount}\`**
+
+> 🔨Банов: **\`${bot.utils.formatNumber(message.guild.bans.cache.size)}\`**
+> 🤩Эмодзи: **\`${message.guild.emojis.cache.size}\`**
+> 🎭Ролей: **\`${message.guild.roles.cache.size}\`**`,
 				true,
 			)
-			.addField(`⁣⁣⁣⁣`, `⁣`, false)
-			.setFooter({ text: "Дизайн JeggyBot" })
 			.setThumbnail(
 				message.guild.iconURL({
 					dynamic: true,
+					size: 2048,
 				}),
-			);
+			)
+			.setFooter({ text: `ID: ${message.guild.id}` });
 
 		if (message.guild.premiumSubscriptionCount > 0)
 			embed.addField(
 				`Буст`,
-				`${emojis.boost} Уровень буста: **${serverinfo.premiumTiers[message.guild.premiumTier]}**
-${emojis.boosted} Кол-во бустов: **${message.guild.premiumSubscriptionCount}**`,
+				`Уровень буста: **\`${Constants.PremiumTiers[message.guild.premiumTier]}\`**
+Кол-во бустов: **\`${message.guild.premiumSubscriptionCount}\`**`,
 				false,
 			);
+		else embed.addField(`⁣⁣⁣⁣`, `⁣`, false);
 
 		embed
 			.addField(`Дата создания`, bot.utils.discordTime(message.guild.createdTimestamp), true)

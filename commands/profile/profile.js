@@ -24,18 +24,16 @@ module.exports = {
 		}
 
 		const embed = new MessageEmbed()
-			.setTitle("Профиль " + bot.utils.escapeMarkdown(member.user.tag))
+			.setAuthor({ name: member.user.tag, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
 			.addField(
 				"Репутация",
 				`Кол-во репутации: \`${bot.utils.formatNumber(user.reputation)}\`:star:
 Место в топе: \`${
-					user.reputation === 0
-						? "Нет репутации"
-						: bot.utils.formatNumber(
-								(await bot.database.member.find({ guild_id: message.guild.id, reputation: { $ne: 0 } }))
-									.sort((a, b) => b.reputation - a.reputation)
-									.findIndex((m) => m.id === member.id),
-						  )
+					bot.utils.formatNumber(
+						(await bot.database.member.find({ guild_id: message.guild.id, reputation: { $ne: 0 } }))
+							.sort((a, b) => b.reputation - a.reputation)
+							.findIndex((m) => m.id === member.id),
+					) + 1
 				}\``,
 			)
 			.addField(

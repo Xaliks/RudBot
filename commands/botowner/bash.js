@@ -11,11 +11,7 @@ module.exports = {
 			const out = String(require("child_process").execSync(args.join(" ")));
 
 			message.channel.send({
-				embeds: [
-					new MessageEmbed().setDescription(
-						out ? (out.length > 2048 ? `${out.substr(0, 2045)}...` : out) : "¯\\_(ツ)_/¯",
-					),
-				],
+				embeds: [new MessageEmbed().setDescription(out.slice(0, 3500) || "¯\\_(ツ)_/¯")],
 			});
 		} catch (e) {
 			bot.utils.error(`\`\`\`${e}\`\`\``, this, message, bot);

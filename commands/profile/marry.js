@@ -12,7 +12,7 @@ module.exports = {
 		if (member.user.bot) return bot.utils.error("Это бот!", this, message, bot);
 		if (member.id === message.author.id) bot.utils.error("Как вы поженитесь на себе?", this, message, bot);
 
-		const author = await bot.cache.create({ id: message.author.id, guild_id: message.guild.id }, "member");
+		const author = await bot.cache.find({ id: message.author.id, guild_id: message.guild.id }, "member");
 		const user = await bot.cache.create({ id: member.id, guild_id: message.guild.id }, "member");
 		const guild = bot.cache.get(message.guild.id);
 
@@ -57,19 +57,12 @@ module.exports = {
 
 		collector.on("collect", async (button) => {
 			if (button.user.id != member.id) return button.reply({ content: "Ты не можешь это сделать!", ephemeral: true });
-			if (button.customId === "no") {
-				collector.resetTimer(null);
-				return button.update({ content: "Действие отменено!", components: [] });
-			}
+			if (button.customId === "no") return button.update({ content: "Действие отменено!", components: [] });
 
 			await bot.cache.update({ id: message.author.id, guild_id: message.guild.id }, { marry: member.id }, "member");
 			await bot.cache.update({ id: member.id, guild_id: message.guild.id }, { marry: message.author.id }, "member");
 
 			button.update({ content: `${member} и ${message.author} теперь пара!`, components: [] });
-		});
-
-		collector.on("end", (success) => {
-			msg.edit({ content: "Время вышло!", components: [] });
 		});
 	},
 };

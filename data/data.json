@@ -50,44 +50,6 @@
 			"3": "18+"
 		}
 	},
-	"serverinfo": {
-		"verification": {
-			"VERY_HIGH": "Очень высокий ┻━┻ミヽ(ಠ益ಠ)ノ彡┻━┻ (4)",
-			"HIGH": "Высокий (╯°□°）╯︵  ┻━┻ (3)",
-			"MEDIUM": "Средний (2)",
-			"LOW": "Низкий (1)",
-			"NONE": "Отсутствует (0)"
-		},
-
-		"regions": {
-			"frankfurt": ":flag_de: Франкфурт",
-			"brazil": ":flag_br: Бразилия",
-			"europe": ":flag_eu: Европа",
-			"hongkong": ":flag_hk: Гонконг",
-			"india": ":flag_in: Индия",
-			"japan": ":flag_jp: Япония",
-			"russia": ":flag_ru: Россия",
-			"singapore": ":flag_sg: Сингапур",
-			"southafrica": ":flag_za: Южная Африка",
-			"sydney": ":flag_au: Сидней",
-			"us-central": ":flag_us: Центральная часть США",
-			"us-east": ":flag_us: Восток США",
-			"us-south": ":flag_us: ЮГ США",
-			"us-west": ":flag_us: Запад США",
-			"amsterdam": ":flag_nl: Амстердам",
-			"dubai": ":flag_ae: Дубай",
-			"south-korea": ":flag_kr: Южная Корея",
-			"london": ":flag_gb: Лондон",
-			"eu-west": ":flag_eu: Западная Европа",
-			"eu-central": ":flag_eu: Центральная Европа"
-		},
-		"premiumTiers": {
-			"NONE": "0",
-			"TIER_1": "1",
-			"TIER_2": "2",
-			"TIER_3": "3"
-		}
-	},
 	"userinfo": {
 		"badges": {
 			"DISCORD_EMPLOYEE": "",
@@ -158,10 +120,6 @@
 	"emojis": {
 		"error": "<a:error:749936985136955433>",
 		"success": "<a:success:750375409358602281>",
-		"bot": "<:BOT:754080028496756969>",
-		"voice": "<:voice:754264368920657930>",
-		"boost": "<a:Boost:754262189879066644>",
-		"boosted": "<a:Boosted:754262195906543628>",
 		"idle": "<:idle:784420460221693983>",
 		"dnd": "<:dnd:784400856707104819>",
 		"online": "<:online:936319696058339348>",
