@@ -1,5 +1,4 @@
 const { connect, connection } = require("mongoose");
-const { events } = require("../../config.json");
 const db = (name) => {
 	const model = require(`../../models/${name}`);
 
@@ -25,16 +24,16 @@ class Database {
 				useNewUrlParser: true,
 				useUnifiedTopology: true,
 			});
-			console.log(events.Database_connect);
+			console.log("[MONGOOSE] Подключение...");
 		} catch (error) {
-			console.log(events.Database_error.replace("{Error}", error));
+			console.log(`[MONGOOSE] Error: ${JSON.stringify(error)}`);
 		}
 		connection
 			.on("disconnected", () => {
-				console.log(events.Database_disconnect);
+				console.log("[MONGOOSE] Отключение...");
 			})
 			.on("reconnected", () => {
-				console.log(events.Database_reconnect);
+				console.log("[MONGOOSE] Переподключение...");
 			});
 
 		require("fs")

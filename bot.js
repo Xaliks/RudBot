@@ -21,3 +21,4 @@ bot.login(token);
 require("./require")(bot);
 
 process.on("unhandledRejection", (error) => bot.utils.sendError(bot, error));
+bot.on("ready", () => console.log(`[BOT] Зашёл как ${bot.user.tag}!`))
