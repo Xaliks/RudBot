@@ -10,7 +10,7 @@ module.exports = {
 	category: "info",
 	async execute(message, args, bot) {
 		let user = await bot.users.fetch(args[0], { force: true }).catch(() => message.author);
-		let member = bot.utils.findMember(message, args.join(" "));
+		let member = await bot.utils.findMember(message, args.join(" "));
 		if (!member && user.id === message.author.id) member = message.member;
 		if (member) user = member.user;
 

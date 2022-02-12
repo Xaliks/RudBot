@@ -1,4 +1,5 @@
 ﻿const { MessageEmbed } = require("discord.js");
+const formats = ["webp", "png", "jpg"];
 
 module.exports = {
 	name: "avatar",
@@ -7,14 +8,13 @@ module.exports = {
 	category: "info",
 	usage: ["[@Пользователь/ID]"],
 	async execute(message, args, bot) {
-		const user = await bot.users.fetch(args[0]).catch(() => bot.utils.findMember(message, args.join(" "), true).user);
-		const formats = ["webp", "png", "jpg"];
+		const user = await bot.users.fetch(args.join("")).catch(() => bot.utils.findMember(message, args.join(" "), true).then(member => member.user));
 		if (user.avatar.startsWith("a_")) formats.push("gif");
 
 		message.channel.send({
 			embeds: [
 				new MessageEmbed()
-					.setAuthor({ name: bot.utils.escapeMarkdown(user.tag) })
+					.setAuthor({ name: user.tag })
 					.setDescription(
 						formats
 							.map(

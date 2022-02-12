@@ -7,7 +7,7 @@ module.exports = {
 	aliases: ["shipbattle", "shipduel", "battle-ship", "battleship"],
 	category: "general",
 	async execute(message, args, bot) {
-		const user = bot.utils.findMember(message, args.join(" "))?.user;
+		const user = await bot.utils.findMember(message, args.join(" "))?.user;
 		if (!user) return bot.utils.error("Пользователь не найден!", this, message, bot);
 		if (user.bot) return bot.utils.error("Нельзя играть с ботами!", this, message, bot);
 		if (user === message.author) return bot.utils.error("Нельзя играть с собой!", this, message, bot);

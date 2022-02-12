@@ -1,20 +1,14 @@
-module.exports = (message, user, author) => {
-	const mentions = message.mentions.members.first();
-	if (!user || user === "" || user === "@") {
-		if (mentions) return mentions;
-		if (author) return message.member;
-		return undefined;
+module.exports = async (message, query, author) => {
+	let result = message.mentions.members.first();
+
+	if (!result) {
+		query = query.toString().toLowerCase();
+		await message.guild.members.fetch({ query, limit: 1, force: true, withPresences: true }).then((collection) => {
+			result = collection.first();
+		})
 	}
 
-	user = user.toString().toLowerCase();
-	if (!mentions && user.startsWith("@")) user = user.slice(1);
+	if (!result && author) return message.member;
 
-	const ret =
-		mentions ||
-		message.guild.members.cache.get(user) ||
-		message.guild.members.cache.find((m) => m.user.tag.toLowerCase().startsWith(user)) ||
-		message.guild.members.cache.find((m) => m.displayName.toLowerCase().startsWith(user));
-
-	if (!ret && author) return message.member;
-	return ret;
+	return result;
 };

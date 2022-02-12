@@ -8,7 +8,7 @@ module.exports = {
 	category: "images",
 	async execute(message, args, bot) {
 		const data = await fetch("https://nekos.life/api/v2/img/poke").then((res) => res.json());
-		const user = bot.utils.findMember(message, args.join(" "));
+		const user = await bot.utils.findMember(message, args.join(" "));
 
 		if (!user) return bot.utils.error("Пользователь не найден!", this, message, bot);
 		if (message.author.id === user.id) return message.channel.send(`Вы не можете тыкать в себя!`);
