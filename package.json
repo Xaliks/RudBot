@@ -1,7 +1,7 @@
 {
 	"name": "rudbot",
-	"version": "1.0.0",
-	"description": "Просто РудБот",
+	"version": "0.0.0",
+	"description": "RudBot",
 	"main": "bot.js",
 	"author": "Xaliks",
 	"scripts": {
@@ -13,5 +13,9 @@
 		"@iamtraction/google-translate": "^1.1.2",
 		"discord.js": "github:discordjs/discord.js",
 		"mongoose": "^5.11.14"
+	},
+	"devDependencies": {
+		"pm2": "^5.1.2",
+		"prettier": "^2.5.1"
 	}
 }
