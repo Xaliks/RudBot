@@ -8,7 +8,9 @@ module.exports = {
 	category: "info",
 	usage: ["[@Пользователь/ID]"],
 	async execute(message, args, bot) {
-		const user = await bot.users.fetch(args.join("")).catch(() => bot.utils.findMember(message, args.join(" "), true).then(member => member.user));
+		const user = await bot.users
+			.fetch(args.join(""))
+			.catch(() => bot.utils.findMember(message, args.join(" "), true).then((member) => member.user));
 		if (user.avatar.startsWith("a_")) formats.push("gif");
 
 		message.channel.send({

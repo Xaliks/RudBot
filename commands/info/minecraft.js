@@ -13,22 +13,25 @@ module.exports = {
 		if (data.ip === "") return bot.utils.error("IP не найден!", this, message, bot);
 
 		const embed = new MessageEmbed()
-			.setAuthor({ name: (data.hostname ? data.hostname + " | " : "") + data.ip + data.port, iconURL: `https://cdn.discordapp.com/emojis/${data.online ? "936319696058339348" : "784420488436514856"}.png` })
+			.setAuthor({
+				name: (data.hostname ? data.hostname + " | " : "") + data.ip + data.port,
+				iconURL: `https://cdn.discordapp.com/emojis/${data.online ? "936319696058339348" : "784420488436514856"}.png`,
+			})
 			.setThumbnail(`https://api.mcsrvstat.us/icon/${args.join("")}`)
-			.setDescription("**СЕРВЕР ОФФЛАЙН**")
+			.setDescription("**СЕРВЕР ОФФЛАЙН**");
 
 		if (data.online) {
-			embed.description = `**Игроков: [\`${bot.utils.formatNumber(data.players?.online || 0)}\`/\`${bot.utils.formatNumber(data.players?.max || 0)}\`]**`;
+			embed.description = `**Игроков: [\`${bot.utils.formatNumber(data.players?.online || 0)}\`/\`${bot.utils.formatNumber(
+				data.players?.max || 0,
+			)}\`]**`;
 
-			if (data.motd) embed.description += `\`\`\`\n${data.motd?.clean.join("\n") || ""}\`\`\``
+			if (data.motd) embed.description += `\`\`\`\n${data.motd?.clean.join("\n") || ""}\`\`\``;
 
-			embed.setFooter({ text: "Версия: " + data.version })
+			embed.setFooter({ text: "Версия: " + data.version });
 		}
 
 		message.channel.send({
-			embeds: [
-				embed
-			]
-		})
+			embeds: [embed],
+		});
 	},
 };
