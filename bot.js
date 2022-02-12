@@ -18,7 +18,9 @@ const bot = new Client({
 });
 bot.login(token);
 
-require("./require")(bot);
+bot.on("ready", () => {
+	require("./require")(bot);
 
-process.on("unhandledRejection", (error) => bot.utils.sendError(bot, error));
-bot.on("ready", () => console.log(`[BOT] Зашёл как ${bot.user.tag}!`))
+	process.on("unhandledRejection", (error) => bot.utils.sendError(bot, error));
+	console.log(`[BOT] Зашёл как ${bot.user.tag}!`);
+});
