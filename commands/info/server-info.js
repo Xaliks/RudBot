@@ -15,7 +15,7 @@ module.exports = {
 	cooldown: 10,
 	category: "info",
 	async execute(message, args, bot) {
-		await message.guild.bans.fetch();
+		await message.guild.bans.fetch().catch(() => null);
 
 		const owner = await bot.users.fetch(message.guild.ownerId).catch(() => null);
 		const botCount = message.guild.members.cache.filter((member) => member.user.bot).size;
