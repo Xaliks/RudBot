@@ -37,7 +37,7 @@ module.exports = class LavalinkNode {
 			const headers = {
 				Authorization: this.password,
 				"Num-Shards": "1",
-				"User-Id": this.manager.user,
+				"User-Id": this.manager.client.user.id,
 			};
 
 			const ws = new WebSocket(`ws://${this.host}:${this.port}/`, { headers });
