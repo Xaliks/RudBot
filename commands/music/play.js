@@ -13,8 +13,7 @@ module.exports = {
 			return bot.utils.error("Вы должны находиться в голосовом канале!", this, message, bot);
 		if (
 			!message.member.voice.channel.permissionsFor(bot.user.id).has(Permissions.FLAGS.CONNECT) ||
-			!message.member.voice.channel.permissionsFor(bot.user.id).has(Permissions.FLAGS.SPEAK) ||
-			!message.member.voice.channel.permissionsFor(bot.user.id).has(Permissions.FLAGS.ADMINISTRATOR)
+			!message.member.voice.channel.permissionsFor(bot.user.id).has(Permissions.FLAGS.SPEAK)
 		)
 			return bot.utils.error("У меня недостаточно прав (**Входить в канал**, **Говорить**)!", this, message, bot);
 		if (message.guild.me.voice.channelId && message.guild.me.voice.channelId != message.member.voice.channelId)
