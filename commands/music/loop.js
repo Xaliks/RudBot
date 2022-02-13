@@ -26,7 +26,7 @@ module.exports = {
 			embeds: [
 				new MessageEmbed().setDescription(
 					`Композиция **${bot.utils.escapeMarkdown(track.title)}** ${
-						player.looping ? "теперь повторяется" : "больше не повторяется"
+						player.state.loop ? "теперь повторяется" : "больше не повторяется"
 					} 🔁`,
 				),
 			],
