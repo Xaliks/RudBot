@@ -14,7 +14,7 @@ module.exports = {
 
 		const embed = new MessageEmbed()
 			.setAuthor({
-				name: (data.hostname ? data.hostname + " | " : "") + data.ip + data.port,
+				name: `${data.hostname ? data.hostname + " | " : ""} ${data.ip}:${data.port}`,
 				iconURL: `https://cdn.discordapp.com/emojis/${data.online ? "936319696058339348" : "784420488436514856"}.png`,
 			})
 			.setThumbnail(`https://api.mcsrvstat.us/icon/${args.join("")}`)
