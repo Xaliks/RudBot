@@ -6,14 +6,14 @@ const Rest = require("./Rest");
 const Player = require("./Player");
 
 module.exports = class Manager extends EventEmitter {
-	constructor(nodes, user) {
+	constructor(client, nodes) {
 		super();
 		this.nodes = new Map();
 		this.players = new Map();
 		this.voiceServers = new Map();
 		this.voiceStates = new Map();
 		this.expecting = new Set();
-		this.user = user;
+		this.client = client;
 
 		for (const node of nodes) this.createNode(node);
 	}
@@ -69,7 +69,7 @@ module.exports = class Manager extends EventEmitter {
 	}
 
 	voiceStateUpdate(data) {
-		if (data.user_id !== this.user) return Promise.resolve(false);
+		if (data.user_id !== this.client.user.id) return Promise.resolve(false);
 		if (data.channel_id) {
 			this.voiceStates.set(data.guild_id, data);
 			return this._attemptConnection(data.guild_id);

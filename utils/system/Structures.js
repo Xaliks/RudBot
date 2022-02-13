@@ -13,7 +13,7 @@ module.exports.Embed = class Embed extends Discord.MessageEmbed {
 
 module.exports.MusicManager = class MusicManager extends require("./Lavacord/Manager.js") {
 	constructor(bot, nodes) {
-		super(nodes, "675311676354199553");
+		super(bot, nodes);
 
 		this.send = (packet) => {
 			bot.guilds.cache.get(packet.d.guild_id).shard.send(packet);
