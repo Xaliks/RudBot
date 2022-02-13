@@ -73,7 +73,8 @@ module.exports = {
 			],
 		});
 
-		await player.play(track.track, message.author, msg);
+		player.message = msg;
+		await player.play(track.track, message.author);
 	},
 };
 

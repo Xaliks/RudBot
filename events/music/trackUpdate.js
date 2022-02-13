@@ -8,8 +8,8 @@ module.exports = {
 		const video = await getVideoInfo(track.uri);
 
 		let trackTitle = "";
-		if (!player.playing) trackTitle += "⏸️ ";
-		if (player.looping) trackTitle += "🔁 ";
+		if (!player.state.playing) trackTitle += "⏸️ ";
+		if (player.state.loop) trackTitle += "🔁 ";
 		trackTitle += bot.utils.escapeMarkdown(video.title);
 
 		const embed = new MessageEmbed()
@@ -31,7 +31,7 @@ module.exports = {
 			);
 		}
 
-		if (player.playing && (player.message.embeds[0].description || "").includes("Трек прослушан"))
+		if (player.state.playing && (player.message.embeds[0].description || "").includes("Трек прослушан"))
 			return (player.message = await player.message.channel.send({ embeds: [embed] }));
 
 		player.message = await player.message.edit({ embeds: [embed] });

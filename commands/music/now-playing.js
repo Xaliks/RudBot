@@ -16,8 +16,8 @@ module.exports = {
 		const video = await getVideoInfo(track.uri);
 
 		let trackTitle = "";
-		if (!player.playing) trackTitle += "⏸️ ";
-		if (player.looping) trackTitle += "🔁 ";
+		if (!player.state.playing) trackTitle += "⏸️ ";
+		if (player.state.loop) trackTitle += "🔁 ";
 		trackTitle += bot.utils.escapeMarkdown(track.title);
 
 		const embed = new MessageEmbed()

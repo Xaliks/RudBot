@@ -8,11 +8,9 @@ module.exports = class Player extends EventEmitter {
 
 		this.node = node;
 		this.id = id;
-		this.state = { volume: 100 };
+		this.state = { volume: 100, playing: false, loop: false };
 		this.queue = [];
 		this.message = null;
-		this.playing = false;
-		this.looping = false;
 		this.voiceUpdateState = null;
 
 		this.on("event", async (data) => {
@@ -33,32 +31,31 @@ module.exports = class Player extends EventEmitter {
 					break;
 			}
 		}).on("playerUpdate", (data) => {
-			if (this.queue[0] && JSON.stringify(this.state) != JSON.stringify(data.state) && this.playing) {
+			if (this.queue[0] && JSON.stringify(this.state) != JSON.stringify(data.state) && this.state.playing) {
 				this.state = { ...this.state, ...data.state };
 				this.manager.emit("trackUpdate", this);
 			}
 		});
 	}
 
-	play(track, author, msg) {
+	play(track, author) {
 		this.queue.push({ track, author });
 
-		if (msg && this.message === null) this.message = msg;
 		if (this.queue.length > 1) return;
 
-		this.playing = true;
+		this.state.playing = true;
 
 		return this._send("play", { track });
 	}
 
 	skip() {
-		if (!this.looping) {
+		if (!this.state.loop) {
 			if (!this.queue[1]) return this.stop();
 
 			this.manager.emit("trackEnd", this);
 
 			this.queue.shift();
-			this.playing = true;
+			this.state.playing = true;
 		}
 
 		return this._send("play", { track: this.queue[0].track });
@@ -82,14 +79,14 @@ module.exports = class Player extends EventEmitter {
 		return this._send("seek", { position });
 	}
 
-	pause(pause = !this.playing) {
-		this.playing = pause;
+	pause(pause = !this.state.playing) {
+		this.state.playing = pause;
 
 		return this._send("pause", { pause: !pause });
 	}
 
-	loop(loop = !this.looping) {
-		this.looping = loop;
+	loop(loop = !this.state.loop) {
+		this.state.loop = loop;
 
 		return loop;
 	}
