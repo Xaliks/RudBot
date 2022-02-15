@@ -15,7 +15,6 @@ const bot = new Client({
 			$device: "Discord Android",
 		},
 	},
-	failIfNotExists: false,
 });
 bot.login(token);
 
