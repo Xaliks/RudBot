@@ -8,7 +8,7 @@ module.exports = {
 	userPerms: ["MANAGE_GUILD"],
 	async execute(message, args, bot) {
 		let user;
-		let member = bot.utils.findMember(message, args[0]);
+		let member = await bot.utils.findMember(message, args[0]);
 
 		if (args[0] && /\d{17,18}/.test(args[0])) user = await bot.users.fetch(args[0]).catch(() => null);
 		if (member) user = await bot.users.fetch(member.user.id);

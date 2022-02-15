@@ -8,7 +8,7 @@ module.exports = {
 	aliases: ["reputation", "+rep"],
 	usage: ["<@Пользователь>"],
 	async execute(message, args, bot) {
-		const member = bot.utils.findMember(message, args.join(" "));
+		const member = await bot.utils.findMember(message, args.join(" "));
 		if (!member) return bot.utils.error("Пользователь не найден!", this, message, bot);
 		if (member.user.bot) return bot.utils.error("Это бот. Зачем?", this, message, bot);
 		if (member.id === message.author.id) return bot.utils.error("Вы не можете выдать себе репутацию", this, message, bot);
