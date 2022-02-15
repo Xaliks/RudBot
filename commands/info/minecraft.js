@@ -9,8 +9,9 @@ module.exports = {
 	category: "info",
 	aliases: ["майнкрафт", "мсервер"],
 	async execute(message, args, bot) {
-		const data = await fetch(`https://api.mcsrvstat.us/2/${encodeURIComponent(args.join(""))}`).then((res) => res.json());
-		if (data.ip === "") return bot.utils.error("IP не найден!", this, message, bot);
+		const data = await fetch(`https://api.mcsrvstat.us/2/${encodeURIComponent(args.join(""))}`).then((res) => res.json()).catch(() => null);
+		if (!data) return bot.utils.error("Ошибка со стороны [API](https://mcsrvstat.us)! Попробуйте позже", this, message, bot);
+		if (data.ip === "" || data.ip === "127.0.0.1") return bot.utils.error("IP не найден!", this, message, bot);
 
 		const embed = new MessageEmbed()
 			.setAuthor({
