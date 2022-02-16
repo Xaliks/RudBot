@@ -9,10 +9,16 @@ module.exports = {
 	usage: ["[@Пользователь/ID]"],
 	category: "info",
 	async execute(message, args, bot) {
-		let user = await bot.users.fetch(args[0], { force: true }).catch(() => message.author);
-		let member = await bot.utils.findMember(message, args.join(" "));
-		if (!member && user.id === message.author.id) member = message.member;
-		if (member) user = member.user;
+		let user = message.author;
+		let member = message.member;
+
+		if (args[0]) {
+			user = await bot.users.fetch(args[0], { force: true }).catch(() => message.author);
+			member = await bot.utils.findMember(message, args.join(" "));
+
+			if (!member && user.id === message.author.id) member = message.member;
+			if (member) user = member.user;
+		}
 
 		let description = `**[Аватар](${user.displayAvatarURL({ dynamic: true, size: 2048 })})**`;
 		if (user.banner) description += ` | **[Баннер](${user.bannerURL({ dynamic: true, size: 2048 })})**`;
