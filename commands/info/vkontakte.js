@@ -96,7 +96,7 @@ module.exports = {
 							.setDescription(
 								`Подписчиков: \`${user.followers_count || "Неизвестно"}\`
 Статус: ${user.online === 1 ? emojis.online : emojis.offline}**${bot.utils.escapeMarkdown(user.status) || "Отсутствует"}**
-Последний заход: **${user.last_seen ? bot.utils.formatDate(user.last_seen.time * 1000, "%full") : "Неизвестно"}**
+Последний заход: **${user.last_seen ? bot.utils.discordTime(user.last_seen.time * 1000, "%full") : "Неизвестно"}**
 
 Пол: **${vk.sex[user.sex]}**
 Год рождения: **${user.bdate || "Неизвестно"}**

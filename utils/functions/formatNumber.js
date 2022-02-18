@@ -1,3 +1,3 @@
 module.exports = (number) => {
-	return Number(number).toLocaleString().replace(",", " ");
+	return new Intl.NumberFormat("ru-RU").format(number);
 };
