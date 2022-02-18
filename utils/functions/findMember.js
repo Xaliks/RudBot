@@ -6,7 +6,7 @@ module.exports = async (message, query, author) => {
 		if (/\d{16,18}/.test(query)) {
 			return await message.guild.members
 				.fetch({ user: query, force: true, withPresences: true })
-				.then((colection) => colection.get ? undefined : colection);
+				.then((colection) => (colection.get ? undefined : colection));
 		} else if (/\S+#\d{4}$/.test(query)) {
 			return await message.guild.members
 				.fetch({ force: true, withPresences: true })

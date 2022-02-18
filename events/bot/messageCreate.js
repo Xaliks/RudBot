@@ -98,7 +98,7 @@ module.exports = {
 		try {
 			command.execute(message, args, bot);
 		} catch (error) {
-			bot.utils.sendError(bot, { ...error, command: command.name, args: message.content });
+			bot.utils.sendError(bot, error);
 			bot.utils.error("Ошибка! Обратитесь к создателю бота.", this, message, bot, false);
 			console.error(error);
 		}
