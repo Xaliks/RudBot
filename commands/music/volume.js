@@ -27,7 +27,7 @@ module.exports = {
 		await player.volume(volume);
 
 		return message.reply({
-			embeds: [new MessageEmbed().setDescription(`Громкость трека изменена на **${volume}%** 🎵`)],
+			content: `Громкость трека изменена на **${volume}%** 🎵`,
 		});
 	},
 };

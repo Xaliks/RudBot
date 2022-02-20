@@ -23,13 +23,9 @@ module.exports = {
 		const track = await bot.music.rest.decode(player.queue[0].track);
 
 		return message.reply({
-			embeds: [
-				new MessageEmbed().setDescription(
-					`Композиция **${bot.utils.escapeMarkdown(track.title)}** ${
-						player.state.loop ? "теперь повторяется" : "больше не повторяется"
-					} 🔁`,
-				),
-			],
+			content: `Композиция **${bot.utils.escapeMarkdown(track.title)}** ${
+				player.state.loop ? "теперь повторяется" : "больше не повторяется"
+			} 🔁`,
 		});
 	},
 };
