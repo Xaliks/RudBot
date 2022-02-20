@@ -16,9 +16,10 @@ module.exports = class Player extends EventEmitter {
 		this.on("event", async (data) => {
 			switch (data.type) {
 				case "TrackStartEvent":
+					this.manager.emit("trackStart", this, data);
 					break;
 				case "TrackEndEvent":
-					if (data.reason != "STOPPED" && data.reason != "REPLACED") await this.skip();
+					this.skip();
 					break;
 				case "TrackExceptionEvent":
 					if (this.listenerCount("error")) this.emit("error", data);
@@ -31,40 +32,33 @@ module.exports = class Player extends EventEmitter {
 					break;
 			}
 		}).on("playerUpdate", (data) => {
-			if (this.queue[0] && JSON.stringify(this.state) != JSON.stringify(data.state) && this.state.playing) {
-				this.state = { ...this.state, ...data.state };
-				this.manager.emit("trackUpdate", this);
-			}
+			this.state = { ...this.state, ...data.state };
+			this.manager.emit("trackUpdate", this);
 		});
 	}
 
 	play(track, author) {
 		this.queue.push({ track, author });
 
-		if (this.queue.length > 1) return;
-
-		this.state.playing = true;
-
-		return this._send("play", { track });
+		if (this.queue.length === 1) return this._send("play", { track });
 	}
 
 	skip() {
-		if (!this.state.loop) {
-			if (!this.queue[1]) return this.stop();
+		if (!this.queue[1]) return this.stop();
 
-			this.manager.emit("trackEnd", this);
-
-			this.queue.shift();
-			this.state.playing = true;
-		}
+		this.manager.emit("trackFinished", this);
+		this.queue.shift();
 
 		return this._send("play", { track: this.queue[0].track });
 	}
 
 	stop() {
-		this.manager.emit("trackEnd", this);
+		this.manager.emit("trackFinished", this);
 
-		return this.manager.leave(this.id);
+		this.removeAllListeners();
+		this.manager.players.delete(this.id);
+
+		return this._send("stop");
 	}
 
 	volume(volume) {
@@ -79,16 +73,14 @@ module.exports = class Player extends EventEmitter {
 		return this._send("seek", { position });
 	}
 
-	pause(pause = !this.state.playing) {
-		this.state.playing = pause;
+	pause() {
+		this.state.playing = !this.state.playing;
 
-		return this._send("pause", { pause: !pause });
+		return this._send("pause", { pause: !this.state.playing });
 	}
 
-	loop(loop = !this.state.loop) {
-		this.state.loop = loop;
-
-		return loop;
+	loop() {
+		return (this.state.loop = !this.state.loop);
 	}
 
 	destroy() {

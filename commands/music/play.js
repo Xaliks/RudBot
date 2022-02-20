@@ -41,39 +41,24 @@ module.exports = {
 		});
 		const video = await getVideoInfo(track.info.uri);
 
-		if (player.queue.length > 0) {
-			message.reply({
-				embeds: [
-					new MessageEmbed()
-						.setAuthor({
-							name: track.info.author,
-							iconURL: await getAuthorAvatar(video.author_url),
-							url: video.author_url,
-						})
-						.setTitle(bot.utils.escapeMarkdown(video.title))
-						.setURL(track.info.uri)
-						.setThumbnail(video.thumbnail_url)
-						.setDescription(`[\`${msToTime(track.info.length)}\`] - **Трек добавлен в очередь**`)
-						.setFooter({ text: `Позиция в очереди: ${player.queue.length + 1}` }),
-				],
-			});
-
-			return await player.play(track.track, message.author);
-		}
-
 		const msg = await message.reply({
 			embeds: [
 				new MessageEmbed()
-					.setAuthor({ name: track.info.author, iconURL: await getAuthorAvatar(video.author_url), url: video.author_url })
+					.setAuthor({
+						name: track.info.author,
+						iconURL: await getAuthorAvatar(video.author_url),
+						url: video.author_url,
+					})
 					.setTitle(bot.utils.escapeMarkdown(video.title))
 					.setURL(track.info.uri)
 					.setThumbnail(video.thumbnail_url)
-					.setFooter({ text: `Громкость: ${player.state.volume}%` })
-					.addField("Длительность", `\`00:00\` / \`${msToTime(track.info.length)}\``, true),
+					.setDescription(`[\`${msToTime(track.info.length)}\`] - **Трек добавлен в очередь**`)
+					.setFooter({ text: `Позиция в очереди: ${player.queue.length + 1}` }),
 			],
 		});
 
-		player.message = msg;
+		if (!player.queue.length) player.message = msg;
+
 		await player.play(track.track, message.author);
 	},
 };

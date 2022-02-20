@@ -6,8 +6,6 @@ module.exports = (bot, error) => {
 
 	bot.channels.cache.get(errorLogsChannelId).send({
 		content: "<@448799481777881089>",
-		embeds: [
-			new MessageEmbed().setDescription(`\`\`\`${JSON.stringify(error) === "{}" ? error : JSON.stringify(error)}\`\`\``),
-		],
+		embeds: [new MessageEmbed().setDescription(`\`\`\`${JSON.stringify(error)}\`\`\``)],
 	});
 };

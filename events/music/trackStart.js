@@ -2,10 +2,8 @@ const fetch = require("node-fetch");
 const { MessageEmbed } = require("discord.js");
 
 module.exports = {
-	name: "trackUpdate",
+	name: "trackStart",
 	async execute(bot, player) {
-		if (!player.state.playing || !player.state.position) return;
-
 		const track = await bot.music.rest.decode(player.queue[0].track);
 		const video = await getVideoInfo(track.uri);
 
@@ -15,7 +13,7 @@ module.exports = {
 			.setURL(track.uri)
 			.setThumbnail(video.thumbnail_url)
 			.setFooter({ text: `Громкость ${player.state.volume}%` })
-			.addField("Длительность", `\`${msToTime(player.state.position)}\` / \`${msToTime(track.length)}\``, true)
+			.addField("Длительность", `\`00:00\` / \`${msToTime(track.length)}\``, true)
 			.addField("Заказал", `${player.queue[0].author} - \`${player.queue[0].author.tag}\``);
 
 		const next = player.queue[1];
@@ -29,7 +27,7 @@ module.exports = {
 			);
 		}
 
-		player.message = await player.message.edit({ embeds: [embed] });
+		player.message = await player.message.channel.send({ content: "Сейчас играет:", embeds: [embed] });
 	},
 };
 
