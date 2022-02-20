@@ -8,7 +8,7 @@ module.exports = {
 	aliases: ["q"],
 	async execute(message, args, bot) {
 		const player = bot.music.players.get(message.guild.id);
-		if (!player || player.queue.length === 0) return bot.utils.error("Очередь сервера пуста!", this, message, bot);
+		if (!player || player.queue.length === 0) return message.channel.send({ content: "Очередь сервера пуста!" });
 
 		const tracks = await bot.music.rest.decode(player.queue.map((t) => t.track));
 
@@ -25,7 +25,10 @@ module.exports = {
 								})** \`[${msToTime(track.info.length)}]\``;
 							})
 							.join("\n"),
-					),
+					)
+					.setFooter({
+						text: `Длительность: ${msToTime(tracks.map((track) => track.info.length).reduce((a, b) => a + b))}`,
+					}),
 			],
 		});
 	},
