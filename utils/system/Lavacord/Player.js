@@ -40,7 +40,11 @@ module.exports = class Player extends EventEmitter {
 	play(track, author) {
 		this.queue.push({ track, author });
 
-		if (this.queue.length === 1) return this._send("play", { track });
+		if (this.queue.length === 1) {
+			this.state.playing = true;
+
+			return this._send("play", { track });
+		}
 	}
 
 	skip() {

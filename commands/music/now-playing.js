@@ -15,31 +15,28 @@ module.exports = {
 		const track = await bot.music.rest.decode(player.queue[0].track);
 		const video = await getVideoInfo(track.uri);
 
-		let trackTitle = "";
-		if (!player.state.playing) trackTitle += "⏸️ ";
-		if (player.state.loop) trackTitle += "🔁 ";
-		trackTitle += bot.utils.escapeMarkdown(track.title);
-
 		const embed = new MessageEmbed()
 			.setAuthor({ name: track.author, iconURL: await getAuthorAvatar(video.author_url), url: video.author_url })
-			.setTitle(trackTitle)
+			.setTitle(bot.utils.escapeMarkdown(video.title))
 			.setURL(track.uri)
 			.setThumbnail(video.thumbnail_url)
-			.setFooter({ text: `Громкость: ${player.state.volume}%` })
+			.setFooter({ text: `Громкость ${player.state.volume}%` })
 			.addField("Длительность", `\`${msToTime(player.state.position)}\` / \`${msToTime(track.length)}\``, true)
-			.addField("Заказал", `${player.queue[0].author} - \`${player.queue[0].author.tag}\``, true);
+			.addField("Заказал", `${player.queue[0].author} - \`${player.queue[0].author.tag}\``);
 
-		if (player.queue[1]) {
-			const nextTrack = await bot.music.rest.decode(player.queue[1].track);
+		const next = player.queue[1];
+		if (next) {
+			const nextTrack = await bot.music.rest.decode(next.track);
 
 			embed.setDescription(
-				`Следующий трек: _\`${player.queue[1].author.tag}\`_ - **[${bot.utils.escapeMarkdown(nextTrack.title)}](${
+				`Следующий трек: _\`${next.author.tag}\`_ - **[${bot.utils.escapeMarkdown(nextTrack.title)}](${
 					nextTrack.uri
 				})** [\`${msToTime(track.length)}\`]`,
 			);
 		}
 
 		const msg = await message.reply({
+			content: player.message.content,
 			embeds: [embed],
 		});
 
