@@ -45,8 +45,6 @@ module.exports.MusicManager = class MusicManager extends require("./Lavacord/Man
 			})
 			.on("voiceChannelLeave", async (member, channel) => {
 				if (channel.members.size === 1 && channel.members.has(bot.user.id)) {
-					channel.guild.me.voice.disconnect();
-
 					await this.sendWS(channel.guild.id, null);
 
 					const player = this.players.get(channel.guild.id);
