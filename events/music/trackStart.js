@@ -7,6 +7,9 @@ module.exports = {
 		const track = await bot.music.rest.decode(player.queue[0].track);
 		const video = await getVideoInfo(track.uri);
 
+		const emojis = [];
+		if (player.state.loop) emojis.push("🔁");
+
 		const embed = new MessageEmbed()
 			.setAuthor({ name: track.author, iconURL: await getAuthorAvatar(video.author_url), url: video.author_url })
 			.setTitle(bot.utils.escapeMarkdown(video.title))
@@ -27,7 +30,11 @@ module.exports = {
 			);
 		}
 
-		player.message = await player.message.channel.send({ content: "Сейчас играет:", embeds: [embed] });
+		let content = "Сейчас играет ";
+		if (emojis.length > 0) content += emojis.join(" ");
+
+		player.state.playing = true;
+		player.message = await player.message.channel.send({ content, embeds: [embed] });
 	},
 };
 

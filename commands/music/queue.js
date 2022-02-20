@@ -8,7 +8,8 @@ module.exports = {
 	aliases: ["q"],
 	async execute(message, args, bot) {
 		const player = bot.music.players.get(message.guild.id);
-		if (!player || player.queue.length === 0) return message.channel.send({ content: "Очередь сервера пуста!" });
+		if (!player || player.queue.length === 0)
+			return bot.utils.error({ content: "Очередь сервера пуста!" }, this, message, bot);
 
 		const tracks = await bot.music.rest.decode(player.queue.map((t) => t.track));
 

@@ -8,7 +8,7 @@ module.exports = class Player extends EventEmitter {
 
 		this.node = node;
 		this.id = id;
-		this.state = { volume: 100, playing: false, loop: false };
+		this.state = { volume: 100, playing: false, loop: false, position: 0 };
 		this.queue = [];
 		this.message = null;
 		this.voiceUpdateState = null;
@@ -16,10 +16,14 @@ module.exports = class Player extends EventEmitter {
 		this.on("event", async (data) => {
 			switch (data.type) {
 				case "TrackStartEvent":
-					this.manager.emit("trackStart", this, data);
+					this.manager.emit("trackStart", this);
 					break;
 				case "TrackEndEvent":
-					this.skip();
+					if (this.state.loop) {
+						this.manager.emit("trackFinished", this);
+
+						this._send("play", { track: this.queue[0].track });
+					} else this.skip();
 					break;
 				case "TrackExceptionEvent":
 					if (this.listenerCount("error")) this.emit("error", data);
@@ -40,11 +44,7 @@ module.exports = class Player extends EventEmitter {
 	play(track, author) {
 		this.queue.push({ track, author });
 
-		if (this.queue.length === 1) {
-			this.state.playing = true;
-
-			return this._send("play", { track });
-		}
+		if (this.queue.length === 1) return this._send("play", { track });
 	}
 
 	skip() {
@@ -84,6 +84,8 @@ module.exports = class Player extends EventEmitter {
 	}
 
 	loop() {
+		this.manager.emit("trackUpdate", this);
+
 		return (this.state.loop = !this.state.loop);
 	}
 

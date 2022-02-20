@@ -4,7 +4,11 @@ const { MessageEmbed } = require("discord.js");
 module.exports = {
 	name: "trackUpdate",
 	async execute(bot, player) {
-		if (!player.state.playing || !player.state.position) return;
+		if (player.state.position === 0) return;
+
+		const emojis = [];
+		if (!player.state.playing) emojis.push("⏸️");
+		if (player.state.loop) emojis.push("🔁");
 
 		const track = await bot.music.rest.decode(player.queue[0].track);
 		const video = await getVideoInfo(track.uri);
@@ -29,7 +33,10 @@ module.exports = {
 			);
 		}
 
-		player.message = await player.message.edit({ embeds: [embed] });
+		let content = "Сейчас играет ";
+		if (emojis.length > 0) content += emojis.join(" ");
+
+		player.message = await player.message.edit({ content, embeds: [embed] });
 	},
 };
 

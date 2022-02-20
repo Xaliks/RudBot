@@ -1,5 +1,3 @@
-const { MessageEmbed } = require("discord.js");
-
 module.exports = {
 	name: "volume",
 	description: "Изменить громкость трека",
@@ -26,8 +24,6 @@ module.exports = {
 
 		await player.volume(volume);
 
-		return message.reply({
-			content: `Громкость трека изменена на **${volume}%** 🎵`,
-		});
+		return bot.utils.success(`Громкость трека изменена на **${volume}%** 🎵`, message);
 	},
 };

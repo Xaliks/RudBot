@@ -1,5 +1,3 @@
-const { MessageEmbed } = require("discord.js");
-
 module.exports = {
 	name: "loop",
 	description: "Включить/Выключить повторение композиции",
@@ -22,10 +20,11 @@ module.exports = {
 
 		const track = await bot.music.rest.decode(player.queue[0].track);
 
-		return message.reply({
-			content: `Композиция **${bot.utils.escapeMarkdown(track.title)}** ${
+		return bot.utils.success(
+			`Композиция **${bot.utils.escapeMarkdown(track.title)}** ${
 				player.state.loop ? "теперь повторяется" : "больше не повторяется"
 			} 🔁`,
-		});
+			message,
+		);
 	},
 };
