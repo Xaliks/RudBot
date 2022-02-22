@@ -29,9 +29,9 @@ module.exports = {
 		const next = player.queue[1];
 		if (next) {
 			embed.setDescription(
-				`Следующий трек: _\`${next.author.tag}\`_ - **[${bot.utils.escapeMarkdown(player.queue[1].track.title)}](${
-					player.queue[1].track.uri
-				})** [\`${msToTime(player.queue[1].track.length)}\`]`,
+				`Следующий трек: _\`${next.author.tag}\`_ - **[${bot.utils.escapeMarkdown(next.track.title)}](${
+					next.track.uri
+				})** [\`${msToTime(next.track.length)}\`]`,
 			);
 		}
 

@@ -19,11 +19,9 @@ module.exports = {
 
 		const next = player.queue[1];
 		if (next) {
-			const nextTrack = await bot.music.rest.decode(next.track);
-
 			embed.setDescription(
-				`Следующий трек: _\`${next.author.tag}\`_ - **[${bot.utils.escapeMarkdown(nextTrack.title)}](${
-					nextTrack.uri
+				`Следующий трек: _\`${next.author.tag}\`_ - **[${bot.utils.escapeMarkdown(next.track.title)}](${
+					next.track.uri
 				})** [\`${msToTime(track.length)}\`]`,
 			);
 		}

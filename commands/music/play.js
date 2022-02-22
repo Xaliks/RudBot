@@ -24,7 +24,7 @@ module.exports = {
 				bot,
 			);
 
-		let search;
+		let search = args.join(" ");
 		try {
 			search = new URL(args.join(" ")).href;
 		} catch (e) {
