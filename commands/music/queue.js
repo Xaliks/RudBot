@@ -11,24 +11,22 @@ module.exports = {
 		if (!player || player.queue.length === 0)
 			return bot.utils.error({ content: "Очередь сервера пуста!" }, this, message, bot);
 
-		const tracks = await bot.music.rest.decode(player.queue.map((t) => t.track));
-
 		return message.reply({
 			embeds: [
 				new MessageEmbed()
 					.setTitle("Очередь сервера")
 					.setThumbnail(message.guild.iconURL({ dynamic: true }))
 					.setDescription(
-						tracks
-							.map((track, i) => {
-								return `${i + 1}. _\`${player.queue[i].author.tag}\`_ -  **[${track.info.title}](${
-									track.info.uri
-								})** \`[${msToTime(track.info.length)}]\``;
+						player.queue
+							.map((q, i) => {
+								return `${i + 1}. _\`${q.author.tag}\`_ -  **[${q.track.title}](${
+									q.track.uri
+								})** \`[${msToTime(q.track.length)}]\``;
 							})
 							.join("\n"),
 					)
 					.setFooter({
-						text: `Длительность: ${msToTime(tracks.map((track) => track.info.length).reduce((a, b) => a + b))}`,
+						text: `Длительность: ${msToTime(player.queue.map((q) => q.track.length).reduce((a, b) => a + b))}`,
 					}),
 			],
 		});

@@ -18,10 +18,8 @@ module.exports = {
 
 		player.loop();
 
-		const track = await bot.music.rest.decode(player.queue[0].track);
-
 		return bot.utils.success(
-			`Композиция **${bot.utils.escapeMarkdown(track.title)}** ${
+			`Композиция **${bot.utils.escapeMarkdown(player.queue[0].track.title)}** ${
 				player.state.loop ? "теперь повторяется" : "больше не повторяется"
 			} 🔁`,
 			message,

@@ -1,6 +1,7 @@
 "use strict";
 
 const { EventEmitter } = require("events");
+const Track = require("./Track");
 
 module.exports = class Player extends EventEmitter {
 	constructor(node, id) {
@@ -21,7 +22,7 @@ module.exports = class Player extends EventEmitter {
 					if (this.state.loop) {
 						this.manager.emit("trackFinished", this);
 
-						this._send("play", { track: this.queue[0].track });
+						this._send("play", { track: this.queue[0].track.trackId });
 					} else this.skip();
 					break;
 				case "TrackExceptionEvent":
@@ -40,10 +41,13 @@ module.exports = class Player extends EventEmitter {
 		});
 	}
 
-	play(track, author) {
+	async play(trackId, author) {
+		const track = new Track(this.manager, trackId);
+		await track.fetch();
+
 		this.queue.push({ track, author });
 
-		if (this.queue.length === 1) return this._send("play", { track });
+		if (this.queue.length === 1) return this._send("play", { track: trackId });
 	}
 
 	skip() {
@@ -52,7 +56,7 @@ module.exports = class Player extends EventEmitter {
 		this.manager.emit("trackFinished", this);
 		this.queue.shift();
 
-		return this._send("play", { track: this.queue[0].track });
+		return this._send("play", { track: this.queue[0].track.trackId });
 	}
 
 	stop() {
@@ -83,9 +87,9 @@ module.exports = class Player extends EventEmitter {
 	}
 
 	loop() {
-		this.manager.emit("trackUpdate", this);
+		this.state.loop = !this.state.loop
 
-		return (this.state.loop = !this.state.loop);
+		return this.manager.emit("trackUpdate", this);
 	}
 
 	destroy() {

@@ -1,5 +1,5 @@
 const { MessageEmbed, Permissions } = require("discord.js");
-const fetch = require("node-fetch");
+const Track = require("../../utils/system/Lavacord/Track");
 
 module.exports = {
 	name: "play",
@@ -24,9 +24,16 @@ module.exports = {
 				bot,
 			);
 
-		const search = await bot.music.rest.load(`ytsearch:${args.join(" ")}`);
-		const track = search.tracks?.filter((track) => !track.isStream && track.info.length < 3600000)?.[0];
-		if (!track)
+		let search;
+		try {
+			search = new URL(args.join(" ")).href;
+		} catch (e) {
+			search = "ytsearch:" + args.join(" ");
+		}
+		search = await bot.music.rest.load(search);
+
+		const ftrack = search.tracks?.filter((track) => !track.isStream && track.info.length < 3600000)?.[0];
+		if (!ftrack)
 			return bot.utils.error(
 				`Ничего не найдено в **[YouTube](https://youtube.com)** по запросу \`${args.join(" ")}\`!\n
 Длительность видео должно быть меньше часа!`,
@@ -39,38 +46,28 @@ module.exports = {
 			guild: message.guild.id,
 			channel: message.member.voice.channel.id,
 		});
-		const video = await getVideoInfo(track.info.uri);
+
+		const track = new Track(bot.music, ftrack.track);
+		await track.fetch();
 
 		const msg = await message.reply({
 			embeds: [
 				new MessageEmbed()
-					.setAuthor({
-						name: track.info.author,
-						iconURL: await getAuthorAvatar(video.author_url),
-						url: video.author_url,
-					})
-					.setTitle(bot.utils.escapeMarkdown(video.title))
-					.setURL(track.info.uri)
-					.setThumbnail(video.thumbnail_url)
-					.setDescription(`[\`${msToTime(track.info.length)}\`] - **Трек добавлен в очередь**`)
+					.setAuthor({ name: track.author.name, iconURL: track.author.avatar, url: track.author.url })
+					.setTitle(bot.utils.escapeMarkdown(track.title))
+					.setURL(track.uri)
+					.setThumbnail(track.thumbnail)
+					.setDescription(`[\`${msToTime(track.length)}\`] - **Трек добавлен в очередь**`)
 					.setFooter({ text: `Позиция в очереди: ${player.queue.length + 1}` }),
 			],
 		});
 
 		if (!player.queue.length) player.message = msg;
 
-		await player.play(track.track, message.author);
+		await player.play(track.trackId, message.author);
 	},
 };
 
-async function getVideoInfo(link) {
-	return await fetch(`https://www.youtube.com/oembed?url=${link}&format=json`).then((res) => res.json());
-}
-async function getAuthorAvatar(url) {
-	return await fetch(url)
-		.then((resp) => resp.text())
-		.then((data) => data.match(/https:\/\/yt3\.ggpht\.com\/.*?"/g)[0].replace('"', ""));
-}
 function msToTime(ms) {
 	const temp = [];
 	const seconds = Math.floor((ms / 1000) % 60);

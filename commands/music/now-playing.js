@@ -1,5 +1,4 @@
 const { MessageEmbed } = require("discord.js");
-const fetch = require("node-fetch");
 
 module.exports = {
 	name: "now-playing",
@@ -12,46 +11,39 @@ module.exports = {
 		if (!player || player.queue.length === 0)
 			return bot.utils.error("Сейчас ничего не воспроизводится!", this, message, bot);
 
-		const track = await bot.music.rest.decode(player.queue[0].track);
-		const video = await getVideoInfo(track.uri);
+		const track = player.queue[0].track;
+
+		const emojis = [];
+		if (!player.state.playing) emojis.push("⏸️");
+		if (player.state.loop) emojis.push("🔁");
 
 		const embed = new MessageEmbed()
-			.setAuthor({ name: track.author, iconURL: await getAuthorAvatar(video.author_url), url: video.author_url })
-			.setTitle(bot.utils.escapeMarkdown(video.title))
+			.setAuthor({ name: track.author.name, iconURL: track.author.avatar, url: track.author.url })
+			.setTitle(bot.utils.escapeMarkdown(track.title))
 			.setURL(track.uri)
-			.setThumbnail(video.thumbnail_url)
+			.setThumbnail(track.thumbnail)
 			.setFooter({ text: `Громкость ${player.state.volume}%` })
 			.addField("Длительность", `\`${msToTime(player.state.position)}\` / \`${msToTime(track.length)}\``, true)
 			.addField("Заказал", `${player.queue[0].author} - \`${player.queue[0].author.tag}\``);
 
 		const next = player.queue[1];
 		if (next) {
-			const nextTrack = await bot.music.rest.decode(next.track);
-
 			embed.setDescription(
-				`Следующий трек: _\`${next.author.tag}\`_ - **[${bot.utils.escapeMarkdown(nextTrack.title)}](${
-					nextTrack.uri
-				})** [\`${msToTime(track.length)}\`]`,
+				`Следующий трек: _\`${next.author.tag}\`_ - **[${bot.utils.escapeMarkdown(player.queue[1].track.title)}](${
+					player.queue[1].track.uri
+				})** [\`${msToTime(player.queue[1].track.length)}\`]`,
 			);
 		}
 
-		const msg = await message.reply({
-			content: player.message.content,
-			embeds: [embed],
-		});
+		let content = "Сейчас играет ";
+		if (emojis.length > 0) content += emojis.join(" ");
+
+		const msg = await message.reply({ content, embeds: [embed] });
 
 		if (message.guild.me.voice.channelId === message.member.voice?.channelId) player.message = msg;
 	},
 };
 
-async function getVideoInfo(link) {
-	return await fetch(`https://www.youtube.com/oembed?url=${link}&format=json`).then((res) => res.json());
-}
-async function getAuthorAvatar(url) {
-	return await fetch(url)
-		.then((resp) => resp.text())
-		.then((data) => data.match(/https:\/\/yt3\.ggpht\.com\/.*?"/g)[0].replace('"', ""));
-}
 function msToTime(ms) {
 	const temp = [];
 	const seconds = Math.floor((ms / 1000) % 60);

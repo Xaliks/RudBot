@@ -1,20 +1,18 @@
-const fetch = require("node-fetch");
 const { MessageEmbed } = require("discord.js");
 
 module.exports = {
 	name: "trackStart",
 	async execute(bot, player) {
-		const track = await bot.music.rest.decode(player.queue[0].track);
-		const video = await getVideoInfo(track.uri);
+		const track = player.queue[0].track;
 
 		const emojis = [];
 		if (player.state.loop) emojis.push("🔁");
 
 		const embed = new MessageEmbed()
-			.setAuthor({ name: track.author, iconURL: await getAuthorAvatar(video.author_url), url: video.author_url })
-			.setTitle(bot.utils.escapeMarkdown(video.title))
+			.setAuthor({ name: track.author.name, iconURL: track.author.avatar, url: track.author.url })
+			.setTitle(bot.utils.escapeMarkdown(track.title))
 			.setURL(track.uri)
-			.setThumbnail(video.thumbnail_url)
+			.setThumbnail(track.thumbnail)
 			.setFooter({ text: `Громкость ${player.state.volume}%` })
 			.addField("Длительность", `\`00:00\` / \`${msToTime(track.length)}\``, true)
 			.addField("Заказал", `${player.queue[0].author} - \`${player.queue[0].author.tag}\``);
@@ -38,14 +36,6 @@ module.exports = {
 	},
 };
 
-async function getVideoInfo(link) {
-	return await fetch(`https://www.youtube.com/oembed?url=${link}&format=json`).then((res) => res.json());
-}
-async function getAuthorAvatar(url) {
-	return await fetch(url)
-		.then((resp) => resp.text())
-		.then((data) => data.match(/https:\/\/yt3\.ggpht\.com\/.*?"/g)[0].replace('"', ""));
-}
 function msToTime(ms) {
 	const temp = [];
 	const seconds = Math.floor((ms / 1000) % 60);
