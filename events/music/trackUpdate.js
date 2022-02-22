@@ -4,6 +4,7 @@ const { MessageEmbed } = require("discord.js");
 module.exports = {
 	name: "trackUpdate",
 	async execute(bot, player) {
+		if (!player.message.deletable) return;
 		if (player.state.position === 0) return;
 
 		const emojis = [];

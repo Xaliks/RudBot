@@ -1,6 +1,6 @@
 module.exports = {
 	name: "trackFinished",
 	async execute(bot, player) {
-		player.message.delete();
+		if (player.message.deletable) player.message.delete();
 	},
 };

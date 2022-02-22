@@ -10,7 +10,6 @@ module.exports = class Player extends EventEmitter {
 		this.id = id;
 		this.state = { volume: 100, playing: false, loop: false, position: 0 };
 		this.queue = [];
-		this.message = null;
 		this.voiceUpdateState = null;
 
 		this.on("event", async (data) => {

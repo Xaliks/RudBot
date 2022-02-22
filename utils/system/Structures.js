@@ -44,15 +44,11 @@ module.exports.MusicManager = class MusicManager extends require("./Lavacord/Man
 				}
 			})
 			.on("voiceChannelLeave", async (member, channel) => {
-				if (channel.members.size === 1 && channel.members.has(bot.user.id)) {
+				const player = this.players.get(channel.guild.id);
+
+				if (channel.members.size === 1 && channel.members.has(bot.user.id) && player) {
 					await this.sendWS(channel.guild.id, null);
-
-					const player = this.players.get(channel.guild.id);
-					if (!player) return;
-
 					await player.destroy();
-
-					return this.players.delete(channel.guild.id);
 				}
 			});
 	}
