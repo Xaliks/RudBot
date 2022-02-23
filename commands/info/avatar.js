@@ -11,7 +11,7 @@ module.exports = {
 		const user = await bot.users
 			.fetch(args.join(""))
 			.catch(() => bot.utils.findMember(message, args.join(" "), true).then((member) => member.user));
-		if (user.avatar.startsWith("a_")) formats.push("gif");
+		if (user.avatar?.startsWith("a_")) formats.push("gif");
 
 		message.channel.send({
 			embeds: [
@@ -26,7 +26,7 @@ module.exports = {
 										format,
 									})})`,
 							)
-							.join(" / "),
+							.join(" | "),
 					)
 					.setImage(
 						user.displayAvatarURL({
