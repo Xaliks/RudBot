@@ -1,3 +1,5 @@
+const { MessageEmbed } = require("discord.js");
+
 module.exports = {
 	name: "loop",
 	description: "Включить/Выключить повторение композиции",
@@ -18,11 +20,8 @@ module.exports = {
 
 		player.loop();
 
-		return bot.utils.success(
-			`Композиция **${bot.utils.escapeMarkdown(player.queue[0].track.title)}** ${
-				player.state.loop ? "была зациклена" : "больше не зациклена"
-			} участником **${bot.utils.escapeMarkdown(message.author.username)}** 🔁`,
-			message,
-		);
+		return message.channel.send({ embeds: [new MessageEmbed().setTitle("🎶 Воспроизвение").setDescription(`Композиция **${bot.utils.escapeMarkdown(player.queue[0].track.title)}** ${
+			player.state.loop ? "была зациклена" : "больше не зациклена"
+		} участником **${bot.utils.escapeMarkdown(message.author.username)}** 🔁`)] })
 	},
 };

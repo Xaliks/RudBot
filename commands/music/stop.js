@@ -15,11 +15,8 @@ module.exports = {
 				bot,
 			);
 
-		player.stop();
+		await player.stop();
 
-		return bot.utils.success(
-			`Воспроизведение было остановлено участником **${bot.utils.escapeMarkdown(message.author.username)}** ⏹️`,
-			message,
-		);
+		return message.channel.send({ embeds: [new MessageEmbed().setTitle("🎶 Воспроизвение").setDescription(`Воспроизведение было остановлено участником **${bot.utils.escapeMarkdown(message.author.username)}** ⏹️`)] })
 	},
 };

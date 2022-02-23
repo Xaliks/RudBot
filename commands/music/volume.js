@@ -1,3 +1,5 @@
+const { MessageEmbed } = require("discord.js")
+
 module.exports = {
 	name: "volume",
 	description: "Изменить громкость трека",
@@ -19,14 +21,11 @@ module.exports = {
 
 		const volume = parseInt(args[0]);
 		if (isNaN(volume)) return bot.utils.error(`\`${args[0]}\` не число!`, this, message, bot);
-		if (volume > 250) return bot.utils.error("Максимальная громкость может быть не больше **250%**!", this, message, bot);
+		if (volume > 300) return bot.utils.error("Максимальная громкость может быть не больше **300%**!", this, message, bot);
 		if (volume < 0) return bot.utils.error("Минимальная громкость может быть не меньше **1%**!", this, message, bot);
 
 		await player.volume(volume);
 
-		return bot.utils.success(
-			`Громкость трека изменена на **${volume}%** участником **${bot.utils.escapeMarkdown(message.author.username)}** 🎵`,
-			message,
-		);
+		return message.channel.send({ embeds: [new MessageEmbed().setTitle("🎶 Воспроизвение").setDescription(`Громкость трека изменена на **${volume}%** участником **${bot.utils.escapeMarkdown(message.author.username)}** 🎵`)] })
 	},
 };

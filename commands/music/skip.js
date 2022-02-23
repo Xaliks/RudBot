@@ -1,3 +1,5 @@
+const { MessageEmbed } = require("discord.js");
+
 module.exports = {
 	name: "skip",
 	description: "Пропустить композицию",
@@ -15,13 +17,10 @@ module.exports = {
 				bot,
 			);
 
-		player.skip();
+		await player.skip();
 
-		return bot.utils.success(
-			`Композиция **${bot.utils.escapeMarkdown(
-				player.queue[0].track.title,
-			)}** была пропущена участником **${bot.utils.escapeMarkdown(message.author.username)}** ⏭️`,
-			message,
-		);
+		return message.channel.send({ embeds: [new MessageEmbed().setTitle("🎶 Воспроизвение").setDescription(`Композиция **${bot.utils.escapeMarkdown(
+			player.queue[0].track.title,
+		)}** была пропущена участником **${bot.utils.escapeMarkdown(message.author.username)}** ⏭️`)] })
 	},
 };
