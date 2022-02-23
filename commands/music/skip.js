@@ -1,9 +1,8 @@
 module.exports = {
-	name: "loop",
-	description: "Включить/Выключить повторение композиции",
+	name: "skip",
+	description: "Пропустить композицию",
 	category: "music",
-	cooldown: 10,
-	aliases: ["l"],
+	aliases: ["s"],
 	async execute(message, args, bot) {
 		const player = bot.music.players.get(message.guild.id);
 		if (!player || player.queue.length === 0)
@@ -16,12 +15,10 @@ module.exports = {
 				bot,
 			);
 
-		player.loop();
+        player.skip();
 
 		return bot.utils.success(
-			`Композиция **${bot.utils.escapeMarkdown(player.queue[0].track.title)}** ${
-				player.state.loop ? "была зациклена" : "больше не зациклена"
-			} участником **${bot.utils.escapeMarkdown(message.author.username)}** 🔁`,
+			`Композиция **${bot.utils.escapeMarkdown(player.queue[0].track.title)}** была пропущена участником **${bot.utils.escapeMarkdown(message.author.username)}** ⏭️`,
 			message,
 		);
 	},

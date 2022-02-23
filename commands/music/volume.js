@@ -24,6 +24,6 @@ module.exports = {
 
 		await player.volume(volume);
 
-		return bot.utils.success(`Громкость трека изменена на **${volume}%** 🎵`, message);
+		return bot.utils.success(`Громкость трека изменена на **${volume}%** участником **${bot.utils.escapeMarkdown(message.author.username)}** 🎵`, message);
 	},
 };

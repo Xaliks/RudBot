@@ -23,7 +23,7 @@ module.exports = class Player extends EventEmitter {
 						this.manager.emit("trackFinished", this);
 
 						this._send("play", { track: this.queue[0].track.trackId });
-					} else this.skip();
+					} else if (data.reason != "REPLACED") this.skip();
 					break;
 				case "TrackExceptionEvent":
 					if (this.listenerCount("error")) this.emit("error", data);
@@ -51,7 +51,7 @@ module.exports = class Player extends EventEmitter {
 	}
 
 	skip() {
-		if (!this.queue[1]) return this.stop();
+		if (this.queue.length === 1) return this.stop();
 
 		this.manager.emit("trackFinished", this);
 		this.queue.shift();

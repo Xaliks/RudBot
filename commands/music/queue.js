@@ -9,7 +9,7 @@ module.exports = {
 	async execute(message, args, bot) {
 		const player = bot.music.players.get(message.guild.id);
 		if (!player || player.queue.length === 0)
-			return bot.utils.error({ content: "Очередь сервера пуста!" }, this, message, bot);
+			return bot.utils.error("Очередь сервера пуста!", this, message, bot);
 
 		return message.reply({
 			embeds: [
