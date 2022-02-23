@@ -1,5 +1,4 @@
 ﻿const { MessageEmbed } = require("discord.js");
-const formats = ["webp", "png", "jpg"];
 
 module.exports = {
 	name: "avatar",
@@ -11,6 +10,8 @@ module.exports = {
 		const user = await bot.users
 			.fetch(args.join(""))
 			.catch(() => bot.utils.findMember(message, args.join(" "), true).then((member) => member.user));
+
+		const formats = ["webp", "png", "jpg"];
 		if (user.avatar?.startsWith("a_")) formats.push("gif");
 
 		message.channel.send({
