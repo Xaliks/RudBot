@@ -16,6 +16,28 @@ module.exports = class Manager extends EventEmitter {
 		this.client = client;
 
 		for (const node of nodes) this.createNode(node);
+
+		this.client.ws
+			.on("VOICE_SERVER_UPDATE", this.voiceServerUpdate.bind(this))
+			.on("VOICE_STATE_UPDATE", this.voiceStateUpdate.bind(this))
+			.on("GUILD_CREATE", async (data) => {
+				for (const state of data.voice_states) await this.voiceStateUpdate({ ...state, guild_id: data.id });
+			});
+
+		this.client.on("voiceStateUpdate", async (oldState, newState) => {
+			if (
+				oldState.channelId &&
+				!newState.channelId &&
+				!oldState.channel.members.find((member) => !member.user.bot) &&
+				oldState.channel.members.has(this.client.user.id)
+			) {
+				this.leave(oldState.channel.guild.id);
+			}
+		});
+	}
+
+	send(packet) {
+		this.client.guilds.cache.get(packet.d.guild_id).shard.send(packet);
 	}
 
 	connect() {
@@ -44,14 +66,14 @@ module.exports = class Manager extends EventEmitter {
 		return node.destroy() && this.nodes.delete(id);
 	}
 
-	async join(data, joinOptions = {}) {
-		await this.sendWS(data.guild, data.channel, joinOptions);
+	join(data, joinOptions = {}) {
+		this.sendWS(data.guild, data.channel, joinOptions);
 
 		return this.spawnPlayer(data);
 	}
 
-	async leave(guild) {
-		await this.sendWS(guild, null);
+	leave(guild) {
+		this.sendWS(guild, null);
 
 		const player = this.players.get(guild);
 		if (!player) return false;
@@ -103,7 +125,7 @@ module.exports = class Manager extends EventEmitter {
 			});
 	}
 
-	async _attemptConnection(guildID) {
+	_attemptConnection(guildID) {
 		const server = this.voiceServers.get(guildID);
 		const state = this.voiceStates.get(guildID);
 		if (!server || !state || !this.expecting.has(guildID)) return false;

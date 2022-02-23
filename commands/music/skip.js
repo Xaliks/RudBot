@@ -15,10 +15,12 @@ module.exports = {
 				bot,
 			);
 
-        player.skip();
+		player.skip();
 
 		return bot.utils.success(
-			`Композиция **${bot.utils.escapeMarkdown(player.queue[0].track.title)}** была пропущена участником **${bot.utils.escapeMarkdown(message.author.username)}** ⏭️`,
+			`Композиция **${bot.utils.escapeMarkdown(
+				player.queue[0].track.title,
+			)}** была пропущена участником **${bot.utils.escapeMarkdown(message.author.username)}** ⏭️`,
 			message,
 		);
 	},

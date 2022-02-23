@@ -8,8 +8,7 @@ module.exports = {
 	aliases: ["q"],
 	async execute(message, args, bot) {
 		const player = bot.music.players.get(message.guild.id);
-		if (!player || player.queue.length === 0)
-			return bot.utils.error("Очередь сервера пуста!", this, message, bot);
+		if (!player || player.queue.length === 0) return bot.utils.error("Очередь сервера пуста!", this, message, bot);
 
 		return message.reply({
 			embeds: [
@@ -19,9 +18,9 @@ module.exports = {
 					.setDescription(
 						player.queue
 							.map((q, i) => {
-								return `${i + 1}. _\`${q.author.tag}\`_ -  **[${q.track.title}](${
-									q.track.uri
-								})** \`[${msToTime(q.track.length)}]\``;
+								return `${i + 1}. _\`${q.author.tag}\`_ -  **[${q.track.title}](${q.track.uri})** \`[${msToTime(
+									q.track.length,
+								)}]\``;
 							})
 							.join("\n"),
 					)

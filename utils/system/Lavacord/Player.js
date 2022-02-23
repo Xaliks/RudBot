@@ -87,7 +87,7 @@ module.exports = class Player extends EventEmitter {
 	}
 
 	loop() {
-		this.state.loop = !this.state.loop
+		this.state.loop = !this.state.loop;
 
 		return this.manager.emit("trackUpdate", this);
 	}

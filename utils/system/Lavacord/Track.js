@@ -32,7 +32,7 @@ module.exports = class Track {
 			data.title = yt.title;
 			data.thumbnail = yt.thumbnail;
 			data.author = yt.author;
-		} else console.log(baseInfo)
+		} else console.log(baseInfo);
 
 		Object.assign(this, data);
 		return this;
