@@ -97,6 +97,18 @@ module.exports = class Player extends EventEmitter {
 		return this.manager.emit("trackUpdate", this);
 	}
 
+	shuffle() {
+		const np = this.queue.shift();
+
+		for (let i = this.queue.length - 1; i > 0; i--) {
+			const j = Math.floor(Math.random() * (i + 1));
+
+			[this.queue[i], this.queue[j]] = [this.queue[j], this.queue[i]];
+		}
+
+		this.queue.splice(0, 0, np);
+	}
+
 	destroy() {
 		this.manager.players.delete(this.id);
 
