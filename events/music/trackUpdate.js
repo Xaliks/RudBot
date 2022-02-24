@@ -9,7 +9,8 @@ module.exports = {
 
 		const emojis = [];
 		if (!player.state.playing) emojis.push("⏸️");
-		if (player.state.loop) emojis.push("🔁");
+		if (player.state.loop === 1) emojis.push("🔂");
+		if (player.state.loop === 2) emojis.push("🔁");
 
 		const embed = new MessageEmbed()
 			.setAuthor({ name: track.author.name, iconURL: track.author.avatar, url: track.author.url })

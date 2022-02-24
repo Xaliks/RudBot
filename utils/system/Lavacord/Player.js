@@ -9,7 +9,7 @@ module.exports = class Player extends EventEmitter {
 
 		this.node = node;
 		this.id = id;
-		this.state = { volume: 100, playing: false, loop: false, position: 0 };
+		this.state = { volume: 100, playing: false, loop: 0, position: 0 };
 		this.queue = [];
 		this.voiceUpdateState = null;
 
@@ -19,11 +19,15 @@ module.exports = class Player extends EventEmitter {
 					this.manager.emit("trackStart", this);
 					break;
 				case "TrackEndEvent":
-					if (this.state.loop) {
-						this.manager.emit("trackFinished", this);
+					if (data.reason != "REPLACED") {
+						if (this.state.loop) {
+							this.manager.emit("trackFinished", this);
 
-						this._send("play", { track: this.queue[0].track.trackId });
-					} else if (data.reason != "REPLACED") this.skip();
+							if (this.state.loop === 2) this.queue.push(this.queue.shift());
+
+							this._send("play", { track: this.queue[0].track.trackId });
+						} else this.skip();
+					}
 					break;
 				case "TrackExceptionEvent":
 					if (this.listenerCount("error")) this.emit("error", data);
@@ -54,7 +58,8 @@ module.exports = class Player extends EventEmitter {
 		if (this.queue.length === 1) return this.stop();
 
 		this.manager.emit("trackFinished", this);
-		this.queue.shift();
+		if (this.state.loop === 2) this.queue.push(this.queue.shift());
+		else this.queue.shift();
 
 		return this._send("play", { track: this.queue[0].track.trackId });
 	}
@@ -86,8 +91,8 @@ module.exports = class Player extends EventEmitter {
 		return this._send("pause", { pause: !this.state.playing });
 	}
 
-	loop() {
-		this.state.loop = !this.state.loop;
+	loop(loop = 0) {
+		this.state.loop = loop;
 
 		return this.manager.emit("trackUpdate", this);
 	}

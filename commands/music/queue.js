@@ -10,7 +10,13 @@ module.exports = {
 		const player = bot.music.players.get(message.guild.id);
 		if (!player || player.queue.length === 0) return bot.utils.error("Очередь сервера пуста!", this, message, bot);
 
+		const content = "_ _";
+		if (!player.state.playing) content += "⏸️";
+		if (player.state.loop === 1) content += "🔂";
+		if (player.state.loop === 2) content += "🔁";
+
 		return message.reply({
+			content,
 			embeds: [
 				new MessageEmbed()
 					.setTitle("Очередь сервера")
