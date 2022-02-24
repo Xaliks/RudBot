@@ -27,7 +27,7 @@ module.exports = class Manager extends EventEmitter {
 		this.client.on("voiceStateUpdate", async (oldState, newState) => {
 			if (oldState.channelId && !newState.channelId) {
 				if (oldState.member.id === this.client.user.id) {
-					this.emit("clientKick", oldState.guild.id)
+					this.emit("clientKick", oldState.guild.id);
 				}
 				if (
 					!oldState.channel.members.find((member) => !member.user.bot) &&

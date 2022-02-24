@@ -7,8 +7,7 @@ module.exports = {
 	aliases: ["s"],
 	async execute(message, args, bot) {
 		const player = bot.music.players.get(message.guild.id);
-		if (!player || player.queue.length === 0)
-			return bot.utils.error("Сейчас ничего не воспроизводится!", this, message, bot);
+		if (!player || player.queue.length === 0) return bot.utils.error("Очередь сервера пуста!", this, message, bot);
 		if (message.guild.me.voice.channelId && message.guild.me.voice.channelId != message.member.voice?.channelId)
 			return bot.utils.error(
 				`Бота использует кто-то другой! Зайдите в канал <#${message.guild.me.voice.channelId}>!`,
@@ -19,8 +18,16 @@ module.exports = {
 
 		await player.skip();
 
-		return message.channel.send({ embeds: [new MessageEmbed().setTitle("🎶 Воспроизвение").setDescription(`Композиция **${bot.utils.escapeMarkdown(
-			player.queue[0].track.title,
-		)}** была пропущена участником **${bot.utils.escapeMarkdown(message.author.username)}** ⏭️`)] })
+		return message.channel.send({
+			embeds: [
+				new MessageEmbed()
+					.setTitle("🎶 Воспроизвение")
+					.setDescription(
+						`Композиция **${bot.utils.escapeMarkdown(
+							player.queue[0].track.title,
+						)}** была пропущена участником **${bot.utils.escapeMarkdown(message.author.username)}** ⏭️`,
+					),
+			],
+		});
 	},
 };

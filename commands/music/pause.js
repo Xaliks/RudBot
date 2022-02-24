@@ -23,7 +23,7 @@ module.exports = {
 				new MessageEmbed()
 					.setTitle("🎶 Воспроизвение")
 					.setDescription(
-						`Воспроизведение было приостановлено участником **${bot.utils.escapeMarkdown(message.author.username)}** ⏹️`,
+						`Воспроизведение было приостановлено участником **${bot.utils.escapeMarkdown(message.author.username)}** ⏸️`,
 					),
 			],
 		});
