@@ -30,8 +30,8 @@ module.exports = {
 		let content = "Сейчас играет ";
 		if (emojis.length > 0) content += emojis.join(" ");
 
-		player.state.playing = true;
 		player.message = await player.message.channel.send({ content, embeds: [embed] });
+		player.state.playing = true;
 	},
 };
 

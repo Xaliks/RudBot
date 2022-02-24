@@ -69,6 +69,7 @@ module.exports = class Player extends EventEmitter {
 
 		this.removeAllListeners();
 		this.manager.players.delete(this.id);
+		this.manager.sendWS(this.id, null);
 
 		return this._send("stop");
 	}
