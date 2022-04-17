@@ -1,5 +1,4 @@
 const { MessageEmbed, MessageButton } = require("discord.js");
-const util = require("util");
 
 module.exports = {
 	name: "idea",
@@ -8,6 +7,8 @@ module.exports = {
 	usage: ["<ваша идея>"],
 	category: "general",
 	async execute(message, args, bot) {
+		if (message.member.roles.cache.has("851520479578816533")) return message.react("❌");
+
 		const guild = bot.cache.get(message.guild.id);
 
 		if (!guild.ideas || !message.guild.channels.cache.get(guild.ideas.id))
