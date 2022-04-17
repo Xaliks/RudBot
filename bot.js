@@ -1,4 +1,4 @@
-﻿const { Client, Intents } = require("discord.js");
+const { Client, Intents } = require("discord.js");
 const { token } = require("./config.json");
 
 const bot = new Client({
@@ -19,8 +19,8 @@ const bot = new Client({
 });
 bot.login(token);
 
-bot.on("ready", () => {
-	require("./require")(bot);
+bot.on("ready", async () => {
+	await require("./require")(bot);
 
 	process.on("unhandledRejection", (error) => bot.utils.sendError(bot, error));
 	console.log(`[BOT] Зашёл как ${bot.user.tag}!`);
